@@ -8,9 +8,9 @@ export default function HostDashboard() {
 
   const load = async () => {
     try {
-      const { data } = await bookingApi.listOwner()
-      setRequests((data.requests||[]).filter(r => r.status === 'Pending'))
-      setHistory((data.requests||[]).filter(r => r.status !== 'Pending'))
+      const { data } = await bookingApi.listOwnerRequests()
+      setRequests((data.bookings||[]).filter(r => r.status === 'Pending'))
+      setHistory((data.bookings||[]).filter(r => r.status !== 'Pending'))
     } catch {
       setRequests([]); setHistory([])
     }
@@ -18,8 +18,9 @@ export default function HostDashboard() {
   useEffect(() => { load() }, [])
 
   const respond = async (id, action) => {
-    await bookingApi.respond(id, action)
-    load()
+    if (action === 'accept') await bookingApi.accept(id)
+    else if (action === 'cancel' || action === 'reject') await bookingApi.reject(id)
+    await load()
   }
 
   return (

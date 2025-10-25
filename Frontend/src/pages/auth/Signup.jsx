@@ -13,8 +13,9 @@ export default function Signup() {
     e.preventDefault()
     setError('')
     try {
-      if (role === 'traveler') await authApi.signupTraveler(form)
-      else await authApi.signupOwner(form)
+      // Backend expects a single register endpoint with `user_type`
+      const payload = { ...form, user_type: role }
+      await authApi.signup(payload)
       navigate('/login')
     } catch (err) {
       setError(err?.response?.data?.message || 'Signup failed')

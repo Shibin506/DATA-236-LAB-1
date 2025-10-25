@@ -12,7 +12,7 @@ export default function Trips() {
 
   const load = async () => {
     try {
-      const { data } = await bookingApi.listTraveler(status)
+      const { data } = await bookingApi.listTraveler({ status })
       setList(data.bookings || [])
     } catch { setList([]) }
   }
