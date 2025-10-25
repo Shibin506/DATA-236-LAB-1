@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import AgentAIBubble from './components/AgentAIBubble'
+import AgentAIModal from './components/AgentAIModal'
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 
@@ -26,6 +27,7 @@ function PrivateRoute({ children, role }) {
 
 function Shell() {
   const navigate = useNavigate()
+  const [showAgent, setShowAgent] = React.useState(false)
   return (
     <div className="d-flex flex-column min-vh-100">
       <Navbar />
@@ -45,7 +47,8 @@ function Shell() {
         </Routes>
       </div>
       <Footer />
-      <AgentAIBubble onClick={() => navigate('/')} />
+      <AgentAIBubble onClick={() => setShowAgent(true)} />
+      <AgentAIModal show={showAgent} onClose={() => setShowAgent(false)} />
     </div>
   )
 }

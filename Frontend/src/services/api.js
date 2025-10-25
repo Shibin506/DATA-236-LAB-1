@@ -3,6 +3,7 @@ import axios from 'axios'
 // Base API URL - should point to backend server root (include /api prefix to match backend)
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:3001/api'
 const MOCK = String(import.meta.env.VITE_MOCK || '').toLowerCase() === 'true'
+const AGENT_API_BASE = import.meta.env.VITE_AGENT_API_BASE || 'http://localhost:8000/api/v1'
 
 export const api = axios.create({
   baseURL: API_BASE,
@@ -126,4 +127,11 @@ export const favoriteApi = {
       return api.post('/favorites', { property_id: propertyId })
     }
   }
+}
+
+// Agent AI (FastAPI) microservice
+const agentClient = axios.create({ baseURL: AGENT_API_BASE, headers: { 'Content-Type': 'application/json' }})
+
+export const agentApi = {
+  conciergeAgent: (payload) => agentClient.post('/concierge-agent', payload)
 }
