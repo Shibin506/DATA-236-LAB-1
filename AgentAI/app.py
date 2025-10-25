@@ -1,5 +1,6 @@
 from typing import Dict, List, Optional
 import os
+import json
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -121,81 +122,78 @@ if LANGCHAIN_AVAILABLE:
 @router.post("/concierge-agent", response_model=AgentResponse)
 async def concierge_agent(payload: AgentInput) -> AgentResponse:
     """
-    Accepts user context + NLU prompt, returns a structured plan.
-    For Task 1, we return a scaffolded static structure; future tasks can
-    wire LangChain tools (e.g., Tavily) to enrich results.
+    Accepts user context + NLU prompt, calls the LangChain agent with a combined prompt,
+    parses JSON output, and returns an AgentResponse. Falls back to a scaffolded response
+    if the agent or providers are unavailable.
     """
-    # Optional: demonstrate using Tavily if configured
-    tavily_snippets: List[Dict] = []
-    if TAVILY_AVAILABLE:
-        try:
-            tool = TavilySearchAPITool()
-            # Use a simple query derived from prompt; safe fallback if it fails
-            q = f"family trip ideas in {payload.booking_context.get('location', '')}".strip()
-            if q:
-                results = tool.run(q)
-                # The tool may return str or list depending on version; normalize to a list of snippets
-                if isinstance(results, str):
-                    tavily_snippets = [{"snippet": results[:300]}]
-                elif isinstance(results, list):
-                    tavily_snippets = results[:3]
-        except Exception:
-            tavily_snippets = []
 
-    # Basic scaffolded response (placeholder content)
-    day_by_day_plan = [
-        {
-            "day": 1,
-            "title": "Arrival and local exploration",
-            "highlights": ["Check-in", "Walk downtown", "Sunset viewpoint"],
-        },
-        {
-            "day": 2,
-            "title": "Activities based on preferences",
-            "highlights": ["Kid-friendly museum", "Vegan lunch", "Short scenic trail"],
-        },
-    ]
+    def _fallback_response() -> AgentResponse:
+        return AgentResponse(
+            day_by_day_plan=[
+                {"day": 1, "title": "Arrival and local exploration", "highlights": ["Check-in", "Walk downtown", "Sunset viewpoint"]},
+                {"day": 2, "title": "Activities based on preferences", "highlights": ["Kid-friendly museum", "Vegan lunch", "Short scenic trail"]},
+            ],
+            activity_cards=[
+                {"name": "City History Museum", "type": "indoor", "duration": "2-3 hours", "suits": ["kids", "wheelchair"]},
+                {"name": "River Walk", "type": "outdoor", "duration": "1 hour", "suits": ["strollers", "low-intensity"]},
+            ],
+            restaurant_recommendations=[
+                {"name": "Green Leaf Vegan", "cuisine": "Vegan", "notes": "Casual, family-friendly"},
+                {"name": "Happy Garden", "cuisine": "Vegetarian", "notes": "Reservations recommended"},
+            ],
+            packing_checklist=[
+                {"item": "Comfortable walking shoes", "why": "Short walks and city touring"},
+                {"item": "Reusable water bottles", "why": "Stay hydrated"},
+                {"item": "Light jackets", "why": "Evening breeze"},
+            ],
+        )
 
-    activity_cards = [
-        {
-            "name": "City History Museum",
-            "type": "indoor",
-            "duration": "2-3 hours",
-            "suits": ["kids", "wheelchair"],
-        },
-        {
-            "name": "River Walk",
-            "type": "outdoor",
-            "duration": "1 hour",
-            "suits": ["strollers", "low-intensity"],
-        },
-    ]
-
-    restaurant_recommendations = [
-        {"name": "Green Leaf Vegan", "cuisine": "Vegan", "notes": "Casual, family-friendly"},
-        {"name": "Happy Garden", "cuisine": "Vegetarian", "notes": "Reservations recommended"},
-    ]
-
-    packing_checklist = [
-        {"item": "Comfortable walking shoes", "why": "Short walks and city touring"},
-        {"item": "Reusable water bottles", "why": "Stay hydrated"},
-        {"item": "Light jackets", "why": "Evening breeze"},
-    ]
-
-    # Attach any Tavily snippets as a bonus context in activity cards (optional)
-    if tavily_snippets:
-        activity_cards.append({
-            "name": "Web snippets",
-            "type": "info",
-            "snippets": tavily_snippets,
-        })
-
-    return AgentResponse(
-        day_by_day_plan=day_by_day_plan,
-        activity_cards=activity_cards,
-        restaurant_recommendations=restaurant_recommendations,
-        packing_checklist=packing_checklist,
+    # Build a combined prompt from all inputs
+    combined_prompt = (
+        "SYNTHESIZE ALL CONTEXTS BELOW INTO A FINAL TRAVEL PLAN AS STRICT JSON.\n\n"
+        f"BOOKING_CONTEXT: {json.dumps(payload.booking_context, ensure_ascii=False)}\n"
+        f"PREFERENCES: {json.dumps(payload.preferences, ensure_ascii=False)}\n"
+        f"LOCAL_CONTEXT: {json.dumps(payload.local_context, ensure_ascii=False)}\n"
+        f"USER_PROMPT: {payload.nlu_prompt}\n\n"
+        "Respond with JSON only. Keys: day_by_day_plan (array), activity_cards (array), "
+        "restaurant_recommendations (array), packing_checklist (array)."
     )
+
+    # If LangChain/LLM not available, return fallback
+    if not LANGCHAIN_AVAILABLE:
+        return _fallback_response()
+
+    try:
+        agent = initialize_agent()
+        raw = agent.run(combined_prompt)
+        # raw may be dict or string JSON; normalize
+        if isinstance(raw, dict):
+            parsed = raw
+        else:
+            # try JSON parse, then loose extraction
+            try:
+                parsed = json.loads(raw)
+            except Exception:
+                # extract the first {...} block heuristically
+                s = str(raw)
+                start = s.find('{')
+                end = s.rfind('}')
+                if start != -1 and end != -1 and end > start:
+                    parsed = json.loads(s[start:end+1])
+                else:
+                    raise
+
+        # Sanitize to ensure required keys exist
+        result = {
+            "day_by_day_plan": parsed.get("day_by_day_plan", []) if isinstance(parsed, dict) else [],
+            "activity_cards": parsed.get("activity_cards", []) if isinstance(parsed, dict) else [],
+            "restaurant_recommendations": parsed.get("restaurant_recommendations", []) if isinstance(parsed, dict) else [],
+            "packing_checklist": parsed.get("packing_checklist", []) if isinstance(parsed, dict) else [],
+        }
+        return AgentResponse(**result)
+    except Exception:
+        # On any error, return a safe fallback
+        return _fallback_response()
 
 
 # Mount router
