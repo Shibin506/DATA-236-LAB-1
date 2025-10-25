@@ -11,6 +11,15 @@ try:
 except Exception:
     TAVILY_AVAILABLE = False
 
+# Additional LangChain imports for Task 2
+try:
+    from langchain.tools import tool  # decorator for tools (compatible across versions)
+    from langchain.agents import initialize_agent, AgentType
+    from langchain_openai import ChatOpenAI
+    LANGCHAIN_AVAILABLE = True
+except Exception:
+    LANGCHAIN_AVAILABLE = False
+
 
 # ------------------------------
 # Pydantic Models
@@ -44,6 +53,70 @@ app.add_middleware(
 )
 router = APIRouter(prefix="/api/v1", tags=["concierge-agent"]) 
 
+
+# ------------------------------
+# Task 2: LangChain Tools & Agent Core
+# ------------------------------
+
+# Placeholder for a DB query (simulate MySQL-backed local catalog)
+def _fetch_local_catalog(query: str, city: Optional[str] = None, dates: Optional[List[str]] = None) -> List[Dict]:
+    """Simulate fetching POIs/events from a local DB based on query and filters."""
+    sample = [
+        {"name": "Downtown Heritage Walk", "type": "tour", "suits": ["kids", "wheelchair"], "city": city or "", "best_time": "morning"},
+        {"name": "Riverside Park", "type": "outdoor", "suits": ["strollers", "low-intensity"], "city": city or "", "best_time": "evening"},
+        {"name": "Green Leaf Vegan", "type": "restaurant", "cuisine": "Vegan", "notes": "Family-friendly", "city": city or ""},
+    ]
+    # In real usage, apply filters and full-text search
+    return sample
+
+if LANGCHAIN_AVAILABLE:
+    @tool("LocalContextTool", return_direct=False)
+    def LocalContextTool(query: str) -> str:
+        """
+        Use this tool to retrieve static/local catalog data (POIs, events, restaurants) from the host system's MySQL-backed store.
+        Ideal for location knowledge that doesn't require live updates. Input should be a short natural-language query.
+        """
+        items = _fetch_local_catalog(query)
+        return str(items)
+
+    @tool("LiveWebSearchTool", return_direct=False)
+    def LiveWebSearchTool(query: str) -> str:
+        """
+        Use this tool ONLY for up-to-the-minute, live, or weather-related context (e.g., current weather, live events, opening hours today).
+        It wraps a real-time web search. Do not use it for static knowledge.
+        """
+        if not TAVILY_AVAILABLE:
+            return "Live web search is unavailable (Tavily not installed or API key missing)."
+        try:
+            tool = TavilySearchAPITool()
+            res = tool.run(query)
+            return str(res)
+        except Exception as e:
+            return f"Live search error: {e}"
+
+    SYSTEM_PROMPT = (
+        "You are an AI Concierge for travel planning. "
+        "Synthesize: (1) booking_context, (2) preferences, (3) local data via LocalContextTool, and (4) the user's prompt. "
+        "Before producing results, call tools when needed (LocalContextTool for static/local catalog; LiveWebSearchTool for up-to-the-minute or weather context). "
+        "Output strictly as JSON with keys: day_by_day_plan (array), activity_cards (array), restaurant_recommendations (array), packing_checklist (array). "
+        "Be concise, family-friendly, accessibility-aware (strollers, wheelchairs), and align with dietary needs."
+    )
+
+    def initialize_agent():
+        """Create and return a LangChain AgentExecutor configured with our tools and system prompt."""
+        if not LANGCHAIN_AVAILABLE:
+            raise RuntimeError("LangChain or OpenAI provider not available. Install deps and set OPENAI_API_KEY.")
+        # LLM: GPT-3.5 (or better). Requires OPENAI_API_KEY env.
+        llm = ChatOpenAI(model=os.getenv("OPENAI_MODEL", "gpt-3.5-turbo"), temperature=0)
+        tools = [LocalContextTool, LiveWebSearchTool]
+        agent = initialize_agent(
+            tools,
+            llm,
+            agent=AgentType.OPENAI_FUNCTIONS,
+            verbose=False,
+            agent_kwargs={"system_message": SYSTEM_PROMPT},
+        )
+        return agent
 
 @router.post("/concierge-agent", response_model=AgentResponse)
 async def concierge_agent(payload: AgentInput) -> AgentResponse:

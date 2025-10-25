@@ -49,3 +49,11 @@ export TAVILY_API_KEY=your_key
 ```
 
 This is optional; the service works without it.
+
+## Agent Core (LangChain)
+- Requires `OPENAI_API_KEY` for GPT-3.5+ via `langchain-openai`.
+- Optional `OPENAI_MODEL` env var to override model (default: `gpt-3.5-turbo`).
+- Tools:
+	- `LocalContextTool` — queries local/static catalog (simulated MySQL via placeholder).
+	- `LiveWebSearchTool` — wraps Tavily for live/weather/up-to-the-minute info.
+- Function `initialize_agent()` creates an AI Concierge agent with a detailed system prompt and both tools loaded.
