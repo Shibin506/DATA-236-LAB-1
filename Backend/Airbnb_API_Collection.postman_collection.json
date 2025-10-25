@@ -1,0 +1,587 @@
+{
+  "info": {
+    "name": "Airbnb Backend API Collection",
+    "description": "Complete API testing collection for Airbnb backend with San Francisco properties",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "session_cookie",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register Traveler",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Traveler\",\n  \"email\": \"traveler@example.com\",\n  \"password\": \"password123\",\n  \"user_type\": \"traveler\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const cookies = pm.response.headers.get('Set-Cookie');",
+                  "    if (cookies) {",
+                  "        const sessionMatch = cookies.match(/airbnb\\.session=([^;]+)/);",
+                  "        if (sessionMatch) {",
+                  "            pm.environment.set('session_cookie', sessionMatch[1]);",
+                  "        }",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Register Owner",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Owner\",\n  \"email\": \"owner@example.com\",\n  \"password\": \"password123\",\n  \"user_type\": \"owner\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"traveler@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const cookies = pm.response.headers.get('Set-Cookie');",
+                  "    if (cookies) {",
+                  "        const sessionMatch = cookies.match(/airbnb\\.session=([^;]+)/);",
+                  "        if (sessionMatch) {",
+                  "            pm.environment.set('session_cookie', sessionMatch[1]);",
+                  "        }",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "airbnb.session={{session_cookie}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "airbnb.session={{session_cookie}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Properties",
+      "item": [
+        {
+          "name": "Get All Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": ["{{base_url}}"],
+              "path": ["api", "properties"]
+            }
+          }
+        },
+        {
+          "name": "Search Properties - San Francisco",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/properties/search?city=San%20Francisco&guests=2&min_price=100&max_price=300",
+              "host": ["{{base_url}}"],
+              "path": ["api", "properties", "search"],
+              "query": [
+                {
+                  "key": "city",
+                  "value": "San Francisco"
+                },
+                {
+                  "key": "guests",
+                  "value": "2"
+                },
+                {
+                  "key": "min_price",
+                  "value": "100"
+                },
+                {
+                  "key": "max_price",
+                  "value": "300"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Properties - Mission District",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/properties/search?city=San%20Francisco&property_type=apartment&min_price=150&max_price=200",
+              "host": ["{{base_url}}"],
+              "path": ["api", "properties", "search"],
+              "query": [
+                {
+                  "key": "city",
+                  "value": "San Francisco"
+                },
+                {
+                  "key": "property_type",
+                  "value": "apartment"
+                },
+                {
+                  "key": "min_price",
+                  "value": "150"
+                },
+                {
+                  "key": "max_price",
+                  "value": "200"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Property by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/properties/22",
+              "host": ["{{base_url}}"],
+              "path": ["api", "properties", "22"]
+            }
+          }
+        },
+        {
+          "name": "Create Property (Owner only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "airbnb.session={{session_cookie}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Property\",\n  \"description\": \"A beautiful test property in San Francisco\",\n  \"property_type\": \"apartment\",\n  \"address\": \"123 Test Street, San Francisco, CA\",\n  \"city\": \"San Francisco\",\n  \"state\": \"CA\",\n  \"country\": \"USA\",\n  \"price_per_night\": 150.00,\n  \"bedrooms\": 2,\n  \"bathrooms\": 1,\n  \"max_guests\": 4,\n  \"amenities\": \"WiFi,Kitchen,TV\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": ["{{base_url}}"],
+              "path": ["api", "properties"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Create Booking (Traveler only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "airbnb.session={{session_cookie}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"property_id\": 22,\n  \"check_in_date\": \"2024-12-01\",\n  \"check_out_date\": \"2024-12-05\",\n  \"number_of_guests\": 2,\n  \"special_requests\": \"Late check-in please\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings"]
+            }
+          }
+        },
+        {
+          "name": "Get Traveler Bookings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "airbnb.session={{session_cookie}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bookings/traveler/my-bookings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "traveler", "my-bookings"]
+            }
+          }
+        },
+        {
+          "name": "Get Owner Bookings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "airbnb.session={{session_cookie}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bookings/owner/my-bookings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "owner", "my-bookings"]
+            }
+          }
+        },
+        {
+          "name": "Accept Booking (Owner only)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "airbnb.session={{session_cookie}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bookings/1/accept",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "1", "accept"]
+            }
+          }
+        },
+        {
+          "name": "Reject Booking (Owner only)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "airbnb.session={{session_cookie}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bookings/1/reject",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "1", "reject"]
+            }
+          }
+        },
+        {
+          "name": "Cancel Booking (Traveler only)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "airbnb.session={{session_cookie}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bookings/1/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "1", "cancel"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Favorites",
+      "item": [
+        {
+          "name": "Add to Favorites (Traveler only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "airbnb.session={{session_cookie}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"property_id\": 22\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/favorites",
+              "host": ["{{base_url}}"],
+              "path": ["api", "favorites"]
+            }
+          }
+        },
+        {
+          "name": "Get User Favorites",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "airbnb.session={{session_cookie}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/favorites/traveler/my-favorites",
+              "host": ["{{base_url}}"],
+              "path": ["api", "favorites", "traveler", "my-favorites"]
+            }
+          }
+        },
+        {
+          "name": "Remove from Favorites",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "airbnb.session={{session_cookie}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/favorites/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "favorites", "1"]
+            }
+          }
+        },
+        {
+          "name": "Check Favorite Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "airbnb.session={{session_cookie}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/favorites/check/22",
+              "host": ["{{base_url}}"],
+              "path": ["api", "favorites", "check", "22"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "airbnb.session={{session_cookie}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Name\",\n  \"phone\": \"+1234567890\",\n  \"about_me\": \"Updated bio\",\n  \"city\": \"San Francisco\",\n  \"state\": \"CA\",\n  \"country\": \"USA\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/1/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "1", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "airbnb.session={{session_cookie}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current_password\": \"password123\",\n  \"new_password\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/1/change-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "1", "change-password"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Testing",
+      "item": [
+        {
+          "name": "Access Protected Endpoint Without Login",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Get Non-existent Property",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/properties/999",
+              "host": ["{{base_url}}"],
+              "path": ["api", "properties", "999"]
+            }
+          }
+        },
+        {
+          "name": "Create Booking with Invalid Data",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"property_id\": \"invalid\",\n  \"check_in_date\": \"invalid-date\",\n  \"check_out_date\": \"invalid-date\",\n  \"number_of_guests\": \"invalid\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
