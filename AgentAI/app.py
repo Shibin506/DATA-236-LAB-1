@@ -12,11 +12,11 @@ try:
 except Exception:
     TAVILY_AVAILABLE = False
 
-# Additional LangChain imports for Task 2
+# Additional LangChain imports for Task 2 (Llama 3 via Ollama)
 try:
-    from langchain.tools import tool  # decorator for tools (compatible across versions)
-    from langchain.agents import initialize_agent, AgentType
-    from langchain_openai import ChatOpenAI
+    from langchain.tools import tool  # decorator for tools
+    from langchain.agents import initialize_agent as lc_initialize_agent, AgentType
+    from langchain_community.chat_models import ChatOllama
     LANGCHAIN_AVAILABLE = True
 except Exception:
     LANGCHAIN_AVAILABLE = False
@@ -107,15 +107,16 @@ if LANGCHAIN_AVAILABLE:
         """Create and return a LangChain AgentExecutor configured with our tools and system prompt."""
         if not LANGCHAIN_AVAILABLE:
             raise RuntimeError("LangChain or OpenAI provider not available. Install deps and set OPENAI_API_KEY.")
-        # LLM: GPT-3.5 (or better). Requires OPENAI_API_KEY env.
-        llm = ChatOpenAI(model=os.getenv("OPENAI_MODEL", "gpt-3.5-turbo"), temperature=0)
+        # LLM: Llama 3 via Ollama (run `ollama serve` and `ollama pull llama3`).
+        # You can override model via LLM_MODEL env (e.g., "llama3:8b").
+        llm = ChatOllama(model=os.getenv("LLM_MODEL", "llama3"), temperature=0)
         tools = [LocalContextTool, LiveWebSearchTool]
-        agent = initialize_agent(
+        agent = lc_initialize_agent(
             tools,
             llm,
-            agent=AgentType.OPENAI_FUNCTIONS,
+            agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
             verbose=False,
-            agent_kwargs={"system_message": SYSTEM_PROMPT},
+            agent_kwargs={"prefix": SYSTEM_PROMPT},
         )
         return agent
 
