@@ -66,6 +66,7 @@ typings/
 .env.development.local
 .env.test.local
 .env.production.local
+# .env.example SHOULD be committed (it's a template)
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -195,3 +196,28 @@ Thumbs.db
 *.bak
 *.backup
 *.old
+
+# Development and testing utilities (not needed for production)
+real-server.js
+setup.js
+simple-test.js
+test-api.js
+check-table-structure.js
+frontend-test.html
+
+# Docker files (keep these - they're needed)
+# Dockerfile
+# docker-compose.yml
+# .dockerignore
+# DOCKER_SETUP.md
+
+# Summary and documentation files (optional - can be committed if needed)
+# Uncomment the lines below if you want to exclude these documentation files:
+# COMPLETE_API_TESTING_GUIDE.md
+# curl-commands-for-postman.md
+# FINAL_SUMMARY.md
+# PROJECT_STRUCTURE.md
+# PROJECT_SUMMARY.md
+# PROPERTY_IMAGES_SUMMARY.md
+# REVIEWS_AND_BOOKINGS_SUMMARY.md
+# SAN_FRANCISCO_DATA_SUMMARY.md

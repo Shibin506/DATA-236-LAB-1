@@ -155,12 +155,51 @@ Backend/
 
 ## 🚀 **Quick Setup Guide**
 
-### **1. Prerequisites**
+### **Option 1: Docker Setup (Recommended) ⭐**
+
+**No MySQL installation required!**
+
+#### **1. Prerequisites**
+- Docker Desktop installed ([Download](https://www.docker.com/products/docker-desktop))
+- Git
+
+#### **2. Installation**
+```bash
+# Clone the repository
+git clone <repository-url>
+cd Backend
+
+# Start everything with Docker (database + backend)
+docker-compose up
+```
+
+That's it! Docker will handle everything automatically.
+
+#### **3. Populate Sample Data**
+In a new terminal window:
+```bash
+# Add sample data
+docker-compose exec backend node add-sample-data.js
+docker-compose exec backend node add-all-property-images.js
+docker-compose exec backend node add-property-reviews.js
+docker-compose exec backend node add-bookings-and-reviews.js
+```
+
+#### **4. Verify**
+Open: `http://localhost:3001/health`
+
+📖 **See `DOCKER_SETUP.md` for detailed Docker instructions**
+
+---
+
+### **Option 2: Manual Setup (If You Have MySQL)**
+
+#### **1. Prerequisites**
 - Node.js (v16 or higher)
 - MySQL database
 - Git
 
-### **2. Installation**
+#### **2. Installation**
 ```bash
 # Clone the repository
 git clone <repository-url>
@@ -174,7 +213,7 @@ cp .env.example .env
 # Edit .env with your database credentials
 ```
 
-### **3. Environment Configuration**
+#### **3. Environment Configuration**
 ```env
 DB_HOST=localhost
 DB_USER=root
@@ -186,7 +225,7 @@ NODE_ENV=development
 PORT=3001
 ```
 
-### **4. Database Setup**
+#### **4. Database Setup**
 ```bash
 # Create MySQL database
 mysql -u root -p
@@ -195,7 +234,7 @@ CREATE DATABASE airbnb_db;
 # The application will auto-create tables on startup
 ```
 
-### **5. Start the Server**
+#### **5. Start the Server**
 ```bash
 # Development mode
 npm run dev
@@ -204,7 +243,7 @@ npm run dev
 npm start
 ```
 
-### **6. Populate Sample Data**
+#### **6. Populate Sample Data**
 ```bash
 # Add sample users and properties
 node add-sample-data.js
