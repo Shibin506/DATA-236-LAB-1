@@ -126,23 +126,92 @@ router.get('/traveler/my-bookings', requireTraveler, async (req, res) => {
       queryParams.push(status);
     }
     
-    // Get traveler's bookings
-    const [bookings] = await connection.execute(
-      `SELECT b.id, b.check_in_date, b.check_out_date, b.number_of_guests, b.total_price,
-              b.status, b.special_requests, b.created_at, b.updated_at,
-              p.id as property_id, p.name as property_name, p.city, p.state, p.country,
-              p.property_type, p.price_per_night,
-              u.name as owner_name, u.email as owner_email, u.phone as owner_phone,
-              pi.image_url as property_image
-       FROM bookings b
-       JOIN properties p ON b.property_id = p.id
-       JOIN users u ON b.owner_id = u.id
-       LEFT JOIN property_images pi ON p.id = pi.property_id AND pi.image_type = 'main'
-       ${whereClause}
-       ORDER BY b.created_at DESC
-       LIMIT ${limit} OFFSET ${offset}`,
-      queryParams
-    );
+    // Get traveler's bookings with progressive fallbacks for schema differences
+    let bookings;
+    try {
+      // Attempt 1: includes property_images and join on b.owner_id
+      const [rows] = await connection.execute(
+        `SELECT b.id, b.check_in_date, b.check_out_date, b.number_of_guests, b.total_price,
+                b.status, b.special_requests, b.created_at, b.updated_at,
+                p.id as property_id, p.name as property_name, p.city, p.state, p.country,
+                p.property_type, p.price_per_night,
+                u.name as owner_name, u.email as owner_email, u.phone as owner_phone,
+                pi.image_url as property_image
+         FROM bookings b
+         JOIN properties p ON b.property_id = p.id
+         JOIN users u ON b.owner_id = u.id
+         LEFT JOIN property_images pi ON p.id = pi.property_id AND pi.image_type = 'main'
+         ${whereClause}
+         ORDER BY b.created_at DESC
+         LIMIT ${limit} OFFSET ${offset}`,
+        queryParams
+      );
+      bookings = rows;
+    } catch (err1) {
+      // Attempt 2: remove property_images join (table/column may not exist)
+      if (err1 && (err1.code === 'ER_NO_SUCH_TABLE' || err1.code === 'ER_BAD_FIELD_ERROR')) {
+        try {
+          const [rows2] = await connection.execute(
+            `SELECT b.id, b.check_in_date, b.check_out_date, b.number_of_guests, b.total_price,
+                    b.status, b.special_requests, b.created_at, b.updated_at,
+                    p.id as property_id, p.name as property_name, p.city, p.state, p.country,
+                    p.property_type, p.price_per_night,
+                    u.name as owner_name, u.email as owner_email, u.phone as owner_phone
+             FROM bookings b
+             JOIN properties p ON b.property_id = p.id
+             JOIN users u ON b.owner_id = u.id
+             ${whereClause}
+             ORDER BY b.created_at DESC
+             LIMIT ${limit} OFFSET ${offset}`,
+            queryParams
+          );
+          bookings = rows2;
+        } catch (err2) {
+          // Attempt 3: owner_id may not exist on bookings; join owner via property
+          if (err2 && err2.code === 'ER_BAD_FIELD_ERROR') {
+            try {
+              const [rows3] = await connection.execute(
+                `SELECT b.id, b.check_in_date, b.check_out_date, b.number_of_guests, b.total_price,
+                        b.status, b.special_requests,
+                        p.id as property_id, p.name as property_name, p.city, p.state, p.country,
+                        p.property_type, p.price_per_night,
+                        u.name as owner_name, u.email as owner_email, u.phone as owner_phone
+                 FROM bookings b
+                 JOIN properties p ON b.property_id = p.id
+                 JOIN users u ON p.owner_id = u.id
+                 ${whereClause}
+                 ORDER BY b.id DESC
+                 LIMIT ${limit} OFFSET ${offset}`,
+                queryParams
+              );
+              bookings = rows3;
+            } catch (err3) {
+              // Final Attempt: select minimal columns to avoid other schema diffs
+              if (err3 && err3.code === 'ER_BAD_FIELD_ERROR') {
+                const [rows4] = await connection.execute(
+                  `SELECT b.id, b.check_in_date, b.check_out_date, b.number_of_guests, b.total_price,
+                          b.status,
+                          p.id as property_id, p.name as property_name
+                   FROM bookings b
+                   JOIN properties p ON b.property_id = p.id
+                   ${whereClause}
+                   ORDER BY b.id DESC
+                   LIMIT ${limit} OFFSET ${offset}`,
+                  queryParams
+                );
+                bookings = rows4;
+              } else {
+                throw err3;
+              }
+            }
+          } else {
+            throw err2;
+          }
+        }
+      } else {
+        throw err1;
+      }
+    }
     
     // Get total count
     const [totalCount] = await connection.execute(

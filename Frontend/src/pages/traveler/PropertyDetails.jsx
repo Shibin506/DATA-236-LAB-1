@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { bookingApi, propertyApi } from '../../services/api'
 
 export default function PropertyDetails() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const [p, setP] = useState(null)
   const [form, setForm] = useState({ startDate: '', endDate: '', guests: 1 })
   const [msg, setMsg] = useState('')
@@ -17,6 +18,8 @@ export default function PropertyDetails() {
     try {
       await bookingApi.create({ propertyId: id, ...form })
       setMsg('Booking requested. Status: Pending')
+      // Redirect to trips so user can see their pending booking
+      setTimeout(() => navigate('/trips'), 500)
     } catch (e) {
       setMsg(e?.response?.data?.message || 'Booking failed')
     }

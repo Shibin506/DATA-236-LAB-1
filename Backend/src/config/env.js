@@ -1,5 +1,22 @@
 require('dotenv').config();
 
+// Build a robust list of local dev origins for CORS
+const defaultOrigins = [
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:3001',
+  'http://127.0.0.1:3001',
+  'http://localhost:3002',
+  'http://127.0.0.1:3002'
+]
+const envOrigins = (process.env.CORS_ORIGINS || process.env.FRONTEND_URL || '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean)
+const allowedOrigins = Array.from(new Set([...envOrigins, ...defaultOrigins]))
+
 const config = {
   // Database configuration
   database: {
@@ -26,33 +43,25 @@ const config = {
     cookie: {
       secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
+      sameSite: 'lax',
       maxAge: 24 * 60 * 60 * 1000 // 24 hours
     },
     name: 'airbnb.session'
   },
   
   // CORS configuration
-  cors: (() => {
-    // Support multiple frontend origins via comma-separated env FRONTEND_URLS
-    const whitelist = (process.env.FRONTEND_URLS || 'http://localhost:3000,http://localhost:3002')
-      .split(',')
-      .map(s => s.trim())
-      .filter(Boolean);
-
-    return {
-      origin: (origin, callback) => {
-        // Allow non-browser or same-origin requests without an Origin header
-        if (!origin) return callback(null, true);
-        if (whitelist.includes(origin)) return callback(null, true);
-        return callback(new Error(`Not allowed by CORS: ${origin}`));
-      },
-      credentials: true,
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cookie'],
-      optionsSuccessStatus: 204,
-      preflightContinue: false,
-    };
-  })(),
+  cors: {
+    origin: function(origin, callback) {
+      // Allow REST tools or same-origin server requests (no origin)
+      if (!origin) return callback(null, true)
+      if (allowedOrigins.includes(origin)) return callback(null, true)
+      return callback(new Error('Not allowed by CORS'))
+    },
+    credentials: true,
+    methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    exposedHeaders: ['Set-Cookie']
+  },
   
   // File upload configuration
   upload: {

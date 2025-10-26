@@ -16,9 +16,11 @@ import PropertyDetails from './pages/traveler/PropertyDetails'
 
 import HostDashboard from './pages/owner/HostDashboard'
 import HostPropertyForm from './pages/owner/HostPropertyForm'
+import HostMyProperties from './pages/owner/HostMyProperties'
 
 function PrivateRoute({ children, role }) {
-  const { user, loading } = useAuth()
+  const ctx = useAuth() || { user: null, loading: false }
+  const { user, loading } = ctx
   if (loading) return null
   if (!user) return <Navigate to="/login" replace />
   if (role && user.role !== role) return <Navigate to="/" replace />
@@ -44,6 +46,8 @@ function Shell() {
           <Route path="/host" element={<Navigate to="/host/dashboard" replace />} />
           <Route path="/host/dashboard" element={<PrivateRoute role="owner"><HostDashboard /></PrivateRoute>} />
           <Route path="/host/properties/new" element={<PrivateRoute role="owner"><HostPropertyForm /></PrivateRoute>} />
+          <Route path="/host/properties" element={<PrivateRoute role="owner"><HostMyProperties /></PrivateRoute>} />
+          <Route path="/host/properties/:id/edit" element={<PrivateRoute role="owner"><HostPropertyForm /></PrivateRoute>} />
         </Routes>
       </div>
       <Footer />

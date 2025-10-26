@@ -9,12 +9,15 @@ function StatusBadge({ status }) {
 export default function Trips() {
   const [status, setStatus] = useState('')
   const [list, setList] = useState([])
+  const [error, setError] = useState('')
 
   const load = async () => {
     try {
-      const { data } = await bookingApi.listTraveler({ status })
+      setError('')
+      const params = status ? { status } : {}
+      const { data } = await bookingApi.listTraveler(params)
       setList(data.bookings || [])
-    } catch { setList([]) }
+    } catch (e) { setList([]); setError('Failed to load trips') }
   }
 
   useEffect(() => { load() }, [status])
@@ -41,6 +44,7 @@ export default function Trips() {
           </div>
         ))}
       </div>
+      {error && <div className="alert alert-warning mt-3">{error}</div>}
       {list.length === 0 && <p>No trips to show.</p>}
     </div>
   )

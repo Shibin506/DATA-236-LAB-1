@@ -8,9 +8,9 @@ class BookingService {
     try {
       const { property_id, check_in_date, check_out_date, number_of_guests, special_requests } = bookingData;
       
-      // Check if property exists and is active
+      // Check if property exists and is active (include owner_id)
       const [properties] = await connection.execute(
-        'SELECT id, price_per_night, max_guests FROM properties WHERE id = ? AND is_active = TRUE',
+        'SELECT id, owner_id, price_per_night, max_guests FROM properties WHERE id = ? AND is_active = TRUE',
         [property_id]
       );
       
@@ -32,12 +32,30 @@ class BookingService {
       const total_price = nights * property.price_per_night;
       
       // Create booking
-      const [result] = await connection.execute(
-        `INSERT INTO bookings (property_id, traveler_id, check_in_date, check_out_date, 
-                             number_of_guests, total_price, special_requests, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
-        [property_id, travelerId, check_in_date, check_out_date, number_of_guests, total_price, special_requests]
-      );
+      let result;
+      try {
+        // Preferred schema: include owner_id column
+        [result] = await connection.execute(
+          `INSERT INTO bookings (
+            property_id, traveler_id, owner_id, check_in_date, check_out_date,
+            number_of_guests, total_price, status, special_requests, created_at, updated_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?, NOW(), NOW())`,
+          [property_id, travelerId, property.owner_id, check_in_date, check_out_date, number_of_guests, total_price, special_requests]
+        );
+      } catch (err) {
+        // Fallback schema (no owner_id/status column defaults)
+        if (err && (err.code === 'ER_BAD_FIELD_ERROR' || err.code === 'ER_WRONG_VALUE_COUNT_ON_ROW')) {
+          [result] = await connection.execute(
+            `INSERT INTO bookings (
+              property_id, traveler_id, check_in_date, check_out_date,
+              number_of_guests, total_price, special_requests, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
+            [property_id, travelerId, check_in_date, check_out_date, number_of_guests, total_price, special_requests]
+          );
+        } else {
+          throw err;
+        }
+      }
       
       return {
         id: result.insertId,
@@ -79,9 +97,9 @@ class BookingService {
         JOIN properties p ON b.property_id = p.id
         JOIN users u ON p.owner_id = u.id
         WHERE ${whereConditions.join(' AND ')}
-        ORDER BY b.created_at DESC
-        LIMIT ? OFFSET ?
-      `, [...queryParams, limitNum, offset]);
+        ORDER BY b.id DESC
+        LIMIT ${limitNum} OFFSET ${offset}
+      `, queryParams);
       
       return {
         bookings,
@@ -122,9 +140,9 @@ class BookingService {
         JOIN properties p ON b.property_id = p.id
         JOIN users u ON b.traveler_id = u.id
         WHERE ${whereConditions.join(' AND ')}
-        ORDER BY b.created_at DESC
-        LIMIT ? OFFSET ?
-      `, [...queryParams, limitNum, offset]);
+        ORDER BY b.id DESC
+        LIMIT ${limitNum} OFFSET ${offset}
+      `, queryParams);
       
       return {
         bookings,
@@ -199,11 +217,32 @@ class BookingService {
         throw new Error('Only pending bookings can be rejected');
       }
       
-      // Update booking status
-      await connection.execute(
-        'UPDATE bookings SET status = ?, cancellation_reason = ?, updated_at = NOW() WHERE id = ?',
-        ['rejected', reason, bookingId]
-      );
+      // Update booking status with robust fallback for legacy ENUM values
+      const reasonVal = (reason === undefined ? null : reason)
+      const candidates = ['rejected', 'Rejected', 'declined', 'Declined', 'cancelled', 'Cancelled', 'canceled', 'Canceled']
+      let updated = false
+      let lastErr
+      for (const status of candidates) {
+        try {
+          await connection.execute(
+            'UPDATE bookings SET status = ?, cancellation_reason = ?, updated_at = NOW() WHERE id = ?',[status, reasonVal, bookingId]
+          )
+          updated = true
+          break
+        } catch (err) {
+          lastErr = err
+          // If data truncated or bad enum, try next candidate
+          if (err && (err.code === 'WARN_DATA_TRUNCATED' || err.code === 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD' || err.code === 'ER_WRONG_VALUE_FOR_FIELD')) {
+            continue
+          }
+          // Other errors: rethrow
+          throw err
+        }
+      }
+      if (!updated) {
+        // As last resort, set to current value 'pending' to avoid inconsistent state and throw the last error
+        throw lastErr || new Error('Failed to update booking status')
+      }
       
       return { success: true };
       
@@ -234,9 +273,10 @@ class BookingService {
       }
       
       // Update booking status
+      const reasonVal = (reason === undefined ? null : reason)
       await connection.execute(
         'UPDATE bookings SET status = ?, cancellation_reason = ?, updated_at = NOW() WHERE id = ?',
-        ['cancelled', reason, bookingId]
+        ['cancelled', reasonVal, bookingId]
       );
       
       return { success: true };

@@ -38,6 +38,10 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Session configuration
 app.use(session(config.session));
 
+// Static uploads (serve uploaded property images)
+const uploadsDir = path.join(__dirname, '..', 'uploads')
+app.use('/uploads', express.static(uploadsDir))
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({

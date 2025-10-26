@@ -1,6 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { authApi } from '../services/api'
 
+const normalizeUser = (u) => {
+  if (!u) return u
+  return { ...u, role: u.role || u.user_type }
+}
+
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
@@ -9,19 +14,37 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let mounted = true
-    authApi.me().then(({ data }) => {
-      if (mounted) setUser(data.user || null)
-    }).catch(() => {}).finally(() => mounted && setLoading(false))
+    const init = async () => {
+      try {
+        const sess = await authApi.sessionInfo()
+        if (!sess?.authenticated) {
+          if (mounted) setUser(null)
+          return
+        }
+        const { data } = await authApi.me()
+        if (mounted) setUser(normalizeUser(data.user) || null)
+      } catch (e) {
+        if (mounted) setUser(null)
+      } finally {
+        if (mounted) setLoading(false)
+      }
+    }
+    init()
     return () => { mounted = false }
   }, [])
 
   const login = async (email, password, role) => {
     const { data } = await authApi.login({ email, password, role })
-    setUser(data.user)
+    setUser(normalizeUser(data.user))
   }
   const logout = async () => {
-    await authApi.logout()
-    setUser(null)
+    try {
+      await authApi.logout()
+    } catch (e) {
+      // Even if the API call fails (e.g., session already gone), force client logout state
+    } finally {
+      setUser(null)
+    }
   }
 
   return (

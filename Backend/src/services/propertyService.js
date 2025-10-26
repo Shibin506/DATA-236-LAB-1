@@ -61,7 +61,7 @@ class PropertyService {
       // Add images for each property
       for (const property of properties) {
         const [images] = await connection.execute(
-          'SELECT image_url, image_type, display_order FROM property_images WHERE property_id = ? ORDER BY display_order',
+          'SELECT id, image_url, image_type, created_at FROM property_images WHERE property_id = ? ORDER BY created_at',
           [property.id]
         );
         property.images = images;
@@ -143,7 +143,7 @@ class PropertyService {
       // Add images for each property
       for (const property of properties) {
         const [images] = await connection.execute(
-          'SELECT image_url, image_type, display_order FROM property_images WHERE property_id = ? ORDER BY display_order',
+          'SELECT id, image_url, image_type, created_at FROM property_images WHERE property_id = ? ORDER BY created_at',
           [property.id]
         );
         property.images = images;
@@ -183,7 +183,7 @@ class PropertyService {
       
       // Add images for the property
       const [images] = await connection.execute(
-        'SELECT image_url, image_type, display_order FROM property_images WHERE property_id = ? ORDER BY display_order',
+        'SELECT id, image_url, image_type, created_at FROM property_images WHERE property_id = ? ORDER BY created_at',
         [propertyId]
       );
       property.images = images;
@@ -192,6 +192,41 @@ class PropertyService {
       
     } finally {
       connection.release();
+    }
+  }
+
+  // Add property images (expects array of { image_url, image_type })
+  async addPropertyImages(propertyId, images) {
+    const connection = await pool.getConnection();
+    try {
+      const insertValues = images.map(img => [propertyId, img.image_url, img.image_type || 'gallery'])
+      if (insertValues.length === 0) return []
+      const [result] = await connection.query(
+        'INSERT INTO property_images (property_id, image_url, image_type) VALUES ?',[insertValues]
+      )
+      return result
+    } finally {
+      connection.release()
+    }
+  }
+
+  async getPropertyImageById(imageId) {
+    const connection = await pool.getConnection();
+    try {
+      const [rows] = await connection.execute('SELECT * FROM property_images WHERE id = ?', [imageId])
+      return rows[0]
+    } finally {
+      connection.release()
+    }
+  }
+
+  async deletePropertyImage(propertyId, imageId) {
+    const connection = await pool.getConnection();
+    try {
+      await connection.execute('DELETE FROM property_images WHERE id = ? AND property_id = ?', [imageId, propertyId])
+      return { success: true }
+    } finally {
+      connection.release()
     }
   }
   

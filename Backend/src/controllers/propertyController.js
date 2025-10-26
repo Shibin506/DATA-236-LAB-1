@@ -1,4 +1,6 @@
 const propertyService = require('../services/propertyService');
+const path = require('path');
+const fs = require('fs');
 
 class PropertyController {
   // Get all properties
@@ -17,6 +19,40 @@ class PropertyController {
         success: false,
         message: 'Failed to get properties'
       });
+    }
+  }
+
+  // Upload images for a property
+  async uploadImages(req, res) {
+    try {
+      const { id } = req.params
+      const files = req.files || []
+      if (!files.length) {
+        return res.status(400).json({ success: false, message: 'No images uploaded' })
+      }
+      const images = files.map(f => ({ image_url: `/uploads/properties/${path.basename(f.path)}`, image_type: 'gallery' }))
+      await propertyService.addPropertyImages(id, images)
+      res.json({ success: true, message: 'Images uploaded', data: { images } })
+    } catch (error) {
+      console.error('Upload images error:', error)
+      res.status(400).json({ success: false, message: 'Failed to upload images' })
+    }
+  }
+
+  async deleteImage(req, res) {
+    try {
+      const { id, imageId } = req.params
+      // Find image to remove physical file
+      const img = await propertyService.getPropertyImageById(imageId)
+      await propertyService.deletePropertyImage(id, imageId)
+      if (img && img.image_url) {
+        const filePath = path.join(__dirname, '..', img.image_url)
+        fs.unlink(filePath, () => {})
+      }
+      res.json({ success: true, message: 'Image deleted' })
+    } catch (error) {
+      console.error('Delete image error:', error)
+      res.status(400).json({ success: false, message: 'Failed to delete image' })
     }
   }
   
