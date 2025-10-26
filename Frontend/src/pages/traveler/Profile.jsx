@@ -6,14 +6,16 @@ const countries = ['United States','Canada','United Kingdom','India','Australia'
 export default function Profile() {
   const [form, setForm] = useState({ name:'', email:'', phone:'', about:'', city:'', state:'', country:'United States', languages:'', gender:'' })
   const [avatar, setAvatar] = useState(null)
+  const [currentAvatar, setCurrentAvatar] = useState('')
   const [msg, setMsg] = useState('')
 
   useEffect(() => {
     userApi.getProfile().then(({data}) => {
       const u = data.user || {}
       setForm({
-        name: u.name||'', email: u.email||'', phone: u.phone||'', about: u.about||'', city: u.city||'', state: u.state||'', country: u.country||'United States', languages: u.languages||'', gender: u.gender||''
+        name: u.name||'', email: u.email||'', phone: u.phone||'', about: u.about_me||u.about||'', city: u.city||'', state: u.state||'', country: u.country||'United States', languages: u.languages||'', gender: u.gender||''
       })
+      setCurrentAvatar(u.profile_picture || '')
     }).catch(()=>{})
   }, [])
 
@@ -23,7 +25,11 @@ export default function Profile() {
     setMsg('')
     try {
       await userApi.updateProfile(form)
-      if (avatar) await userApi.uploadAvatar(avatar)
+      if (avatar) {
+        const res = await userApi.uploadAvatar(avatar)
+        const url = res?.data?.profile_picture
+        if (url) setCurrentAvatar(url)
+      }
       setMsg('Profile updated')
     } catch {
       setMsg('Update failed')
@@ -38,6 +44,16 @@ export default function Profile() {
 
         <form onSubmit={onSubmit}>
           <div className="row g-3">
+            <div className="col-12 d-flex align-items-center gap-3">
+              {currentAvatar ? (
+                <img src={currentAvatar} alt="avatar" style={{width:64,height:64,borderRadius:'50%',objectFit:'cover',border:'1px solid #ddd'}} />
+              ) : (
+                <div style={{width:64,height:64,borderRadius:'50%',background:'#f0f0f0',border:'1px solid #ddd'}} />
+              )}
+              {currentAvatar && (
+                <button type="button" className="btn btn-sm btn-outline-danger" onClick={async()=>{ try{ await userApi.deleteAvatar(); setCurrentAvatar('') }catch{} }}>Remove</button>
+              )}
+            </div>
             <div className="col-md-6">
               <label className="form-label">Name</label>
               <input className="form-control" name="name" value={form.name} onChange={onChange} />

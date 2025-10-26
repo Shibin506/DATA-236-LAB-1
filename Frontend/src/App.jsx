@@ -30,6 +30,7 @@ function PrivateRoute({ children, role }) {
 function Shell() {
   const navigate = useNavigate()
   const [showAgent, setShowAgent] = React.useState(false)
+  const { user } = useAuth() || {}
   return (
     <div className="d-flex flex-column min-vh-100">
       <Navbar />
@@ -51,8 +52,12 @@ function Shell() {
         </Routes>
       </div>
       <Footer />
-      <AgentAIBubble onClick={() => setShowAgent(true)} />
-      <AgentAIModal show={showAgent} onClose={() => setShowAgent(false)} />
+      {user && user.role !== 'owner' && (
+        <>
+          <AgentAIBubble onClick={() => setShowAgent(true)} />
+          <AgentAIModal show={showAgent} onClose={() => setShowAgent(false)} />
+        </>
+      )}
     </div>
   )
 }

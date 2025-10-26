@@ -24,8 +24,7 @@ export default function Navbar() {
         </Link>
 
         <div className="d-flex align-items-center ms-auto">
-          <Link className="btn btn-outline-secondary me-2" to="/host">Switch to hosting</Link>
-      {user ? (
+  {user ? (
             <div className="dropdown">
               <button className="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
                 {user.name || user.email}
