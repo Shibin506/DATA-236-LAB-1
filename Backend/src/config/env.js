@@ -32,10 +32,27 @@ const config = {
   },
   
   // CORS configuration
-  cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-    credentials: true
-  },
+  cors: (() => {
+    // Support multiple frontend origins via comma-separated env FRONTEND_URLS
+    const whitelist = (process.env.FRONTEND_URLS || 'http://localhost:3000,http://localhost:3002')
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    return {
+      origin: (origin, callback) => {
+        // Allow non-browser or same-origin requests without an Origin header
+        if (!origin) return callback(null, true);
+        if (whitelist.includes(origin)) return callback(null, true);
+        return callback(new Error(`Not allowed by CORS: ${origin}`));
+      },
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cookie'],
+      optionsSuccessStatus: 204,
+      preflightContinue: false,
+    };
+  })(),
   
   // File upload configuration
   upload: {

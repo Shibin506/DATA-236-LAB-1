@@ -37,10 +37,18 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // CORS configuration
+const frontendWhitelist = (process.env.FRONTEND_URLS || 'http://localhost:3000,http://localhost:3002')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean)
+
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-frontend-domain.com'] 
-    : true, // Allow all origins in development
+  origin: (origin, callback) => {
+    // Allow non-browser or same-origin requests (no Origin header)
+    if (!origin) return callback(null, true)
+    if (frontendWhitelist.includes(origin)) return callback(null, true)
+    return callback(new Error(`Not allowed by CORS: ${origin}`))
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cookie']

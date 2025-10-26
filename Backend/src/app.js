@@ -28,6 +28,8 @@ app.use(rateLimit(config.rateLimit));
 
 // CORS configuration
 app.use(cors(config.cors));
+// Explicitly handle preflight for all routes
+app.options('*', cors(config.cors));
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
