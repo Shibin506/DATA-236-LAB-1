@@ -154,124 +154,47 @@ async function addSampleData() {
     
     log(`✅ Added ${users.length} users (3 travelers, 3 owners)`, 'green');
     
-    // 2. Add Properties
+    // 2. Add Properties (20 San Francisco listings, all owned by Jane Owner)
     log('\n🏠 Adding Properties...', 'cyan');
-    
+
     const properties = [
-      {
-        owner_id: 4, // Jane Owner
-        name: 'Beautiful Downtown Apartment',
-        description: 'A stunning modern apartment in the heart of downtown with amazing city views. Perfect for business travelers and tourists alike.',
-        property_type: 'apartment',
-        address: '123 Main Street, New York, NY 10001',
-        city: 'New York',
-        state: 'NY',
-        country: 'USA',
-        price_per_night: 150.00,
-        bedrooms: 2,
-        bathrooms: 1,
-        max_guests: 4,
-        amenities: 'WiFi, Kitchen, Parking, Pool, Gym, Air Conditioning',
-        house_rules: 'No smoking, No pets, Check-in after 3 PM, Check-out before 11 AM',
-        availability_start: '2024-01-01',
-        availability_end: '2024-12-31',
-        is_active: true
-      },
-      {
-        owner_id: 4, // Jane Owner
-        name: 'Cozy Brooklyn Loft',
-        description: 'Charming loft in trendy Brooklyn with exposed brick walls and modern amenities.',
-        property_type: 'loft',
-        address: '456 Brooklyn Ave, Brooklyn, NY 11201',
-        city: 'Brooklyn',
-        state: 'NY',
-        country: 'USA',
-        price_per_night: 120.00,
-        bedrooms: 1,
-        bathrooms: 1,
-        max_guests: 2,
-        amenities: 'WiFi, Kitchen, Washer, Dryer, Air Conditioning',
-        house_rules: 'No smoking, No pets, Quiet hours after 10 PM',
-        availability_start: '2024-01-01',
-        availability_end: '2024-12-31',
-        is_active: true
-      },
-      {
-        owner_id: 5, // Robert Host
-        name: 'Luxury Miami Beach Villa',
-        description: 'Stunning beachfront villa with private pool and direct beach access. Perfect for luxury getaways.',
-        property_type: 'villa',
-        address: '789 Ocean Drive, Miami Beach, FL 33139',
-        city: 'Miami Beach',
-        state: 'FL',
-        country: 'USA',
-        price_per_night: 400.00,
-        bedrooms: 4,
-        bathrooms: 3,
-        max_guests: 8,
-        amenities: 'WiFi, Kitchen, Pool, Hot Tub, Gym, Beach Access, Concierge',
-        house_rules: 'No smoking, No pets, No parties, Respect neighbors',
-        availability_start: '2024-01-01',
-        availability_end: '2024-12-31',
-        is_active: true
-      },
-      {
-        owner_id: 5, // Robert Host
-        name: 'Modern Miami Condo',
-        description: 'Sleek modern condo with floor-to-ceiling windows and city views.',
-        property_type: 'condo',
-        address: '321 Biscayne Blvd, Miami, FL 33132',
-        city: 'Miami',
-        state: 'FL',
-        country: 'USA',
-        price_per_night: 200.00,
-        bedrooms: 2,
-        bathrooms: 2,
-        max_guests: 4,
-        amenities: 'WiFi, Kitchen, Pool, Gym, Parking, Balcony',
-        house_rules: 'No smoking, No pets, No loud music',
-        availability_start: '2024-01-01',
-        availability_end: '2024-12-31',
-        is_active: true
-      },
-      {
-        owner_id: 6, // Lisa Property Manager
-        name: 'Charming LA Studio',
-        description: 'Artistic studio in the heart of Los Angeles, perfect for creative professionals.',
-        property_type: 'studio',
-        address: '654 Sunset Blvd, Los Angeles, CA 90028',
-        city: 'Los Angeles',
-        state: 'CA',
-        country: 'USA',
-        price_per_night: 100.00,
-        bedrooms: 0,
-        bathrooms: 1,
-        max_guests: 2,
-        amenities: 'WiFi, Kitchenette, Air Conditioning, Workspace',
-        house_rules: 'No smoking, No pets, Keep noise down',
-        availability_start: '2024-01-01',
-        availability_end: '2024-12-31',
-        is_active: true
-      },
-      {
-        owner_id: 6, // Lisa Property Manager
-        name: 'Hollywood Hills House',
-        description: 'Beautiful house in Hollywood Hills with panoramic city views and private garden.',
-        property_type: 'house',
-        address: '987 Mulholland Drive, Los Angeles, CA 90046',
-        city: 'Los Angeles',
-        state: 'CA',
-        country: 'USA',
-        price_per_night: 300.00,
-        bedrooms: 3,
-        bathrooms: 2,
-        max_guests: 6,
-        amenities: 'WiFi, Kitchen, Pool, Garden, Parking, Mountain Views',
-        house_rules: 'No smoking, No pets, No parties, Respect the neighborhood',
-        availability_start: '2024-01-01',
-        availability_end: '2024-12-31',
-        is_active: true
-      }
+      // Mission District
+      { owner_id: 4, name: 'Modern Mission Loft with City Views', description: 'Stylish loft with skyline views in the heart of the Mission. Walk to cafes and nightlife.', property_type: 'apartment', address: 'Mission District, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 180.00, bedrooms: 2, bathrooms: 1, max_guests: 4, amenities: 'WiFi, Kitchen, Washer, Dryer, Air Conditioning, Heating', house_rules: 'No smoking, No parties, Quiet hours after 10 PM', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+      { owner_id: 4, name: 'Charming Victorian in Mission', description: 'Classic Victorian with modern comfort on a tree-lined Mission block.', property_type: 'house', address: 'Mission District, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 220.00, bedrooms: 3, bathrooms: 2, max_guests: 6, amenities: 'WiFi, Kitchen, Washer, Dryer, Heating', house_rules: 'No smoking, No parties', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+      { owner_id: 4, name: 'Trendy Mission Apartment', description: 'Cozy and bright apartment near Valencia Street.', property_type: 'apartment', address: 'Mission District, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 160.00, bedrooms: 1, bathrooms: 1, max_guests: 2, amenities: 'WiFi, Kitchen, Heating', house_rules: 'No smoking', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+
+      // Castro
+      { owner_id: 4, name: 'Elegant Castro Victorian', description: 'Sun-filled Victorian home steps from Castro’s best spots.', property_type: 'house', address: 'Castro, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 240.00, bedrooms: 3, bathrooms: 2, max_guests: 6, amenities: 'WiFi, Kitchen, Washer, Dryer, Heating', house_rules: 'No smoking', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+      { owner_id: 4, name: 'Castro Studio with Garden', description: 'Quiet studio with shared garden in the Castro.', property_type: 'studio', address: 'Castro, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 130.00, bedrooms: 0, bathrooms: 1, max_guests: 2, amenities: 'WiFi, Kitchenette, Heating', house_rules: 'No smoking', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+
+      // SOMA
+      { owner_id: 4, name: 'Luxury SOMA Penthouse', description: 'Penthouse with floor-to-ceiling windows and city lights.', property_type: 'condo', address: 'SOMA, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 350.00, bedrooms: 2, bathrooms: 2, max_guests: 4, amenities: 'WiFi, Kitchen, Parking, Gym, Air Conditioning', house_rules: 'No parties', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+      { owner_id: 4, name: 'Modern SOMA Loft', description: 'Open-concept loft close to startups and nightlife.', property_type: 'loft', address: 'SOMA, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 200.00, bedrooms: 1, bathrooms: 1, max_guests: 2, amenities: 'WiFi, Kitchen, Heating, Air Conditioning', house_rules: 'No smoking', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+      { owner_id: 4, name: 'SOMA Tech Apartment', description: 'Smart apartment with fast WiFi and workspace.', property_type: 'apartment', address: 'SOMA, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 170.00, bedrooms: 1, bathrooms: 1, max_guests: 2, amenities: 'WiFi, Kitchen, Workspace, Heating', house_rules: 'No smoking', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+
+      // North Beach
+      { owner_id: 4, name: 'Charming North Beach Apartment', description: 'Classic walk-up near cafes and the waterfront.', property_type: 'apartment', address: 'North Beach, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 190.00, bedrooms: 2, bathrooms: 1, max_guests: 4, amenities: 'WiFi, Kitchen, Heating', house_rules: 'No smoking', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+      { owner_id: 4, name: 'Historic North Beach Studio', description: 'Cozy studio in historic North Beach alley.', property_type: 'studio', address: 'North Beach, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 140.00, bedrooms: 0, bathrooms: 1, max_guests: 2, amenities: 'WiFi, Kitchenette, Heating', house_rules: 'No smoking', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+
+      // Haight-Ashbury
+      { owner_id: 4, name: 'Colorful Haight Victorian', description: 'Vibrant Victorian close to the park.', property_type: 'house', address: 'Haight-Ashbury, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 230.00, bedrooms: 3, bathrooms: 2, max_guests: 6, amenities: 'WiFi, Kitchen, Washer, Dryer, Heating', house_rules: 'No parties', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+      { owner_id: 4, name: 'Bohemian Haight Apartment', description: 'Artsy apartment with bay windows.', property_type: 'apartment', address: 'Haight-Ashbury, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 175.00, bedrooms: 1, bathrooms: 1, max_guests: 3, amenities: 'WiFi, Kitchen, Heating', house_rules: 'No smoking', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+
+      // Marina District
+      { owner_id: 4, name: 'Marina Bay View Apartment', description: 'Bright apartment with bay views and balcony.', property_type: 'apartment', address: 'Marina District, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 260.00, bedrooms: 2, bathrooms: 2, max_guests: 4, amenities: 'WiFi, Kitchen, Parking, Heating', house_rules: 'No smoking', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+      { owner_id: 4, name: 'Luxury Marina Condo', description: 'Spacious condo near the Marina Green.', property_type: 'condo', address: 'Marina District, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 300.00, bedrooms: 3, bathrooms: 2, max_guests: 6, amenities: 'WiFi, Kitchen, Parking, Heating', house_rules: 'No parties', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+
+      // Pacific Heights
+      { owner_id: 4, name: 'Elegant Pacific Heights Mansion', description: 'Grand home with high ceilings and views.', property_type: 'house', address: 'Pacific Heights, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 420.00, bedrooms: 5, bathrooms: 4, max_guests: 10, amenities: 'WiFi, Kitchen, Washer, Dryer, Heating', house_rules: 'No parties', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+      { owner_id: 4, name: 'Chic Pacific Heights Apartment', description: 'Elegant apartment on a quiet block.', property_type: 'apartment', address: 'Pacific Heights, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 250.00, bedrooms: 2, bathrooms: 1, max_guests: 4, amenities: 'WiFi, Kitchen, Heating', house_rules: 'No smoking', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+
+      // Russian Hill
+      { owner_id: 4, name: 'Historic Russian Hill Apartment', description: 'Classic apartment on a scenic hill street.', property_type: 'apartment', address: 'Russian Hill, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 210.00, bedrooms: 2, bathrooms: 1, max_guests: 4, amenities: 'WiFi, Kitchen, Heating', house_rules: 'No smoking', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+      { owner_id: 4, name: 'Russian Hill Studio with Views', description: 'Studio with postcard city views.', property_type: 'studio', address: 'Russian Hill, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 160.00, bedrooms: 0, bathrooms: 1, max_guests: 2, amenities: 'WiFi, Kitchenette, Heating', house_rules: 'No smoking', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+
+      // Sunset
+      { owner_id: 4, name: 'Sunset Family Home', description: 'Family-friendly home near Golden Gate Park.', property_type: 'house', address: 'Sunset District, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 260.00, bedrooms: 3, bathrooms: 2, max_guests: 6, amenities: 'WiFi, Kitchen, Washer, Dryer, Heating', house_rules: 'No parties', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
+      { owner_id: 4, name: 'Sunset Apartment Near Beach', description: 'Sunny apartment close to Ocean Beach.', property_type: 'apartment', address: 'Sunset District, San Francisco, CA', city: 'San Francisco', state: 'CA', country: 'USA', price_per_night: 160.00, bedrooms: 1, bathrooms: 1, max_guests: 2, amenities: 'WiFi, Kitchen, Heating', house_rules: 'No smoking', availability_start: '2024-01-01', availability_end: '2025-12-31', is_active: true },
     ];
     
     for (const property of properties) {
@@ -289,30 +212,8 @@ async function addSampleData() {
     
     log(`✅ Added ${properties.length} properties`, 'green');
     
-    // 3. Add Property Images
-    log('\n📸 Adding Property Images...', 'cyan');
-    
-    const propertyImages = [
-      { property_id: 1, image_url: '/uploads/properties/property-1-main.jpg', image_type: 'main', display_order: 1 },
-      { property_id: 1, image_url: '/uploads/properties/property-1-gallery1.jpg', image_type: 'gallery', display_order: 2 },
-      { property_id: 1, image_url: '/uploads/properties/property-1-gallery2.jpg', image_type: 'gallery', display_order: 3 },
-      { property_id: 2, image_url: '/uploads/properties/property-2-main.jpg', image_type: 'main', display_order: 1 },
-      { property_id: 2, image_url: '/uploads/properties/property-2-gallery1.jpg', image_type: 'gallery', display_order: 2 },
-      { property_id: 3, image_url: '/uploads/properties/property-3-main.jpg', image_type: 'main', display_order: 1 },
-      { property_id: 3, image_url: '/uploads/properties/property-3-gallery1.jpg', image_type: 'gallery', display_order: 2 },
-      { property_id: 4, image_url: '/uploads/properties/property-4-main.jpg', image_type: 'main', display_order: 1 },
-      { property_id: 5, image_url: '/uploads/properties/property-5-main.jpg', image_type: 'main', display_order: 1 },
-      { property_id: 6, image_url: '/uploads/properties/property-6-main.jpg', image_type: 'main', display_order: 1 }
-    ];
-    
-    for (const image of propertyImages) {
-      await connection.execute(
-        'INSERT INTO property_images (property_id, image_url, image_type, display_order) VALUES (?, ?, ?, ?)',
-        [image.property_id, image.image_url, image.image_type, image.display_order]
-      );
-    }
-    
-    log(`✅ Added ${propertyImages.length} property images`, 'green');
+    // 3. Property images will be added via add-property-images.js to keep concerns separated
+    log('\n📸 Skipping direct property image inserts here. Use add-property-images.js to load images.', 'cyan');
     
     // 4. Add Bookings
     log('\n📅 Adding Bookings...', 'cyan');
@@ -331,12 +232,12 @@ async function addSampleData() {
       },
       {
         traveler_id: 2, // Sarah Explorer
-        property_id: 3, // Luxury Miami Beach Villa
-        owner_id: 5, // Robert Host
+        property_id: 3, // Trendy Mission Apartment
+        owner_id: 4, // Jane Owner
         check_in_date: '2024-02-15',
         check_out_date: '2024-02-20',
         number_of_guests: 4,
-        total_price: 2000.00,
+        total_price: 1000.00,
         status: 'pending',
         special_requests: 'Anniversary celebration'
       },
@@ -353,23 +254,23 @@ async function addSampleData() {
       },
       {
         traveler_id: 1, // John Traveler
-        property_id: 5, // Charming LA Studio
-        owner_id: 6, // Lisa Property Manager
+        property_id: 5, // Elegant Castro Victorian
+        owner_id: 4, // Jane Owner
         check_in_date: '2024-03-01',
         check_out_date: '2024-03-07',
         number_of_guests: 1,
-        total_price: 600.00,
+        total_price: 1380.00,
         status: 'cancelled',
         special_requests: 'Change of plans'
       },
       {
         traveler_id: 2, // Sarah Explorer
-        property_id: 6, // Hollywood Hills House
-        owner_id: 6, // Lisa Property Manager
+        property_id: 6, // Luxury SOMA Penthouse
+        owner_id: 4, // Jane Owner
         check_in_date: '2024-03-15',
         check_out_date: '2024-03-22',
         number_of_guests: 3,
-        total_price: 2100.00,
+        total_price: 2450.00,
         status: 'accepted',
         special_requests: 'Family vacation'
       }

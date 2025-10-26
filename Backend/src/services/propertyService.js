@@ -308,10 +308,11 @@ class PropertyService {
   }
   
   // Delete property
-  async deleteProperty(propertyId, ownerId) {
+  async deleteProperty(propertyId, ownerId, hardDelete = false) {
     const connection = await pool.getConnection();
     
     try {
+      await connection.beginTransaction()
       // Check if property exists and belongs to user
       const [properties] = await connection.execute(
         'SELECT id FROM properties WHERE id = ? AND owner_id = ?',
@@ -322,15 +323,25 @@ class PropertyService {
         throw new Error('Property not found or you do not have permission to delete it');
       }
       
-      // Soft delete
-      await connection.execute(
-        'UPDATE properties SET is_active = FALSE, updated_at = NOW() WHERE id = ?',
-        [propertyId]
-      );
-      
+      if (hardDelete) {
+        // Hard delete: remove dependents then the property
+        await connection.execute('DELETE FROM property_images WHERE property_id = ?', [propertyId])
+        await connection.execute('DELETE FROM favorites WHERE property_id = ?', [propertyId])
+        await connection.execute('DELETE FROM reviews WHERE property_id = ?', [propertyId])
+        await connection.execute('DELETE FROM bookings WHERE property_id = ?', [propertyId])
+        await connection.execute('DELETE FROM properties WHERE id = ?', [propertyId])
+      } else {
+        // Soft delete
+        await connection.execute(
+          'UPDATE properties SET is_active = FALSE, updated_at = NOW() WHERE id = ?',
+          [propertyId]
+        );
+      }
+      await connection.commit()
       return { success: true };
       
     } finally {
+      try { await connection.rollback() } catch (_) {}
       connection.release();
     }
   }

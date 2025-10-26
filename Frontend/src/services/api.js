@@ -253,7 +253,7 @@ export const propertyApi = {
     })()
   },
   deleteImage: (propertyId, imageId) => MOCK ? Promise.resolve({}) : api.delete(`/properties/${propertyId}/images/${imageId}`),
-  remove: (id) => MOCK ? Promise.resolve({}) : api.delete(`/properties/${id}`),
+  remove: (id, params) => MOCK ? Promise.resolve({}) : api.delete(`/properties/${id}`, { params }),
 }
 
 // Bookings endpoints (backend):
@@ -378,16 +378,18 @@ export const favoriteApi = {
     if (MOCK) return Promise.resolve({ data: { favorites: [] }})
     try {
       const res = await api.get('/favorites', { params })
-      // Normalize to property-shaped items so UI has id/coverImage/pricePerNight/location
       const items = Array.isArray(res.data?.favorites) ? res.data.favorites : (Array.isArray(res.data) ? res.data : [])
       const favorites = items.map((p) => {
         const propertyLike = {
           ...p,
-          id: p.id ?? p.property_id, // prefer property id for links/cards
+          // IMPORTANT: For favorites rows, p.id is the favorites.id.
+          // We want the UI card to operate on the actual property id.
+          id: p.property_id ?? p.id,
+          favorite_id: p.id ?? p.favorite_id,
+          favorite: true,
           pricePerNight: p.pricePerNight ?? p.price_per_night,
           location: p.location || [p.city, p.state, p.country].filter(Boolean).join(', ')
         }
-        // If backend provided a representative image_url, surface it as images array for normalization
         if (p.image_url) {
           propertyLike.images = [{ image_url: p.image_url, image_type: 'main' }]
         }
@@ -402,7 +404,9 @@ export const favoriteApi = {
         const favorites = items.map((p) => {
           const propertyLike = {
             ...p,
-            id: p.id ?? p.property_id,
+            id: p.property_id ?? p.id,
+            favorite_id: p.id ?? p.favorite_id,
+            favorite: true,
             pricePerNight: p.pricePerNight ?? p.price_per_night,
             location: p.location || [p.city, p.state, p.country].filter(Boolean).join(', ')
           }
@@ -432,7 +436,7 @@ export const favoriteApi = {
     }
   },
   remove: (propertyId) => MOCK ? Promise.resolve({}) : api.delete(`/favorites/${propertyId}`),
-  // Toggle convenience wrapper: try POST (body-style), on conflict do DELETE; includes fallbacks
+  // Toggle convenience wrapper: try POST first, if 409 then DELETE. Avoid re-adding if delete fails.
   toggle: async (propertyId) => {
     if (MOCK) return Promise.resolve({})
     try {
@@ -441,7 +445,7 @@ export const favoriteApi = {
     } catch (err) {
       const status = err?.response?.status
       if (status === 409) {
-        // Already favorited -> remove
+        // Already favorited -> try remove; if removal fails, surface error (do not re-add)
         return api.delete(`/favorites/${propertyId}`)
       }
       if (status === 404 || status === 405) {
@@ -455,9 +459,7 @@ export const favoriteApi = {
           throw err2
         }
       }
-      // Last resort: try DELETE then POST path
-      try { await api.delete(`/favorites/${propertyId}`) } catch (_) {}
-      return api.post(`/favorites/${propertyId}`)
+      throw err
     }
   },
   count: async () => {

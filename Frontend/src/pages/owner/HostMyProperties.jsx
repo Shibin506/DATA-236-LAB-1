@@ -17,6 +17,7 @@ export default function HostMyProperties() {
       const propsRes = await propertyApi.ownerMyProperties()
       const props = propsRes?.data?.properties || []
       setProperties(props)
+      setEditAvail({})
       try {
         const bookingsRes = await bookingApi.listOwnerRequests()
         const bookings = bookingsRes?.data?.bookings || []
@@ -77,13 +78,39 @@ export default function HostMyProperties() {
   }
 
   const removeProperty = async (p) => {
-    const ok = window.confirm(`You are deleting the property "${p.name}". This action will remove it from listings. Continue?`)
+    const ok = window.confirm(`You are deleting the property "${p.name}". This will remove it from listings.\n\nChoose OK to permanently delete.`)
     if (!ok) return
     try {
-      await propertyApi.remove(p.id)
+      // Permanently delete (backend will cascade dependent records)
+      await propertyApi.remove(p.id, { hard: true })
       await load()
     } catch (e) {
       alert('Failed to delete the property. Please try again.')
+    }
+  }
+
+  const [editAvail, setEditAvail] = useState({})
+  const setAvail = (id, field, value) => setEditAvail(prev => ({ ...prev, [id]: { ...(prev[id]||{}), [field]: value } }))
+  const saveAvailability = async (p) => {
+    const pending = editAvail[p.id] || {}
+    const availability_start = (pending.availability_start ?? (p.availability_start||'')).slice(0,10)
+    const availability_end = (pending.availability_end ?? (p.availability_end||'')).slice(0,10)
+
+    if (!availability_start || !availability_end) {
+      window.alert('Please select both start and end dates.')
+      return
+    }
+    if (new Date(availability_start) > new Date(availability_end)) {
+      window.alert('Start date cannot be after end date.')
+      return
+    }
+
+    try {
+      await propertyApi.update(p.id, { availability_start, availability_end })
+      await load()
+      window.alert('Availability updated successfully.')
+    } catch (e) {
+      window.alert('Failed to update availability. Please try again.')
     }
   }
 
@@ -113,6 +140,21 @@ export default function HostMyProperties() {
                   {p.description && <div className="mt-2" style={{maxWidth:600}}>{p.description}</div>}
                   <div className="mt-2">
                     <span className={`badge ${p.is_active ? 'bg-success' : 'bg-secondary'}`}>{p.is_active ? 'Active' : 'Disabled'}</span>
+                  </div>
+                  <div className="mt-2 d-flex align-items-center gap-2">
+                    <div>
+                      <small className="text-muted d-block">Available from</small>
+                      <input type="date" className="form-control" style={{maxWidth:180}}
+                        value={(editAvail[p.id]?.availability_start ?? (p.availability_start||'').slice(0,10))}
+                        onChange={e=>setAvail(p.id,'availability_start', e.target.value)} />
+                    </div>
+                    <div>
+                      <small className="text-muted d-block">Available until</small>
+                      <input type="date" className="form-control" style={{maxWidth:180}}
+                        value={(editAvail[p.id]?.availability_end ?? (p.availability_end||'').slice(0,10))}
+                        onChange={e=>setAvail(p.id,'availability_end', e.target.value)} />
+                    </div>
+                    <button className="btn btn-sm btn-outline-primary mt-4" onClick={()=>saveAvailability(p)}>Save availability</button>
                   </div>
                 </div>
                 <div className="btn-group">

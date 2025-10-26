@@ -139,11 +139,12 @@ class PropertyController {
   async deleteProperty(req, res) {
     try {
       const { id } = req.params;
-      await propertyService.deleteProperty(id, req.userId);
+      const hard = String(req.query.hard || '').toLowerCase() === 'true'
+      await propertyService.deleteProperty(id, req.userId, hard);
       
       res.json({
         success: true,
-        message: 'Property deleted successfully'
+        message: hard ? 'Property permanently deleted' : 'Property deleted successfully'
       });
       
     } catch (error) {

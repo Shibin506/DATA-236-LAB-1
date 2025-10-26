@@ -81,12 +81,36 @@ class FavoriteService {
       // Note: Some MySQL setups error on binding LIMIT/OFFSET as parameters in prepared statements.
       // Embed sanitized numbers directly to avoid HY000 ER_WRONG_ARGUMENTS.
       const [favorites] = await connection.execute(`
-        SELECT f.id, f.created_at, p.id as property_id, p.name, p.description, p.property_type,
-               p.address, p.city, p.state, p.country, p.price_per_night, p.bedrooms, p.bathrooms,
-               p.max_guests, p.amenities, u.name as owner_name
+        SELECT 
+          f.id,
+          f.created_at,
+          p.id AS property_id,
+          p.name,
+          p.description,
+          p.property_type,
+          p.address,
+          p.city,
+          p.state,
+          p.country,
+          p.price_per_night,
+          p.bedrooms,
+          p.bathrooms,
+          p.max_guests,
+          p.amenities,
+          u.name AS owner_name,
+          COALESCE(pi_main.image_url, pi_first.image_url) AS image_url
         FROM favorites f
         JOIN properties p ON f.property_id = p.id
         JOIN users u ON p.owner_id = u.id
+        LEFT JOIN property_images pi_main 
+          ON pi_main.property_id = p.id AND pi_main.image_type = 'main'
+        LEFT JOIN (
+          SELECT pi.property_id, MIN(pi.id) AS min_id
+          FROM property_images pi
+          GROUP BY pi.property_id
+        ) first_img ON first_img.property_id = p.id
+        LEFT JOIN property_images pi_first 
+          ON pi_first.property_id = first_img.property_id AND pi_first.id = first_img.min_id
         WHERE f.${userCol} = ? AND p.is_active = TRUE
         ORDER BY f.created_at DESC
         LIMIT ${limitNum} OFFSET ${offset}
