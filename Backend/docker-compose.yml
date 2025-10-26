@@ -1,0 +1,83 @@
+# Docker Compose for Airbnb Backend
+# Environment variables are loaded from .env file
+# Copy .env.example to .env and update with your values
+# Default values (after the :-) are fallback values
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: airbnb_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-Lionel@2}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE:-airbnb_db}"
+      MYSQL_USER: "${MYSQL_USER:-airbnb_user}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD:-Lionel@2}"
+    ports:
+      - "13306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-Lionel@2}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - airbnb_network
+    # platform: linux/amd64   # uncomment if Apple Silicon issues
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: airbnb_backend
+    restart: unless-stopped
+    environment:
+      DB_HOST: "${DB_HOST:-mysql}"
+      DB_USER: "${MYSQL_USER:-airbnb_user}"
+      DB_PASSWORD: "${MYSQL_PASSWORD:-Lionel@2}"
+      DB_NAME: "${MYSQL_DATABASE:-airbnb_db}"
+      DB_PORT: "${DB_PORT:-3306}"
+      SESSION_SECRET: "${SESSION_SECRET:-your-secret-session-key-change-in-production}"
+      NODE_ENV: "${NODE_ENV:-development}"
+      PORT: "${PORT:-3001}"
+    ports:
+      - "3002:3001"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./add-sample-data.js:/app/add-sample-data.js
+      - ./add-all-property-images.js:/app/add-all-property-images.js
+      - ./add-property-reviews.js:/app/add-property-reviews.js
+      - ./add-bookings-and-reviews.js:/app/add-bookings-and-reviews.js
+      - ./clean-and-populate-sf-data.js:/app/clean-and-populate-sf-data.js
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - airbnb_network
+    command: >
+      sh -c '
+        echo "Waiting for MySQL to be ready..." &&
+        sleep 10 &&
+        echo "Starting backend server..." &&
+        node server.js
+      '
+
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - airbnb_network
+
+volumes:
+  mysql_data:
+
+networks:
+  airbnb_network:
+    driver: bridge
