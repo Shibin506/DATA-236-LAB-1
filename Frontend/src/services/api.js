@@ -377,11 +377,41 @@ export const favoriteApi = {
   list: async (params) => {
     if (MOCK) return Promise.resolve({ data: { favorites: [] }})
     try {
-      return await api.get('/favorites', { params })
+      const res = await api.get('/favorites', { params })
+      // Normalize to property-shaped items so UI has id/coverImage/pricePerNight/location
+      const items = Array.isArray(res.data?.favorites) ? res.data.favorites : (Array.isArray(res.data) ? res.data : [])
+      const favorites = items.map((p) => {
+        const propertyLike = {
+          ...p,
+          id: p.id ?? p.property_id, // prefer property id for links/cards
+          pricePerNight: p.pricePerNight ?? p.price_per_night,
+          location: p.location || [p.city, p.state, p.country].filter(Boolean).join(', ')
+        }
+        // If backend provided a representative image_url, surface it as images array for normalization
+        if (p.image_url) {
+          propertyLike.images = [{ image_url: p.image_url, image_type: 'main' }]
+        }
+        return normalizeProperty(propertyLike)
+      })
+      return { data: { favorites } }
     } catch (err) {
       // Fallback to src route style
       if (err?.response?.status === 404) {
-        return api.get('/favorites/traveler/my-favorites', { params })
+        const res = await api.get('/favorites/traveler/my-favorites', { params })
+        const items = Array.isArray(res.data?.favorites) ? res.data.favorites : (Array.isArray(res.data) ? res.data : [])
+        const favorites = items.map((p) => {
+          const propertyLike = {
+            ...p,
+            id: p.id ?? p.property_id,
+            pricePerNight: p.pricePerNight ?? p.price_per_night,
+            location: p.location || [p.city, p.state, p.country].filter(Boolean).join(', ')
+          }
+          if (p.image_url) {
+            propertyLike.images = [{ image_url: p.image_url, image_type: 'main' }]
+          }
+          return normalizeProperty(propertyLike)
+        })
+        return { data: { favorites } }
       }
       throw err
     }

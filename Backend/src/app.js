@@ -23,8 +23,11 @@ const app = express();
 // Security middleware
 app.use(helmet());
 
-// Rate limiting
-app.use(rateLimit(config.rateLimit));
+// Rate limiting (skip CORS preflight and health checks to prevent accidental blocking)
+app.use(rateLimit({
+  ...config.rateLimit,
+  skip: (req) => req.method === 'OPTIONS' || req.path === '/health'
+}));
 
 // CORS configuration
 app.use(cors(config.cors));

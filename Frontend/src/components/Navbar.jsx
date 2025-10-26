@@ -29,9 +29,9 @@ export default function Navbar() {
               <button className="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
                 {user.name || user.email}
               </button>
-              <ul className="dropdown-menu dropdown-menu-end">
-        <li><Link className="dropdown-item" to="/trips">Trips</Link></li>
-        <li><Link className="dropdown-item" to="/favorites">Favourites</Link></li>
+      <ul className="dropdown-menu dropdown-menu-end">
+  {user.role !== 'owner' && <li><Link className="dropdown-item" to="/trips">Trips</Link></li>}
+  {user.role !== 'owner' && <li><Link className="dropdown-item" to="/favorites">Favourites</Link></li>}
                 <li><Link className="dropdown-item" to="/profile">Profile</Link></li>
                 {user.role === 'owner' && <li><Link className="dropdown-item" to="/host/dashboard">Host Dashboard</Link></li>}
                 <li><button className="dropdown-item" onClick={handleLogout}>Logout</button></li>

@@ -6,8 +6,18 @@ const router = express.Router();
 // Add property to favorites (Traveler only)
 router.post('/', requireAuth, requireTraveler, favoriteController.addToFavorites.bind(favoriteController));
 
+// Path-style add (compatibility): POST /api/favorites/:property_id
+router.post('/:property_id', requireAuth, requireTraveler, (req, res, next) => {
+	// Normalize to body-style expected by controller
+	req.body = req.body || {}
+	req.body.property_id = req.params.property_id
+	return favoriteController.addToFavorites(req, res, next)
+});
+
 // Get user favorites (Traveler only)
 router.get('/traveler/my-favorites', requireAuth, requireTraveler, favoriteController.getUserFavorites.bind(favoriteController));
+// Alias to support clients expecting GET /api/favorites
+router.get('/', requireAuth, requireTraveler, favoriteController.getUserFavorites.bind(favoriteController));
 
 // Remove property from favorites
 router.delete('/:id', requireAuth, requireTraveler, favoriteController.removeFromFavorites.bind(favoriteController));

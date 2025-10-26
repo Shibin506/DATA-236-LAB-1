@@ -1,11 +1,34 @@
 const { pool } = require('../config/database');
 
+// Detect favorites user column once (supports schemas using `user_id` or `traveler_id`)
+let FAVORITES_USER_COL = 'user_id'
+let favoritesUserColChecked = false
+async function ensureFavoritesUserCol(connection) {
+  if (favoritesUserColChecked) return FAVORITES_USER_COL
+  try {
+    const [rows] = await connection.execute(
+      `SELECT COLUMN_NAME FROM information_schema.COLUMNS 
+       WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'favorites' 
+         AND COLUMN_NAME IN ('user_id','traveler_id')`
+    )
+    const names = rows.map(r => r.COLUMN_NAME)
+    if (names.includes('user_id')) FAVORITES_USER_COL = 'user_id'
+    else if (names.includes('traveler_id')) FAVORITES_USER_COL = 'traveler_id'
+    favoritesUserColChecked = true
+  } catch (_) {
+    // default remains 'user_id' if information_schema unavailable
+    favoritesUserColChecked = true
+  }
+  return FAVORITES_USER_COL
+}
+
 class FavoriteService {
   // Add property to favorites
   async addToFavorites(propertyId, userId) {
     const connection = await pool.getConnection();
     
     try {
+      const userCol = await ensureFavoritesUserCol(connection)
       // Check if property exists and is active
       const [properties] = await connection.execute(
         'SELECT id FROM properties WHERE id = ? AND is_active = TRUE',
@@ -18,7 +41,7 @@ class FavoriteService {
       
       // Check if already in favorites
       const [existingFavorites] = await connection.execute(
-        'SELECT id FROM favorites WHERE user_id = ? AND property_id = ?',
+        `SELECT id FROM favorites WHERE ${userCol} = ? AND property_id = ?`,
         [userId, propertyId]
       );
       
@@ -28,7 +51,7 @@ class FavoriteService {
       
       // Add to favorites
       const [result] = await connection.execute(
-        'INSERT INTO favorites (user_id, property_id, created_at) VALUES (?, ?, NOW())',
+        `INSERT INTO favorites (${userCol}, property_id, created_at) VALUES (?, ?, NOW())`,
         [userId, propertyId]
       );
       
@@ -48,11 +71,15 @@ class FavoriteService {
     const connection = await pool.getConnection();
     
     try {
+      const userCol = await ensureFavoritesUserCol(connection)
       const { page = 1, limit = 10 } = filters;
-      const pageNum = parseInt(page) || 1;
-      const limitNum = parseInt(limit) || 10;
-      const offset = (pageNum - 1) * limitNum;
-      
+      // Sanitize pagination to safe integers and clamp ranges
+      const pageNum = Math.max(1, Number.parseInt(page) || 1);
+      const limitNum = Math.max(1, Math.min(50, Number.parseInt(limit) || 10));
+      const offset = Math.max(0, (pageNum - 1) * limitNum);
+
+      // Note: Some MySQL setups error on binding LIMIT/OFFSET as parameters in prepared statements.
+      // Embed sanitized numbers directly to avoid HY000 ER_WRONG_ARGUMENTS.
       const [favorites] = await connection.execute(`
         SELECT f.id, f.created_at, p.id as property_id, p.name, p.description, p.property_type,
                p.address, p.city, p.state, p.country, p.price_per_night, p.bedrooms, p.bathrooms,
@@ -60,10 +87,10 @@ class FavoriteService {
         FROM favorites f
         JOIN properties p ON f.property_id = p.id
         JOIN users u ON p.owner_id = u.id
-        WHERE f.user_id = ? AND p.is_active = TRUE
+        WHERE f.${userCol} = ? AND p.is_active = TRUE
         ORDER BY f.created_at DESC
-        LIMIT ? OFFSET ?
-      `, [userId, limitNum, offset]);
+        LIMIT ${limitNum} OFFSET ${offset}
+      `, [userId]);
       
       return {
         favorites,
@@ -84,21 +111,26 @@ class FavoriteService {
     const connection = await pool.getConnection();
     
     try {
-      // Check if favorite exists and belongs to user
-      const [favorites] = await connection.execute(
-        'SELECT id FROM favorites WHERE id = ? AND user_id = ?',
+      const userCol = await ensureFavoritesUserCol(connection)
+      // First try: treat favoriteId as the favorites.id
+      let [favorites] = await connection.execute(
+        `SELECT id FROM favorites WHERE id = ? AND ${userCol} = ?`,
         [favoriteId, userId]
-      );
-      
-      if (favorites.length === 0) {
-        throw new Error('Favorite not found or you do not have permission to remove it');
+      )
+      if (favorites.length > 0) {
+        await connection.execute('DELETE FROM favorites WHERE id = ?', [favoriteId])
+        return { success: true }
       }
-      
-      // Remove from favorites
-      await connection.execute(
-        'DELETE FROM favorites WHERE id = ?',
-        [favoriteId]
-      );
+      // Second try: treat provided id as property_id (frontend variant)
+      ;[favorites] = await connection.execute(
+        `SELECT id FROM favorites WHERE ${userCol} = ? AND property_id = ?`,
+        [userId, favoriteId]
+      )
+      if (favorites.length === 0) {
+        throw new Error('Favorite not found or you do not have permission to remove it')
+      }
+      const favId = favorites[0].id
+      await connection.execute('DELETE FROM favorites WHERE id = ?', [favId])
       
       return { success: true };
       
@@ -112,8 +144,9 @@ class FavoriteService {
     const connection = await pool.getConnection();
     
     try {
+      const userCol = await ensureFavoritesUserCol(connection)
       const [favorites] = await connection.execute(
-        'SELECT id FROM favorites WHERE user_id = ? AND property_id = ?',
+        `SELECT id FROM favorites WHERE ${userCol} = ? AND property_id = ?`,
         [userId, propertyId]
       );
       
@@ -149,8 +182,9 @@ class FavoriteService {
     const connection = await pool.getConnection();
     
     try {
+      const userCol = await ensureFavoritesUserCol(connection)
       const [result] = await connection.execute(
-        'SELECT COUNT(*) as count FROM favorites WHERE user_id = ?',
+        `SELECT COUNT(*) as count FROM favorites WHERE ${userCol} = ?`,
         [userId]
       );
       

@@ -23,7 +23,9 @@ class FavoriteController {
       
     } catch (error) {
       console.error('Add to favorites error:', error);
-      res.status(400).json({
+      const msg = String(error?.message || '')
+      const status = msg.toLowerCase().includes('already in your favorites') ? 409 : 400
+      res.status(status).json({
         success: false,
         message: error.message
       });
