@@ -255,6 +255,93 @@ async def _tavily_search(query: str, max_results: int = 5) -> List[Dict[str, Any
 def _tavily_enabled() -> bool:
     return bool(os.getenv("TAVILY_API_KEY"))
 
+def _normalize_str(s: Optional[str]) -> str:
+    return (s or "").strip().lower()
+
+def _city_aliases(location: Optional[str]) -> List[str]:
+    """Return a set of useful aliases for a city name to help filter search results.
+    We keep aliases reasonably strict to avoid cross-state noise.
+    """
+    loc = _normalize_str(location)
+    if not loc:
+        return []
+    # Strip state/country if provided (e.g., "New York, NY" -> "New York")
+    primary = loc.split(",")[0].strip()
+    aliases: List[str] = [primary]
+    # Well-known city-specific aliases
+    if primary in ["new york", "new york city", "nyc"]:
+        aliases.extend([
+            "new york city",
+            "nyc",
+            "manhattan",
+            "brooklyn",
+            "queens",
+            "bronx",
+            "staten island",
+            "new york, ny",
+        ])
+    elif primary in ["los angeles", "la", "l.a."]:
+        aliases.extend([
+            "los angeles",
+            "l.a.",
+            "la, ca",
+            "hollywood",
+            "santa monica",
+            "venice beach",
+            "west hollywood",
+        ])
+    elif primary in ["san francisco", "sf"]:
+        aliases.extend([
+            "san francisco",
+            "sf",
+            "fisherman's wharf",
+            "golden gate",
+            "mission district",
+        ])
+    elif primary in ["chicago"]:
+        aliases.extend(["chicago", "downtown chicago"])  # keep tight
+    elif primary in ["miami"]:
+        aliases.extend(["miami", "miami beach"])
+    elif primary in ["seattle"]:
+        aliases.append("seattle")
+    elif primary in ["boston"]:
+        aliases.extend(["boston", "cambridge, ma", "somerville, ma"])  # greater area but same metro
+    # Also add original location string if different
+    if loc not in aliases:
+        aliases.append(loc)
+    # Deduplicate while preserving order
+    seen = set()
+    uniq: List[str] = []
+    for a in aliases:
+        if a and a not in seen:
+            seen.add(a)
+            uniq.append(a)
+    return uniq
+
+def _filter_results_by_location(results: List[Dict[str, Any]], location: Optional[str]) -> List[Dict[str, Any]]:
+    """Filter Tavily results to those that likely belong to the requested city.
+    Strategy:
+    - Build city aliases and require at least one alias to appear in title/content/url
+    - If this yields nothing, loosen to matching the raw location substring
+    - If still empty, return the original results
+    """
+    if not results or not location:
+        return results
+    aliases = _city_aliases(location)
+    if not aliases:
+        return results
+    def text_of(item: Dict[str, Any]) -> str:
+        return _normalize_str(
+            f"{item.get('title','')} {item.get('content','') or item.get('snippet','')} {item.get('url','')}"
+        )
+    filtered = [it for it in results if any(a in text_of(it) for a in aliases)]
+    if filtered:
+        return filtered
+    # Loosen to raw cleaned location substring
+    loc_raw = _normalize_str(location)
+    filtered2 = [it for it in results if loc_raw in text_of(it)]
+    return filtered2 or results
+
 def _extract_price_tier(text: str) -> Optional[str]:
     text = (text or '').lower()
     if '$$$$' in text or 'expensive' in text or 'fine dining' in text:
@@ -369,6 +456,81 @@ def _infer_trip_from_query(query: Optional[str]) -> Dict[str, Any]:
         loc = " ".join(w.capitalize() for w in cand.split())
     return {"location": loc, "days": days}
 
+def _parse_date_range_from_text(query: Optional[str], today: datetime.date) -> Optional[Dict[str, str]]:
+    """Parse date ranges like '2025-11-11 to 2025-11-14' or '11 Nov - 14 Nov' from text.
+    Returns {start, end} ISO strings or None if not found.
+    """
+    if not query:
+        return None
+    import re
+    q = query.strip()
+    # Helper for month names
+    month_map = {
+        'jan':1,'january':1,'feb':2,'february':2,'mar':3,'march':3,'apr':4,'april':4,
+        'may':5,'jun':6,'june':6,'jul':7,'july':7,'aug':8,'august':8,'sep':9,'sept':9,'september':9,
+        'oct':10,'october':10,'nov':11,'november':11,'dec':12,'december':12
+    }
+    # 1) YYYY-MM-DD to YYYY-MM-DD
+    m_iso = re.search(r"(\d{4}-\d{2}-\d{2})\s*(to|-)\s*(\d{4}-\d{2}-\d{2})", q, re.IGNORECASE)
+    if m_iso:
+        s = m_iso.group(1)
+        e = m_iso.group(3)
+        return {"start": s, "end": e}
+    # 2) DD Mon to DD Mon (optional year at end or per date)
+    # Examples: '11 Nov - 14 Nov', 'Nov 11 to Nov 14', '11 Nov 2025 - 14 Nov 2025'
+    # a) DD Mon - DD Mon [YYYY]? 
+    m1 = re.search(r"(\d{1,2})\s*([A-Za-z]{3,9})\s*(\d{4})?\s*(to|-)\s*(\d{1,2})\s*([A-Za-z]{3,9})\s*(\d{4})?", q, re.IGNORECASE)
+    if m1:
+        d1 = int(m1.group(1)); m1name = m1.group(2).lower(); y1 = m1.group(3)
+        d2 = int(m1.group(5)); m2name = m1.group(6).lower(); y2 = m1.group(7)
+        m1num = month_map.get(m1name); m2num = month_map.get(m2name)
+        year = today.year
+        y1i = int(y1) if y1 else year
+        y2i = int(y2) if y2 else year
+        try:
+            sdate = datetime(y1i, m1num, d1).date()
+            edate = datetime(y2i, m2num, d2).date()
+            # If end before start and no years provided, assume end month later or same year wrap
+            if not y1 and not y2 and edate < sdate:
+                # if end month numerically less than start, likely crosses year
+                if m2num < m1num:
+                    edate = datetime(year+1, m2num, d2).date()
+            return {"start": sdate.isoformat(), "end": edate.isoformat()}
+        except Exception:
+            return None
+    # b) Mon DD - Mon DD [YYYY]?
+    m2 = re.search(r"([A-Za-z]{3,9})\s*(\d{1,2})\s*(\d{4})?\s*(to|-)\s*([A-Za-z]{3,9})\s*(\d{1,2})\s*(\d{4})?", q, re.IGNORECASE)
+    if m2:
+        m1name = m2.group(1).lower(); d1 = int(m2.group(2)); y1 = m2.group(3)
+        m2name = m2.group(5).lower(); d2 = int(m2.group(6)); y2 = m2.group(7)
+        m1num = month_map.get(m1name); m2num = month_map.get(m2name)
+        year = today.year
+        y1i = int(y1) if y1 else year
+        y2i = int(y2) if y2 else year
+        try:
+            sdate = datetime(y1i, m1num, d1).date()
+            edate = datetime(y2i, m2num, d2).date()
+            if not y1 and not y2 and edate < sdate:
+                if m2num < m1num:
+                    edate = datetime(year+1, m2num, d2).date()
+            return {"start": sdate.isoformat(), "end": edate.isoformat()}
+        except Exception:
+            return None
+    # 3) DD/MM/YYYY - DD/MM/YYYY or DD/MM - DD/MM (assume current year)
+    m3 = re.search(r"(\d{1,2})/(\d{1,2})(?:/(\d{4}))?\s*(to|-)\s*(\d{1,2})/(\d{1,2})(?:/(\d{4}))?", q, re.IGNORECASE)
+    if m3:
+        d1 = int(m3.group(1)); mo1 = int(m3.group(2)); y1 = int(m3.group(3)) if m3.group(3) else today.year
+        d2 = int(m3.group(5)); mo2 = int(m3.group(6)); y2 = int(m3.group(7)) if m3.group(7) else today.year
+        try:
+            sdate = datetime(y1, mo1, d1).date()
+            edate = datetime(y2, mo2, d2).date()
+            if not m3.group(3) and not m3.group(7) and edate < sdate and mo2 < mo1:
+                edate = datetime(today.year+1, mo2, d2).date()
+            return {"start": sdate.isoformat(), "end": edate.isoformat()}
+        except Exception:
+            return None
+    return None
+
 def _build_itinerary(dates: List[str], act_ids: List[str]) -> List[Dict[str, Any]]:
     itinerary = []
     idx = 0
@@ -403,10 +565,18 @@ async def concierge_agent(payload: Union[AgentV2Input, AgentLegacyInput] = Body(
         today = datetime.utcnow().date()
         start_raw = bc.get("start_date") or bc.get("check_in") or bc.get("checkIn") or (bc.get("dates") or {}).get("start")
         end_raw = bc.get("end_date") or bc.get("check_out") or bc.get("checkOut") or (bc.get("dates") or {}).get("end")
+        parsed = None
         if not start_raw or not end_raw:
-            used_default_dates = True
-        start_date = start_raw or today.isoformat()
-        end_date = end_raw or (today + timedelta(days=2)).isoformat()  # default 3 calendar days
+            # Try parse from free text first
+            parsed = _parse_date_range_from_text(payload.nlu_prompt, today)
+        if parsed and parsed.get("start") and parsed.get("end"):
+            start_date = parsed["start"]
+            end_date = parsed["end"]
+        else:
+            if not start_raw or not end_raw:
+                used_default_dates = True
+            start_date = start_raw or today.isoformat()
+            end_date = end_raw or (today + timedelta(days=2)).isoformat()  # default 3 calendar days
         location = bc.get("location") or bc.get("city") or bc.get("destination") or ""
         party_type = bc.get("party_type") or bc.get("partyType") or None
         party_size = bc.get("guests") or bc.get("party_size") or None
@@ -453,12 +623,18 @@ async def concierge_agent(payload: Union[AgentV2Input, AgentLegacyInput] = Body(
     hints = _infer_trip_from_query(nlu_query)
     if (not booking.location) and hints.get("location"):
         booking.location = hints["location"]
-    # If dates are missing or invalid, compute from inferred days
+    # If dates are missing or invalid, compute from parsed text or inferred days
     if not _date_range(booking.start_date, booking.end_date):
-        days = hints.get("days") or 3
-        start = datetime.utcnow().date()
-        booking.start_date = start.isoformat()
-        booking.end_date = (start + timedelta(days=max(0, days-1))).isoformat()
+        today = datetime.utcnow().date()
+        parsed = _parse_date_range_from_text(nlu_query, today)
+        if parsed and parsed.get("start") and parsed.get("end"):
+            booking.start_date = parsed["start"]
+            booking.end_date = parsed["end"]
+        else:
+            days = hints.get("days") or 3
+            start = today
+            booking.start_date = start.isoformat()
+            booking.end_date = (start + timedelta(days=max(0, days-1))).isoformat()
     # If legacy used default dates and user asked for a specific day-count, honor it
     elif used_default_dates and hints.get("days"):
         try:
@@ -473,6 +649,8 @@ async def concierge_agent(payload: Union[AgentV2Input, AgentLegacyInput] = Body(
     weather_text = None
     events: List[Dict[str, Any]] = []
     pois: List[Dict[str, Any]] = []
+    events_all: List[Dict[str, Any]] = []
+    pois_all: List[Dict[str, Any]] = []
 
     context_overrides = None
     if not isinstance(payload, AgentLegacyInput):
@@ -493,14 +671,16 @@ async def concierge_agent(payload: Union[AgentV2Input, AgentLegacyInput] = Body(
         q = f"events this week for families in {booking.location}"
         res = await _tavily_search(q, 5)
         if res:
-            events = res
+            events_all = res
+            events = _filter_results_by_location(events_all, booking.location)[:5]
             sources.append(DebugSource(type="tavily", query=q, url=res[0].get("url")))
 
     if ctx_flags.pois == "auto" and not pois:
         q = f"top attractions and kid-friendly points of interest in {booking.location} with hours and prices"
         res = await _tavily_search(q, 8)
         if res:
-            pois = res
+            pois_all = res
+            pois = _filter_results_by_location(pois_all, booking.location)[:8]
             sources.append(DebugSource(type="tavily", query=q, url=res[0].get("url")))
 
     # 2) Build activities from POIs/events (with graceful fallback)
@@ -563,7 +743,8 @@ async def concierge_agent(payload: Union[AgentV2Input, AgentLegacyInput] = Body(
         rest_query = f"best {key} restaurants in {booking.location} with price info"
     else:
         rest_query = f"best family friendly restaurants in {booking.location} with price info"
-    rest_results = await _tavily_search(rest_query, 6)
+    rest_results_raw = await _tavily_search(rest_query, 6)
+    rest_results = _filter_results_by_location(rest_results_raw or [], booking.location)[:6]
     restaurants: List[Restaurant] = []
     for r in rest_results:
         price = _extract_price_tier(str(r.get("content") or ""))
@@ -631,6 +812,12 @@ async def concierge_agent(payload: Union[AgentV2Input, AgentLegacyInput] = Body(
             "days": len(computed_dates),
         },
         "sources": [_to_dict(s) for s in sources],
+        "location_filter": {
+            "location": booking.location,
+            "events": {"before": len(events_all or []), "after": len(events or [])},
+            "pois": {"before": len(pois_all or []), "after": len(pois or [])},
+            "restaurants": {"before": len(rest_results_raw or []), "after": len(rest_results or [])},
+        },
     }
 
     # Build backward-compatible response shape along with the new one
