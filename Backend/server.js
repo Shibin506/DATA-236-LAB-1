@@ -13,7 +13,8 @@ const { testConnection, initializeDatabase } = require('./config/database');
 // Import routes
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
-const propertyRoutes = require('./routes/properties-simple');
+// Use full-featured properties routes (includes images upload/delete, availability, etc.)
+const propertyRoutes = require('./routes/properties');
 const bookingRoutes = require('./routes/bookings');
 const favoriteRoutes = require('./routes/favorites');
 
@@ -26,18 +27,8 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false
 }));
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.',
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-app.use('/api/', limiter);
-
-// CORS configuration
-const frontendWhitelist = (process.env.FRONTEND_URLS || 'http://localhost:3000,http://localhost:3002')
+// CORS configuration - must be BEFORE rate limiting so CORS headers are set even on errors
+const frontendWhitelist = (process.env.FRONTEND_URLS || 'http://localhost:3000,http://localhost:3002,http://127.0.0.1:3000')
   .split(',')
   .map(s => s.trim())
   .filter(Boolean)
@@ -65,6 +56,17 @@ app.options('*', cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cookie']
 }));
+
+// Rate limiting (after CORS). Skip preflight and health to avoid noisy 429s on OPTIONS
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => req.method === 'OPTIONS' || req.path === '/health'
+});
+app.use('/api/', limiter);
 
 // Session configuration
 app.use(session({

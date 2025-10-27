@@ -38,8 +38,27 @@ app.options('*', cors(config.cors));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Session configuration
-app.use(session(config.session));
+// Session configuration (prefer persistent MySQL store if available)
+const sessionOptions = { ...config.session }
+try {
+  const MySQLStoreFactory = require('express-mysql-session')
+  const MySQLStore = MySQLStoreFactory(session)
+  const store = new MySQLStore({
+    host: config.database.host,
+    port: config.database.port,
+    user: config.database.user,
+    password: config.database.password,
+    database: config.database.database,
+    clearExpired: true,
+    checkExpirationInterval: 15 * 60 * 1000, // ms
+    expiration: config.session.cookie.maxAge
+  })
+  sessionOptions.store = store
+  console.log('✅ Using MySQL session store')
+} catch (e) {
+  console.warn('ℹ️  express-mysql-session not installed; using in-memory session store (sessions reset on restart).')
+}
+app.use(session(sessionOptions));
 
 // Static uploads (serve uploaded property images)
 const uploadsDir = path.join(__dirname, '..', 'uploads')

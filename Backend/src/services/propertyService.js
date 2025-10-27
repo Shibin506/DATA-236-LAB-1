@@ -83,6 +83,9 @@ class PropertyService {
         location, city, state, guests, min_price, max_price, property_type,
         page = 1, limit = 10
       } = searchParams;
+      // optional date range filters coming from frontend as startDate/endDate
+      const startDate = searchParams.startDate || searchParams.check_in_date
+      const endDate = searchParams.endDate || searchParams.check_out_date
       
       let whereConditions = ['p.is_active = TRUE'];
       let queryParams = [];
@@ -122,6 +125,27 @@ class PropertyService {
         whereConditions.push('p.property_type = ?');
         queryParams.push(property_type);
       }
+
+      // Guests capacity
+      if (guests) {
+        whereConditions.push('p.max_guests >= ?')
+        queryParams.push(parseInt(guests))
+      }
+
+      // Availability window on property and exclude overlapping bookings
+      if (startDate && endDate) {
+        whereConditions.push('(p.availability_start IS NULL OR p.availability_start <= ?)')
+        whereConditions.push('(p.availability_end IS NULL OR p.availability_end >= ?)')
+        queryParams.push(startDate, endDate)
+        // Exclude properties that have a booking overlapping the requested window (pending or accepted)
+        whereConditions.push(`NOT EXISTS (
+          SELECT 1 FROM bookings b
+          WHERE b.property_id = p.id
+            AND (b.status IS NULL OR b.status IN ('pending','accepted'))
+            AND NOT (b.check_out_date <= ? OR b.check_in_date >= ?)
+        )`)
+        queryParams.push(startDate, endDate)
+      }
       
       const pageNum = parseInt(page) || 1;
       const limitNum = parseInt(limit) || 10;
@@ -129,7 +153,7 @@ class PropertyService {
       
       const searchQuery = `
         SELECT p.id, p.name, p.description, p.property_type, p.address, p.city, p.state, p.country,
-               p.price_per_night, p.bedrooms, p.bathrooms, p.max_guests, p.amenities,
+               p.price_per_night, p.bedrooms, p.bathrooms, p.max_guests, p.amenities, p.availability_start, p.availability_end,
                p.created_at, u.name as owner_name
         FROM properties p
         JOIN users u ON p.owner_id = u.id

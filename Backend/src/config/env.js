@@ -40,6 +40,7 @@ const config = {
     secret: process.env.SESSION_SECRET || 'your-super-secret-session-key-change-in-production',
     resave: false,
     saveUninitialized: false,
+    rolling: true,
     cookie: {
       secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
@@ -54,8 +55,13 @@ const config = {
     origin: function(origin, callback) {
       // Allow REST tools or same-origin server requests (no origin)
       if (!origin) return callback(null, true)
+      // Allow common localhost patterns on any port for dev
+      const isLocalhost = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)
+      if (isLocalhost) return callback(null, true)
       if (allowedOrigins.includes(origin)) return callback(null, true)
-      return callback(new Error('Not allowed by CORS'))
+      // In development, be more permissive to reduce flakiness with port changes
+      if ((process.env.NODE_ENV || 'development') !== 'production') return callback(null, true)
+      return callback(new Error(`Not allowed by CORS: ${origin}`))
     },
     credentials: true,
     methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

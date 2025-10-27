@@ -33,8 +33,8 @@ export function AuthProvider({ children }) {
     return () => { mounted = false }
   }, [])
 
-  const login = async (email, password, role) => {
-    const { data } = await authApi.login({ email, password, role })
+  const login = async (email, password) => {
+    const { data } = await authApi.login({ email, password })
     setUser(normalizeUser(data.user))
   }
   const logout = async () => {

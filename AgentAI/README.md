@@ -40,15 +40,35 @@ By default CORS is configured to allow `http://localhost:3000`. Override with en
 export FRONTEND_URL=http://localhost:3000
 ```
 
-## Optional: Tavily snippets
-If you want quick web snippets in the response, install Tavily and set the API key:
+## Environment variables (.env)
+Instead of exporting variables in your shell, you can create a `.env` file in the `AgentAI` folder. The service automatically loads it.
 
+1) Copy the example file and edit values:
 ```bash
-pip install tavily-python
-export TAVILY_API_KEY=your_key
+cp .env.example .env
 ```
 
-This is optional; the service works without it.
+2) Set your values in `.env`:
+```
+# Frontend origin for CORS
+FRONTEND_URL=http://localhost:3000
+
+# Tavily API key (recommended for live search)
+TAVILY_API_KEY=your_key_here
+
+# Optional: Ollama model for LangChain
+# LLM_MODEL=llama3:8b
+```
+
+3) Install dependencies and run:
+```bash
+pip install -r requirements.txt
+uvicorn app:app --reload --host 0.0.0.0 --port 8000
+```
+
+Notes:
+- `.env` is git-ignored to keep secrets safe.
+- If `TAVILY_API_KEY` is not set, the endpoint will still respond but with fewer dynamic sources.
 
 ## Agent Core (LangChain) — Llama 3 via Ollama
 This project is configured to use Llama 3 locally through Ollama.

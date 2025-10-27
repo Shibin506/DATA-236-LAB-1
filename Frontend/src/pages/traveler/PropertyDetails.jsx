@@ -8,20 +8,49 @@ export default function PropertyDetails() {
   const [p, setP] = useState(null)
   const [form, setForm] = useState({ startDate: '', endDate: '', guests: 1 })
   const [msg, setMsg] = useState('')
+  const [error, setError] = useState('')
 
   useEffect(() => {
     propertyApi.details(id).then(({data}) => setP(data.property)).catch(()=>{})
   }, [id])
 
+  const isDatesValid = form.startDate && form.endDate && new Date(form.startDate) < new Date(form.endDate)
+  const exceedsGuests = p && form.guests && Number(form.guests) > Number(p.max_guests || p.maxGuests)
+  const outsideAvailability = (() => {
+    if (!p) return false
+    const start = form.startDate ? new Date(form.startDate) : null
+    const end = form.endDate ? new Date(form.endDate) : null
+    const availStart = p.availability_start ? new Date(p.availability_start) : null
+    const availEnd = p.availability_end ? new Date(p.availability_end) : null
+    if (!start || !end) return false
+    if (availStart && start < availStart) return true
+    if (availEnd && end > availEnd) return true
+    return false
+  })()
+
   const book = async () => {
-    setMsg('')
+    setMsg(''); setError('')
+    if (!isDatesValid) {
+      setError('Please select a valid date range.')
+      return
+    }
+    if (exceedsGuests) {
+      setError('Guest limit exceeded for this property.')
+      return
+    }
+    if (outsideAvailability) {
+      setError('This property is not available for your selected dates.')
+      return
+    }
     try {
       await bookingApi.create({ propertyId: id, ...form })
       setMsg('Booking requested. Status: Pending')
       // Redirect to trips so user can see their pending booking
       setTimeout(() => navigate('/trips'), 500)
     } catch (e) {
-      setMsg(e?.response?.data?.message || 'Booking failed')
+      const m = e?.response?.data?.message || 'Booking failed'
+      if (/not available/i.test(m) || /guest limit/i.test(m)) setError(m)
+      else setMsg(m)
     }
   }
 
@@ -33,6 +62,14 @@ export default function PropertyDetails() {
   <img src={p.coverImage || '/placeholder.svg'} alt={p.name} className="img-fluid rounded mb-3" />
         <h2>{p.name}</h2>
         <p className="text-muted">{p.location}</p>
+        {(p.availability_start || p.availability_end) && (
+          <p className="text-muted small">
+            Availability window{': '}
+            {p.availability_start ? new Date(p.availability_start).toLocaleDateString() : 'Any'}
+            {' '}to{' '}
+            {p.availability_end ? new Date(p.availability_end).toLocaleDateString() : 'Any'}
+          </p>
+        )}
         <p>{p.description}</p>
         <ul>
           <li>Type: {p.type}</li>
@@ -46,6 +83,7 @@ export default function PropertyDetails() {
             <div className="d-flex align-items-baseline justify-content-between mb-2">
               <div><span className="h4">${p.pricePerNight}</span> night</div>
             </div>
+            {error && <div className="alert alert-danger">{error}</div>}
             {msg && <div className="alert alert-info">{msg}</div>}
             <div className="row g-2">
               <div className="col-6">
@@ -61,7 +99,9 @@ export default function PropertyDetails() {
                 <input type="number" min="1" className="form-control" value={form.guests} onChange={e=>setForm({...form,guests:e.target.value})} />
               </div>
               <div className="col-12 d-grid">
-                <button className="btn btn-brand text-white" onClick={book}>Request to book</button>
+                <button className="btn btn-brand text-white" onClick={book}
+                  disabled={!isDatesValid || exceedsGuests || outsideAvailability}
+                >Request to book</button>
               </div>
             </div>
           </div>

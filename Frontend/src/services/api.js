@@ -39,10 +39,17 @@ const normalizeProperty = (p) => {
       ? p.amenities.split(',').map(s => s.trim()).filter(Boolean)
       : [])
 
-  const images = Array.isArray(p.images) ? p.images.map(img => ({
+  // Support various backend shapes for a main image: images[], main_image, property_image
+  let images = Array.isArray(p.images) ? p.images.map(img => ({
     ...img,
     image_url: toAbsoluteUrl(img.image_url)
   })) : []
+
+  // If we don't have an images array but backend provided a main image url, synthesize one
+  const possibleMain = p.main_image || p.property_image || p.image_url
+  if (!images.length && possibleMain) {
+    images = [{ image_url: toAbsoluteUrl(possibleMain), image_type: 'main' }]
+  }
 
   // Determine cover image: prefer 'main', else first image, else seeded default pattern
   let coverImage
@@ -149,7 +156,23 @@ export const authApi = {
 
 export const userApi = {
   getProfile: () => MOCK ? Promise.resolve({ data: { user: { name:'Mock', email:'mock@example.com' }}}) : api.get('/users/profile'),
-  updateProfile: (payload) => MOCK ? Promise.resolve({ data: { user: payload }}) : api.put('/users/profile', payload),
+  updateProfile: (payload) => {
+    if (MOCK) return Promise.resolve({ data: { user: payload }})
+    const body = { ...payload }
+    // Backend expects about_me
+    if (body.about !== undefined && body.about_me === undefined) {
+      body.about_me = body.about
+      delete body.about
+    }
+    // Normalize gender to match DB enum values (e.g., 'male','female','other')
+    if (body.gender !== undefined && body.gender !== null && body.gender !== '') {
+      body.gender = String(body.gender).trim().toLowerCase()
+    } else if (body.gender === '') {
+      // Allow clearing gender
+      body.gender = null
+    }
+    return api.put('/users/profile', body)
+  },
   uploadAvatar: (file) => {
     const form = new FormData()
     form.append('profile_picture', file)
@@ -187,7 +210,12 @@ export const propertyApi = {
       { id: 1, name: 'Cozy Studio', city: 'San Jose', state: 'CA', country: 'US', price_per_night: 120, coverImage: '/placeholder.svg', amenities: ['WiFi'] },
       { id: 2, name: 'Modern Loft', city: 'San Francisco', state: 'CA', country: 'US', price_per_night: 220, coverImage: '/placeholder.svg', amenities: ['WiFi'] },
     ] } })
-    const res = await api.get('/properties/search', { params })
+    // Map frontend param names to backend expectations and drop empty values
+    const q = { ...(params || {}) }
+    if (q.startDate) { q.check_in_date = q.startDate; delete q.startDate }
+    if (q.endDate) { q.check_out_date = q.endDate; delete q.endDate }
+    Object.keys(q).forEach(k => { if (q[k] === '' || q[k] === undefined || q[k] === null) delete q[k] })
+    const res = await api.get('/properties/search', { params: q })
     // res.data might be { properties, pagination } or plain array depending on backend
     if (Array.isArray(res.data)) {
       return { data: res.data.map(normalizeProperty) }

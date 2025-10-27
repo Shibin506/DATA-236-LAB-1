@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { userApi } from '../../services/api'
 
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:3001/api'
+const API_ORIGIN = API_BASE.replace(/\/api$/, '')
+const toAbsolute = (url) => {
+  if (!url) return ''
+  if (/^https?:\/\//i.test(url)) return url
+  return `${API_ORIGIN}${url.startsWith('/') ? '' : '/'}${url}`
+}
+
 const countries = ['United States','Canada','United Kingdom','India','Australia']
 
 export default function Profile() {
@@ -13,9 +21,9 @@ export default function Profile() {
     userApi.getProfile().then(({data}) => {
       const u = data.user || {}
       setForm({
-        name: u.name||'', email: u.email||'', phone: u.phone||'', about: u.about_me||u.about||'', city: u.city||'', state: u.state||'', country: u.country||'United States', languages: u.languages||'', gender: u.gender||''
+        name: u.name||'', email: u.email||'', phone: u.phone||'', about: u.about_me||u.about||'', city: u.city||'', state: u.state||'', country: u.country||'United States', languages: u.languages||'', gender: (u.gender||'').toLowerCase()
       })
-      setCurrentAvatar(u.profile_picture || '')
+  setCurrentAvatar(toAbsolute(u.profile_picture || ''))
     }).catch(()=>{})
   }, [])
 
@@ -28,7 +36,7 @@ export default function Profile() {
       if (avatar) {
         const res = await userApi.uploadAvatar(avatar)
         const url = res?.data?.profile_picture
-        if (url) setCurrentAvatar(url)
+        if (url) setCurrentAvatar(toAbsolute(url))
       }
       setMsg('Profile updated')
     } catch {
@@ -92,9 +100,9 @@ export default function Profile() {
               <label className="form-label">Gender</label>
               <select className="form-select" name="gender" value={form.gender} onChange={onChange}>
                 <option value="">Prefer not to say</option>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
               </select>
             </div>
             <div className="col-md-8">

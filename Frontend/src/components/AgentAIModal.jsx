@@ -37,12 +37,12 @@ export default function AgentAIModal({ show, onClose }) {
   return (
     <div className="position-fixed top-0 start-0 w-100 h-100" style={{background:'rgba(0,0,0,0.35)', zIndex:1060}} onClick={CloseOnBackdrop}>
       <div className="container h-100 d-flex align-items-end align-items-md-center">
-        <div className="card shadow w-100" style={{maxWidth:800, margin:'0 auto'}}>
-          <div className="card-header d-flex justify-content-between align-items-center">
+        <div className="card shadow w-100" style={{maxWidth:800, margin:'0 auto', maxHeight:'85vh', display:'flex', flexDirection:'column'}}>
+          <div className="card-header d-flex justify-content-between align-items-center flex-shrink-0">
             <strong>Agent AI Concierge</strong>
             <button className="btn btn-sm btn-outline-secondary" onClick={onClose}>&times;</button>
           </div>
-          <div className="card-body">
+          <div className="card-body" style={{overflowY:'auto'}}>
             <form onSubmit={submit}>
               <div className="mb-3">
                 <label className="form-label">Ask anything about your trip</label>
@@ -72,9 +72,22 @@ export default function AgentAIModal({ show, onClose }) {
                   <div className="mb-3">
                     <h6>Activities</h6>
                     <ul>
-                      {result.activity_cards.map((a, idx) => (
-                        <li key={idx}><strong>{a.name || a.title || a.type}:</strong> {a.duration || ''} {(a.suits||[]).join(', ')}</li>
-                      ))}
+                      {result.activity_cards.map((a, idx) => {
+                        const label = a.name || a.title || a.type
+                        const link = a.link || a.url
+                        return (
+                          <li key={idx}>
+                            <strong>
+                              {link ? (
+                                <a href={link} target="_blank" rel="noreferrer">{label}</a>
+                              ) : (
+                                label
+                              )}
+                            </strong>
+                            {`: ${a.duration || ''} ${(a.suits||[]).join(', ')}`}
+                          </li>
+                        )
+                      })}
                     </ul>
                   </div>
                 )}
@@ -82,9 +95,21 @@ export default function AgentAIModal({ show, onClose }) {
                   <div className="mb-3">
                     <h6>Restaurants</h6>
                     <ul>
-                      {result.restaurant_recommendations.map((r, idx) => (
-                        <li key={idx}><strong>{r.name}</strong> — {r.cuisine} {r.notes ? `(${r.notes})` : ''}</li>
-                      ))}
+                      {result.restaurant_recommendations.map((r, idx) => {
+                        const link = r.link || r.url
+                        return (
+                          <li key={idx}>
+                            <strong>
+                              {link ? (
+                                <a href={link} target="_blank" rel="noreferrer">{r.name}</a>
+                              ) : (
+                                r.name
+                              )}
+                            </strong>
+                            {` — ${r.cuisine || ''} ${r.notes ? `(${r.notes})` : ''}`}
+                          </li>
+                        )
+                      })}
                     </ul>
                   </div>
                 )}

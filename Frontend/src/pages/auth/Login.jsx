@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext'
 export default function Login() {
   const { login } = useAuth()
   const navigate = useNavigate()
-  const [form, setForm] = useState({ email: '', password: '', role: 'traveler' })
+  const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
   const onChange = e => setForm({ ...form, [e.target.name]: e.target.value })
 
@@ -13,7 +13,7 @@ export default function Login() {
     e.preventDefault()
     setError('')
     try {
-      await login(form.email, form.password, form.role)
+      await login(form.email, form.password)
       navigate('/')
     } catch (err) {
       setError(err?.response?.data?.message || 'Login failed')
@@ -35,11 +35,6 @@ export default function Login() {
             <input className="form-control" name="password" type="password" value={form.password} onChange={onChange} required />
           </div>
           <div className="mb-3">
-            <label className="form-label me-2">Role</label>
-            <select className="form-select" style={{maxWidth:220}} name="role" value={form.role} onChange={onChange}>
-              <option value="traveler">Traveler</option>
-              <option value="owner">Owner</option>
-            </select>
           </div>
           <button className="btn btn-brand text-white">Log in</button>
         </form>

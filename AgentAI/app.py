@@ -1,9 +1,15 @@
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any, Union
 import os
 import json
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Body
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import httpx
+from dotenv import load_dotenv
+from datetime import datetime, timedelta
+
+# Load environment variables from .env if present
+load_dotenv()
 
 # LangChain (optional use in Task 1; initialized for future steps)
 try:
@@ -25,17 +31,105 @@ except Exception:
 # ------------------------------
 # Pydantic Models
 # ------------------------------
-class AgentInput(BaseModel):
-    booking_context: Dict
-    preferences: Dict
-    local_context: Dict
-    nlu_prompt: str
+class MobilityNeeds(BaseModel):
+    wheelchair: Optional[bool] = None
+    max_walk_km: Optional[float] = None
+    stroller: Optional[bool] = None
 
-class AgentResponse(BaseModel):
-    day_by_day_plan: List[Dict]
-    activity_cards: List[Dict]
-    restaurant_recommendations: List[Dict]
-    packing_checklist: List[Dict]
+class Dietary(BaseModel):
+    vegan: Optional[bool] = None
+    vegetarian: Optional[bool] = None
+    gluten_free: Optional[bool] = None
+    halal: Optional[bool] = None
+    kosher: Optional[bool] = None
+    other: Optional[List[str]] = None
+
+class Preferences(BaseModel):
+    budget: Optional[str] = None  # low|medium|high
+    interests: Optional[List[str]] = None
+    mobility_needs: Optional[MobilityNeeds] = None
+    dietary: Optional[Dietary] = None
+
+class Booking(BaseModel):
+    start_date: str
+    end_date: str
+    location: str
+    party_type: Optional[str] = None  # couple|family|solo|friends
+    party_size: Optional[int] = None
+    children_ages: Optional[List[int]] = None
+
+class ContextFlags(BaseModel):
+    weather: Optional[str] = "auto"  # auto|provided
+    events: Optional[str] = "auto"
+    pois: Optional[str] = "auto"
+
+class AgentV2Input(BaseModel):
+    booking: Booking
+    preferences: Preferences
+    nlu_query: Optional[str] = None
+    context: Optional[ContextFlags] = None
+    context_overrides: Optional[Dict[str, Any]] = None
+
+class Geo(BaseModel):
+    lat: float
+    lng: float
+
+class Activity(BaseModel):
+    id: str
+    title: str
+    address: Optional[str] = ""
+    geo: Optional[Geo] = None
+    price_tier: Optional[str] = None  # $|$$|$$$|$$$$
+    duration_minutes: Optional[int] = None
+    tags: Optional[List[str]] = None
+    wheelchair_friendly: Optional[bool] = None
+    child_friendly: Optional[bool] = None
+    stroller_friendly: Optional[bool] = None
+    booking_link: Optional[str] = None
+    source: Optional[Dict[str, Any]] = None
+
+class Restaurant(BaseModel):
+    name: str
+    address: Optional[str] = ""
+    geo: Optional[Geo] = None
+    dietary_match: Optional[List[str]] = None
+    price_tier: Optional[str] = None
+    kid_friendly: Optional[bool] = None
+    reservation_link: Optional[str] = None
+    source: Optional[Dict[str, Any]] = None
+
+class ItineraryBlock(BaseModel):
+    time_block: str  # morning|afternoon|evening
+    summary: str
+    activities: List[str]
+
+class ItineraryDay(BaseModel):
+    date: str
+    blocks: List[ItineraryBlock]
+
+class Note(BaseModel):
+    type: str
+    text: str
+
+class DebugSource(BaseModel):
+    type: str
+    query: str
+    url: Optional[str] = None
+
+class AgentV2Response(BaseModel):
+    itinerary: List[ItineraryDay]
+    activities: List[Activity]
+    restaurants: List[Restaurant]
+    packing_checklist: List[Dict[str, Any]]
+    notes: List[Note]
+    debug: Dict[str, Any]
+
+# Legacy request model (backward compatibility with old frontend)
+class AgentLegacyInput(BaseModel):
+    booking_context: Dict[str, Any]
+    preferences: Dict[str, Any]
+    local_context: Optional[Dict[str, Any]] = None
+    nlu_prompt: Optional[str] = None
 
 
 # ------------------------------
@@ -120,34 +214,492 @@ if LANGCHAIN_AVAILABLE:
         )
         return agent
 
-@router.post("/concierge-agent", response_model=AgentResponse)
-async def concierge_agent(payload: AgentInput) -> AgentResponse:
-    """
-    Accepts user context + NLU prompt, calls the LangChain agent with a combined prompt,
-    parses JSON output, and returns an AgentResponse. Falls back to a scaffolded response
-    if the agent or providers are unavailable.
-    """
+def _slugify(s: str) -> str:
+    return ''.join(ch.lower() if ch.isalnum() else '-' for ch in s).strip('-')[:64]
 
-    def _fallback_response() -> AgentResponse:
-        return AgentResponse(
-            day_by_day_plan=[
-                {"day": 1, "title": "Arrival and local exploration", "highlights": ["Check-in", "Walk downtown", "Sunset viewpoint"]},
-                {"day": 2, "title": "Activities based on preferences", "highlights": ["Kid-friendly museum", "Vegan lunch", "Short scenic trail"]},
-            ],
-            activity_cards=[
-                {"name": "City History Museum", "type": "indoor", "duration": "2-3 hours", "suits": ["kids", "wheelchair"]},
-                {"name": "River Walk", "type": "outdoor", "duration": "1 hour", "suits": ["strollers", "low-intensity"]},
-            ],
-            restaurant_recommendations=[
-                {"name": "Green Leaf Vegan", "cuisine": "Vegan", "notes": "Casual, family-friendly"},
-                {"name": "Happy Garden", "cuisine": "Vegetarian", "notes": "Reservations recommended"},
-            ],
-            packing_checklist=[
-                {"item": "Comfortable walking shoes", "why": "Short walks and city touring"},
-                {"item": "Reusable water bottles", "why": "Stay hydrated"},
-                {"item": "Light jackets", "why": "Evening breeze"},
-            ],
+async def _tavily_search(query: str, max_results: int = 5) -> List[Dict[str, Any]]:
+    """Prefer official Tavily client if available; otherwise fallback to raw HTTP API."""
+    api_key = os.getenv("TAVILY_API_KEY")
+    if not api_key:
+        return []
+    # Try official client first
+    try:
+        from tavily import TavilyClient  # type: ignore
+        client = TavilyClient(api_key)
+        # Tavily client is sync; call it in a thread to avoid blocking
+        import asyncio
+        loop = asyncio.get_event_loop()
+        resp = await loop.run_in_executor(None, lambda: client.search(query=query, max_results=max_results, search_depth="advanced", include_answers=False))
+        # Normalize to match our structure
+        results = resp.get("results") or []
+        return results
+    except Exception:
+        # Fallback to HTTP
+        try:
+            async with httpx.AsyncClient(timeout=20) as client:
+                resp = await client.post(
+                    "https://api.tavily.com/search",
+                    json={
+                        "api_key": api_key,
+                        "query": query,
+                        "search_depth": "advanced",
+                        "include_answers": False,
+                        "max_results": max_results,
+                    },
+                )
+                data = resp.json()
+                return data.get("results", []) or []
+        except Exception:
+            return []
+
+def _tavily_enabled() -> bool:
+    return bool(os.getenv("TAVILY_API_KEY"))
+
+def _extract_price_tier(text: str) -> Optional[str]:
+    text = (text or '').lower()
+    if '$$$$' in text or 'expensive' in text or 'fine dining' in text:
+        return '$$$$'
+    if '$$$' in text:
+        return '$$$'
+    if '$$' in text or 'moderate' in text:
+        return '$$'
+    if '$' in text or 'cheap' in text or 'budget' in text:
+        return '$'
+    return None
+
+def _dietary_keys(pref: Optional[Dietary]) -> List[str]:
+    out: List[str] = []
+    if not pref: return out
+    for k in ["vegan","vegetarian","gluten_free","halal","kosher"]:
+        if getattr(pref, k, None): out.append(k)
+    if pref.other:
+        out.extend([str(x).lower() for x in pref.other])
+    return out
+
+def _date_range(start: str, end: str) -> List[str]:
+    def _parse(d: str):
+        for fmt in ("%Y-%m-%d", "%m/%d/%Y", "%Y/%m/%d"):
+            try:
+                return datetime.strptime(d, fmt).date()
+            except Exception:
+                continue
+        # try ISO 8601
+        try:
+            return datetime.fromisoformat(d).date()
+        except Exception:
+            return None
+    s = _parse(start)
+    e = _parse(end)
+    if not s or not e:
+        return []
+    days = []
+    cur = s
+    while cur <= e:
+        days.append(cur.isoformat())
+        cur += timedelta(days=1)
+    return days
+
+def _to_dict(m: Any) -> Dict[str, Any]:
+    if hasattr(m, "model_dump"):
+        return m.model_dump()
+    if hasattr(m, "dict"):
+        return m.dict()
+    return dict(m)
+
+def _pack_list_from_weather(weather_text: str) -> List[Dict[str, Any]]:
+    wt = (weather_text or '').lower()
+    items: List[Dict[str, Any]] = [
+        {"item": "Comfortable walking shoes", "reason": "activity", "mandatory": True},
+        {"item": "Reusable water bottle", "reason": "activity", "mandatory": True},
+    ]
+    if any(k in wt for k in ["rain", "showers", "thunder"]):
+        items.append({"item": "Rain jacket / umbrella", "reason": "weather", "mandatory": True})
+    if any(k in wt for k in ["sunny", "hot", "heat", "uv"]):
+        items.append({"item": "Sunscreen & hat", "reason": "weather", "mandatory": True})
+    if any(k in wt for k in ["cold", "chilly", "wind", "snow"]):
+        items.append({"item": "Warm layer", "reason": "weather", "mandatory": False})
+    return items
+
+def _nlu_extract(query: Optional[str]) -> Dict[str, Any]:
+    if not query: return {"extracted_interests": [], "constraints": []}
+    q = query.lower()
+    interests = []
+    for key, words in {
+        "museum": ["museum", "art", "gallery"],
+        "outdoors": ["park", "hike", "trail", "outdoors"],
+        "food": ["food", "restaurant", "cafe", "eat"],
+        "shopping": ["shop", "shopping", "market"],
+        "history": ["history", "historic", "heritage"],
+        "nightlife": ["bar", "nightlife", "club"],
+        "kids": ["kids", "children", "family"],
+    }.items():
+        if any(w in q for w in words):
+            interests.append(key)
+    constraints = []
+    if "no long hike" in q or "no long hikes" in q:
+        constraints.append("avoid long hikes")
+    if "wheelchair" in q:
+        constraints.append("wheelchair-friendly only")
+    if "vegan" in q:
+        constraints.append("vegan diet")
+    return {"extracted_interests": interests, "constraints": constraints}
+
+def _infer_trip_from_query(query: Optional[str]) -> Dict[str, Any]:
+    """Infer simple trip hints like location and number of days from a free-text query."""
+    if not query:
+        return {"location": None, "days": None}
+    import re
+    q = query.strip()
+    # days
+    m_days = re.search(r"(\d+)\s*(day|days)", q, re.IGNORECASE)
+    days = int(m_days.group(1)) if m_days else None
+    # location: look for 'to X' or 'in X'
+    loc = None
+    m_to = re.search(r"\bto\s+([a-zA-Z][a-zA-Z\s]+)", q, re.IGNORECASE)
+    m_in = re.search(r"\bin\s+([a-zA-Z][a-zA-Z\s]+)", q, re.IGNORECASE)
+    cand = None
+    if m_to:
+        cand = m_to.group(1)
+    elif m_in:
+        cand = m_in.group(1)
+    if cand:
+        # trim trailing words like 'with', 'for'
+        cand = re.split(r"\s+(with|for|and|,|\.)\b", cand)[0].strip()
+        # title case
+        loc = " ".join(w.capitalize() for w in cand.split())
+    return {"location": loc, "days": days}
+
+def _build_itinerary(dates: List[str], act_ids: List[str]) -> List[Dict[str, Any]]:
+    itinerary = []
+    idx = 0
+    for d in dates:
+        blocks = []
+        for tb in ["morning","afternoon","evening"]:
+            if act_ids:
+                # Cycle through activities so all days/blocks have items
+                a1 = act_ids[idx % len(act_ids)]
+                a2 = act_ids[(idx + 1) % len(act_ids)] if len(act_ids) > 1 else a1
+                chosen = [a1, a2]
+                idx += 2
+            else:
+                chosen = []
+            blocks.append({
+                "time_block": tb,
+                "summary": f"Suggested {tb} activities",
+                "activities": chosen
+            })
+        itinerary.append({"date": d, "blocks": blocks})
+    return itinerary
+
+@router.post("/concierge-agent")
+async def concierge_agent(payload: Union[AgentV2Input, AgentLegacyInput] = Body(...)):
+    """Dynamic Concierge endpoint that follows the new contract and uses Tavily when available."""
+    # Normalize legacy payload to AgentV2Input shape
+    used_default_dates = False
+    if isinstance(payload, AgentLegacyInput):
+        bc = payload.booking_context or {}
+        prefs_raw = payload.preferences or {}
+        # Extract dates/location heuristically
+        today = datetime.utcnow().date()
+        start_raw = bc.get("start_date") or bc.get("check_in") or bc.get("checkIn") or (bc.get("dates") or {}).get("start")
+        end_raw = bc.get("end_date") or bc.get("check_out") or bc.get("checkOut") or (bc.get("dates") or {}).get("end")
+        if not start_raw or not end_raw:
+            used_default_dates = True
+        start_date = start_raw or today.isoformat()
+        end_date = end_raw or (today + timedelta(days=2)).isoformat()  # default 3 calendar days
+        location = bc.get("location") or bc.get("city") or bc.get("destination") or ""
+        party_type = bc.get("party_type") or bc.get("partyType") or None
+        party_size = bc.get("guests") or bc.get("party_size") or None
+        children_ages = bc.get("children_ages") or None
+
+        booking = Booking(
+            start_date=str(start_date),
+            end_date=str(end_date),
+            location=str(location),
+            party_type=party_type,
+            party_size=party_size,
+            children_ages=children_ages,
         )
+        # Preferences mapping
+        mobility = prefs_raw.get("mobility_needs") or {}
+        dietary = prefs_raw.get("dietary") or {}
+        prefs = Preferences(
+            budget=prefs_raw.get("budget"),
+            interests=prefs_raw.get("interests"),
+            mobility_needs=MobilityNeeds(
+                wheelchair=mobility.get("wheelchair"),
+                max_walk_km=mobility.get("max_walk_km"),
+                stroller=mobility.get("stroller"),
+            ),
+            dietary=Dietary(
+                vegan=dietary.get("vegan"),
+                vegetarian=dietary.get("vegetarian"),
+                gluten_free=dietary.get("gluten_free"),
+                halal=dietary.get("halal"),
+                kosher=dietary.get("kosher"),
+                other=dietary.get("other"),
+            ),
+        )
+        ctx_flags = ContextFlags()
+        nlu_query = payload.nlu_prompt
+    else:
+        # Already new model
+        booking = payload.booking
+        prefs = payload.preferences or Preferences()
+        ctx_flags = payload.context or ContextFlags()
+        nlu_query = payload.nlu_query
+
+    # Heuristic fill: infer location/days from nlu_query when missing
+    hints = _infer_trip_from_query(nlu_query)
+    if (not booking.location) and hints.get("location"):
+        booking.location = hints["location"]
+    # If dates are missing or invalid, compute from inferred days
+    if not _date_range(booking.start_date, booking.end_date):
+        days = hints.get("days") or 3
+        start = datetime.utcnow().date()
+        booking.start_date = start.isoformat()
+        booking.end_date = (start + timedelta(days=max(0, days-1))).isoformat()
+    # If legacy used default dates and user asked for a specific day-count, honor it
+    elif used_default_dates and hints.get("days"):
+        try:
+            start = datetime.fromisoformat(booking.start_date).date()
+            days = int(hints["days"]) or 3
+            booking.end_date = (start + timedelta(days=max(0, days-1))).isoformat()
+        except Exception:
+            pass
+
+    # 1) Context acquisition (weather/events/pois)
+    sources: List[DebugSource] = []
+    weather_text = None
+    events: List[Dict[str, Any]] = []
+    pois: List[Dict[str, Any]] = []
+
+    context_overrides = None
+    if not isinstance(payload, AgentLegacyInput):
+        context_overrides = payload.context_overrides if isinstance(payload.context_overrides, dict) else None
+    if context_overrides:
+        weather_text = (context_overrides.get("weather") or {}).get("summary") if isinstance(context_overrides.get("weather"), dict) else None
+        events = context_overrides.get("events") or []
+        pois = context_overrides.get("pois") or []
+
+    if ctx_flags.weather == "auto" and not weather_text:
+        q = f"current weather and typical conditions this week in {booking.location}"
+        res = await _tavily_search(q, 3)
+        if res:
+            weather_text = (res[0].get("content") or res[0].get("snippet") or "").strip()[:400]
+            sources.append(DebugSource(type="tavily", query=q, url=res[0].get("url")))
+
+    if ctx_flags.events == "auto" and not events:
+        q = f"events this week for families in {booking.location}"
+        res = await _tavily_search(q, 5)
+        if res:
+            events = res
+            sources.append(DebugSource(type="tavily", query=q, url=res[0].get("url")))
+
+    if ctx_flags.pois == "auto" and not pois:
+        q = f"top attractions and kid-friendly points of interest in {booking.location} with hours and prices"
+        res = await _tavily_search(q, 8)
+        if res:
+            pois = res
+            sources.append(DebugSource(type="tavily", query=q, url=res[0].get("url")))
+
+    # 2) Build activities from POIs/events (with graceful fallback)
+    activities: List[Activity] = []
+    def add_activity_from_item(item: Dict[str, Any], taghint: List[str]):
+        title = item.get("title") or item.get("name") or "Activity"
+        aid = _slugify(title)
+        price = _extract_price_tier(str(item.get("content") or ""))
+        activities.append(Activity(
+            id=aid,
+            title=title,
+            address="",
+            geo=Geo(lat=0.0, lng=0.0),
+            price_tier=price,
+            duration_minutes=90,
+            tags=taghint,
+            wheelchair_friendly=bool(getattr(prefs.mobility_needs or MobilityNeeds(), 'wheelchair', False)),
+            child_friendly=(booking.party_type == 'family' or bool(booking.children_ages)),
+            stroller_friendly=bool(getattr(prefs.mobility_needs or MobilityNeeds(), 'stroller', False)),
+            booking_link=item.get("url"),
+            source={"name": "tavily", "url": item.get("url")}
+        ))
+
+    for p in pois[:10]:
+        add_activity_from_item(p, ["outdoors" if 'park' in (p.get('title','').lower()) else "sightseeing"]) 
+    for e in events[:6]:
+        add_activity_from_item(e, ["event"]) 
+
+    # Fallback if no activities from Tavily/context
+    if not activities:
+        base_city = booking.location or "City"
+        fallback = [
+            {"title": f"{base_city} Museum", "url": None, "tag": ["museum"]},
+            {"title": f"{base_city} Scenic Park", "url": None, "tag": ["outdoors"]},
+            {"title": f"Historic {base_city} Walk", "url": None, "tag": ["sightseeing"]},
+            {"title": f"Sunset Viewpoint", "url": None, "tag": ["outdoors"]},
+            {"title": f"Farmers Market", "url": None, "tag": ["food","market"]},
+        ]
+        for f in fallback:
+            activities.append(Activity(
+                id=_slugify(f["title"]),
+                title=f["title"],
+                address="",
+                geo=Geo(lat=0.0, lng=0.0),
+                price_tier=None,
+                duration_minutes=90,
+                tags=f["tag"],
+                wheelchair_friendly=bool(getattr(prefs.mobility_needs or MobilityNeeds(), 'wheelchair', False)),
+                child_friendly=(booking.party_type == 'family' or bool(booking.children_ages)),
+                stroller_friendly=bool(getattr(prefs.mobility_needs or MobilityNeeds(), 'stroller', False)),
+                booking_link=None,
+                source={"name": "fallback", "url": None}
+            ))
+
+    # 3) Restaurants based on dietary
+    dietary_filters = _dietary_keys(prefs.dietary)
+    rest_query = None
+    if dietary_filters:
+        key = dietary_filters[0].replace('_', ' ')
+        rest_query = f"best {key} restaurants in {booking.location} with price info"
+    else:
+        rest_query = f"best family friendly restaurants in {booking.location} with price info"
+    rest_results = await _tavily_search(rest_query, 6)
+    restaurants: List[Restaurant] = []
+    for r in rest_results:
+        price = _extract_price_tier(str(r.get("content") or ""))
+        restaurants.append(Restaurant(
+            name=r.get("title") or "Restaurant",
+            address="",
+            geo=Geo(lat=0.0, lng=0.0),
+            dietary_match=[d for d in dietary_filters],
+            price_tier=price,
+            kid_friendly=(booking.party_type == 'family'),
+            reservation_link=r.get("url"),
+            source={"name": "tavily", "url": r.get("url")}
+        ))
+    if rest_results:
+        sources.append(DebugSource(type="tavily", query=rest_query, url=rest_results[0].get("url")))
+    # Fallback restaurants
+    if not restaurants:
+        base_city = booking.location or "City"
+        defaults = [
+            {"name": f"{base_city} Family Cafe", "tier": "$"},
+            {"name": f"{base_city} Vegan Kitchen", "tier": "$$"},
+            {"name": f"{base_city} Diner", "tier": "$"},
+        ]
+        for d in defaults:
+            restaurants.append(Restaurant(
+                name=d["name"],
+                address="",
+                geo=Geo(lat=0.0, lng=0.0),
+                dietary_match=[*dietary_filters],
+                price_tier=d["tier"],
+                kid_friendly=(booking.party_type == 'family'),
+                reservation_link=None,
+                source={"name": "fallback", "url": None}
+            ))
+
+    # 4) Itinerary mapping across dates
+    dates = _date_range(booking.start_date, booking.end_date)
+    act_ids = [a.id for a in activities]
+    itinerary = _build_itinerary(dates or [booking.start_date], act_ids)
+
+    # 5) Packing checklist and notes
+    packing = _pack_list_from_weather(weather_text or "")
+    if prefs.mobility_needs and getattr(prefs.mobility_needs, 'wheelchair', False):
+        packing.append({"item": "Portable ramp (if needed)", "reason": "mobility", "mandatory": False})
+    if booking.children_ages:
+        packing.append({"item": "Snacks / wipes for kids", "reason": "activity", "mandatory": False})
+
+    notes: List[Note] = []
+    if weather_text:
+        notes.append(Note(type="weather", text=weather_text[:500]))
+    if dietary_filters:
+        notes.append(Note(type="dietary", text=f"Filtering restaurants for: {', '.join(dietary_filters)}"))
+    if prefs.mobility_needs and (getattr(prefs.mobility_needs, 'wheelchair', False) or getattr(prefs.mobility_needs, 'stroller', False)):
+        notes.append(Note(type="mobility", text="Routes kept wheelchair/stroller-friendly where possible."))
+
+    tavily_on = _tavily_enabled()
+    computed_dates = _date_range(booking.start_date, booking.end_date)
+    debug = {
+        "query_understanding": _nlu_extract(nlu_query),
+        "inferred": hints,
+        "tavily_enabled": tavily_on,
+        "date_range": {
+            "start": booking.start_date,
+            "end": booking.end_date,
+            "days": len(computed_dates),
+        },
+        "sources": [_to_dict(s) for s in sources],
+    }
+
+    # Build backward-compatible response shape along with the new one
+    legacy_day_by_day = []
+    for day in itinerary:
+        highlights = []
+        for b in day["blocks"]:
+            # Use activity titles for highlights
+            highlights.extend([a.title for a in activities if a.id in b["activities"]])
+        legacy_day_by_day.append({
+            "day": day["date"],
+            "title": f"Plan for {day['date']}",
+            "highlights": highlights[:5]
+        })
+    legacy_activity_cards = [
+        {
+            "name": a.title,
+            "type": ",".join(a.tags or []),
+            "duration": f"{a.duration_minutes or 90} minutes",
+            "suits": [
+                *( ["wheelchair"] if a.wheelchair_friendly else [] ),
+                *( ["kids"] if a.child_friendly else [] ),
+                *( ["strollers"] if a.stroller_friendly else [] ),
+            ],
+            "link": a.booking_link,
+        } for a in activities
+    ]
+    legacy_restaurants = []
+    for r in restaurants:
+        link = r.reservation_link
+        if not link and r.source and isinstance(r.source, dict):
+            link = r.source.get("url")
+        legacy_restaurants.append({
+            "name": r.name,
+            "cuisine": ",".join(r.dietary_match or []),
+            "notes": ("Kid-friendly" if r.kid_friendly else ""),
+            "link": link,
+        })
+
+    response = {
+        # New schema
+        "itinerary": itinerary,
+        "activities": [a.model_dump() if hasattr(a, "model_dump") else a.dict() for a in activities],
+        "restaurants": [r.model_dump() if hasattr(r, "model_dump") else r.dict() for r in restaurants],
+        "packing_checklist": packing,
+        "notes": [n.model_dump() if hasattr(n, "model_dump") else n.dict() for n in notes],
+        "debug": debug,
+        # Legacy schema
+        "day_by_day_plan": legacy_day_by_day,
+        "activity_cards": legacy_activity_cards,
+        "restaurant_recommendations": legacy_restaurants,
+    }
+    return response
+
+
+@router.get("/concierge-agent/diag")
+async def concierge_diag():
+    """Diagnostic endpoint to verify dynamic mode.
+    Returns whether Tavily is enabled and a tiny sample search count (0 if disabled or error).
+    """
+    enabled = _tavily_enabled()
+    sample_count = 0
+    if enabled:
+        try:
+            res = await _tavily_search("best things to do in London", 1)
+            sample_count = len(res)
+        except Exception:
+            sample_count = 0
+    return {"tavily_enabled": enabled, "sample_results": sample_count}
 
     # Build a combined prompt from all inputs
     combined_prompt = (

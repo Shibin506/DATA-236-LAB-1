@@ -7,10 +7,19 @@ class BookingService {
     
     try {
       const { property_id, check_in_date, check_out_date, number_of_guests, special_requests } = bookingData;
+      // Basic date sanity
+      if (!property_id || !check_in_date || !check_out_date) {
+        throw new Error('Missing booking details')
+      }
+      const checkIn = new Date(check_in_date);
+      const checkOut = new Date(check_out_date);
+      if (!(checkIn instanceof Date) || isNaN(checkIn) || !(checkOut instanceof Date) || isNaN(checkOut) || checkIn >= checkOut) {
+        throw new Error('Invalid date range')
+      }
       
       // Check if property exists and is active (include owner_id)
       const [properties] = await connection.execute(
-        'SELECT id, owner_id, price_per_night, max_guests FROM properties WHERE id = ? AND is_active = TRUE',
+        'SELECT id, owner_id, price_per_night, max_guests, availability_start, availability_end FROM properties WHERE id = ? AND is_active = TRUE',
         [property_id]
       );
       
@@ -22,12 +31,31 @@ class BookingService {
       
       // Check guest capacity
       if (number_of_guests > property.max_guests) {
-        throw new Error(`This property can only accommodate ${property.max_guests} guests`);
+        throw new Error('Guest limit exceeded for this property');
+      }
+
+      // Check requested dates fit within property availability window (if set)
+      if (property.availability_start && new Date(property.availability_start) > checkIn) {
+        throw new Error('This property is not available for your selected dates');
+      }
+      if (property.availability_end && new Date(property.availability_end) < checkOut) {
+        throw new Error('This property is not available for your selected dates');
+      }
+
+      // Check overlapping bookings (pending/accepted)
+      const [conflicts] = await connection.execute(
+        `SELECT COUNT(*) AS cnt
+         FROM bookings b
+         WHERE b.property_id = ?
+           AND (b.status IS NULL OR b.status IN ('pending','accepted'))
+           AND NOT (b.check_out_date <= ? OR b.check_in_date >= ?)`,
+        [property_id, check_in_date, check_out_date]
+      )
+      if (conflicts && conflicts[0] && conflicts[0].cnt > 0) {
+        throw new Error('This property is not available for your selected dates');
       }
       
       // Calculate total price
-      const checkIn = new Date(check_in_date);
-      const checkOut = new Date(check_out_date);
       const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
       const total_price = nights * property.price_per_night;
       

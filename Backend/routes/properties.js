@@ -164,7 +164,8 @@ router.get('/search', validate(schemas.propertySearch), async (req, res) => {
       SELECT p.id, p.name, p.description, p.property_type, p.address, p.city, p.state, p.country,
              p.price_per_night, p.bedrooms, p.bathrooms, p.max_guests, p.amenities, p.house_rules,
              p.availability_start, p.availability_end, p.created_at,
-             u.name as owner_name, u.profile_picture as owner_avatar
+             u.name as owner_name, u.profile_picture as owner_avatar,
+             (SELECT pi.image_url FROM property_images pi WHERE pi.property_id = p.id AND pi.image_type = 'main' ORDER BY pi.display_order ASC LIMIT 1) as main_image
       FROM properties p
       JOIN users u ON p.owner_id = u.id
       WHERE ${whereConditions.join(' AND ')}
