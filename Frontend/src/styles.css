@@ -1,0 +1,17 @@
+/* Global styles and Airbnb-like look tweaks */
+:root {
+  --brand: #ff385c;
+}
+
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; }
+
+.navbar-brand span { color: var(--brand); font-weight: 700; }
+
+.btn-brand { background: var(--brand); border-color: var(--brand); }
+.btn-brand:hover { background: #e31c5f; border-color: #e31c5f; }
+
+.card-img-top { height: 200px; object-fit: cover; }
+
+.form-error { color: #dc3545; font-size: .9rem; }
+
+.badge-status { text-transform: capitalize; }
