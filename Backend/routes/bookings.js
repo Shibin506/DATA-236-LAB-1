@@ -61,6 +61,12 @@ router.post('/', requireTraveler, validate(schemas.bookingCreate), async (req, r
     
     // Calculate total price
     const nights = Math.ceil((new Date(check_out_date) - new Date(check_in_date)) / (1000 * 60 * 60 * 24));
+    if (nights <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'check_out_date must be after check_in_date'
+      });
+    }
     const totalPrice = nights * property.price_per_night;
     
     // Create booking
@@ -89,7 +95,7 @@ router.post('/', requireTraveler, validate(schemas.bookingCreate), async (req, r
       success: true,
       message: 'Booking request created successfully',
       data: {
-        booking: newBooking[0]
+        booking: { ...newBooking[0], nights }
       }
     });
     

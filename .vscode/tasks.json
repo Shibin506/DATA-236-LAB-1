@@ -1,0 +1,25 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "run-backend-price-quote-check",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"\"(async()=>{const http=require('http');function req(path){return new Promise((resolve,reject)=>{http.get({host:'localhost',port:3001,path},res=>{let data='';res.on('data',c=>data+=c);res.on('end',()=>resolve({statusCode:res.statusCode,body:data}));}).on('error',reject);});} (async()=>{try{const health=await req('/health'); console.log('HEALTH',health.statusCode); console.log(health.body); const quote=await req('/api/properties/1/price-quote?check_in_date=2025-11-11&check_out_date=2025-11-14'); console.log('QUOTE',quote.statusCode); console.log(quote.body); }catch(e){console.error('ERR',e.message);} })(); })()\""
+			],
+			"group": "test"
+		},
+		{
+			"label": "run-frontend-build-check",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"\"const fs=require('fs'); const p='./Frontend/src/services/api.js'; fs.accessSync(p); console.log('Checked', p);\""
+			],
+			"group": "build"
+		}
+	]
+}

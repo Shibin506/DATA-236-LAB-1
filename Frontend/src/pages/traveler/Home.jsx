@@ -20,7 +20,8 @@ export default function Home() {
     setLoading(true)
     try {
       const { data } = await propertyApi.search(q)
-      setList(data.properties || [])
+      const payload = data?.data || data
+      setList(payload?.properties || [])
     } catch {
       setList([])
     } finally { setLoading(false) }
@@ -60,7 +61,7 @@ export default function Home() {
       <div className="row g-3">
         {list.map(p => (
           <div className="col-sm-6 col-md-4 col-lg-3" key={p.id}>
-            <PropertyCard property={p} />
+            <PropertyCard property={p} dateRange={{ startDate: q.startDate, endDate: q.endDate }} />
           </div>
         ))}
       </div>

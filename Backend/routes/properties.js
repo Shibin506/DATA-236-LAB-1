@@ -8,6 +8,16 @@ const { validate, schemas } = require('../middleware/validation');
 
 const router = express.Router();
 
+// Helper to compute nights between two ISO date strings (inclusive of check-in, exclusive of check-out)
+function computeNights(checkIn, checkOut) {
+  if (!checkIn || !checkOut) return 0;
+  const start = new Date(checkIn);
+  const end = new Date(checkOut);
+  const ms = end - start;
+  const nights = Math.ceil(ms / (1000 * 60 * 60 * 24));
+  return Math.max(0, nights);
+}
+
 // Configure multer for property image uploads
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
@@ -177,6 +187,16 @@ router.get('/search', validate(schemas.propertySearch), async (req, res) => {
     
     const [properties] = await connection.execute(searchQuery, queryParams);
     
+    // If dates are provided, include a client-friendly price quote per property
+    if (check_in_date && check_out_date) {
+      const nights = computeNights(check_in_date, check_out_date);
+      properties.forEach(p => {
+        const pricePerNight = Number(p.price_per_night) || 0;
+        p.total_nights = nights;
+        p.total_price = nights > 0 ? pricePerNight * nights : 0;
+      });
+    }
+    
     // Get total count for pagination
     const countQuery = `
       SELECT COUNT(DISTINCT p.id) as total
@@ -221,6 +241,7 @@ router.get('/:id', optionalAuth, async (req, res) => {
   
   try {
     const propertyId = req.params.id;
+    const { check_in_date, check_out_date } = req.query || {};
     
     // Get property details
     const [properties] = await connection.execute(
@@ -280,6 +301,19 @@ router.get('/:id', optionalAuth, async (req, res) => {
       reviews: reviews,
       is_favorited: isFavorited
     };
+    
+    // Optional price quote when dates are provided
+    if (check_in_date && check_out_date) {
+      const nights = computeNights(check_in_date, check_out_date);
+      const pricePerNight = Number(property.price_per_night) || 0;
+      property.price_quote = {
+        check_in_date,
+        check_out_date,
+        nights,
+        price_per_night: pricePerNight,
+        total_price: nights > 0 ? pricePerNight * nights : 0
+      };
+    }
     
     res.json({
       success: true,
@@ -712,6 +746,52 @@ router.delete('/:id/images/:imageId', requireOwner, async (req, res) => {
       success: false,
       message: 'Failed to delete image'
     });
+  } finally {
+    connection.release();
+  }
+});
+
+/**
+ * Additional utility endpoint: GET /api/properties/:id/price-quote
+ * Returns total nights and total price for a given property and date range.
+ * Access: Public
+ */
+// Note: This must be declared before module.exports in some setups; keeping it here for clarity.
+router.get('/:id/price-quote', async (req, res) => {
+  const connection = await pool.getConnection();
+  try {
+    const propertyId = req.params.id;
+    const { check_in_date, check_out_date } = req.query || {};
+    if (!check_in_date || !check_out_date) {
+      return res.status(400).json({
+        success: false,
+        message: 'check_in_date and check_out_date are required (YYYY-MM-DD)'
+      });
+    }
+    // Fetch price_per_night
+    const [rows] = await connection.execute(
+      'SELECT price_per_night FROM properties WHERE id = ? AND is_active = TRUE',
+      [propertyId]
+    );
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Property not found' });
+    }
+    const pricePerNight = Number(rows[0].price_per_night) || 0;
+    const nights = computeNights(check_in_date, check_out_date);
+    return res.json({
+      success: true,
+      data: {
+        property_id: propertyId,
+        check_in_date,
+        check_out_date,
+        nights,
+        price_per_night: pricePerNight,
+        total_price: nights > 0 ? pricePerNight * nights : 0
+      }
+    });
+  } catch (error) {
+    console.error('Price quote error:', error);
+    res.status(500).json({ success: false, message: 'Failed to compute price quote' });
   } finally {
     connection.release();
   }
