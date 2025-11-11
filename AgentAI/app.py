@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Any, Union
+from typing import Dict, List, Optional, Any, Union, Tuple
 import os
 import json
 from fastapi import FastAPI, APIRouter, Body
@@ -7,6 +7,12 @@ from pydantic import BaseModel
 import httpx
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
+try:
+    import pymysql
+    from pymysql.cursors import DictCursor
+    PYMYSQL_AVAILABLE = True
+except Exception:
+    PYMYSQL_AVAILABLE = False
 
 # Load environment variables from .env if present
 load_dotenv()
@@ -217,6 +223,137 @@ if LANGCHAIN_AVAILABLE:
 def _slugify(s: str) -> str:
     return ''.join(ch.lower() if ch.isalnum() else '-' for ch in s).strip('-')[:64]
 
+# ------------------------------
+# Database helpers: fetch Airbnb properties by location
+# ------------------------------
+def _db_connect():
+    host = os.getenv("DB_HOST", "localhost")
+    user = os.getenv("DB_USER", "root")
+    password = os.getenv("DB_PASSWORD", "")
+    database = os.getenv("DB_NAME", "air_bnb")
+    port = int(os.getenv("DB_PORT", "3306"))
+    if not PYMYSQL_AVAILABLE:
+        raise RuntimeError("PyMySQL not installed. Run: pip install PyMySQL")
+    return pymysql.connect(host=host, user=user, password=password, database=database, port=port, cursorclass=DictCursor, autocommit=True)
+
+def _db_connect_no_db():
+    host = os.getenv("DB_HOST", "localhost")
+    user = os.getenv("DB_USER", "root")
+    password = os.getenv("DB_PASSWORD", "")
+    port = int(os.getenv("DB_PORT", "3306"))
+    if not PYMYSQL_AVAILABLE:
+        raise RuntimeError("PyMySQL not installed. Run: pip install PyMySQL")
+    return pymysql.connect(host=host, user=user, password=password, port=port, cursorclass=DictCursor, autocommit=True)
+
+def _discover_db_with_properties() -> Optional[str]:
+    """Try to find a database that contains the 'properties' table."""
+    try:
+        conn = _db_connect_no_db()
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT table_schema
+                FROM information_schema.tables
+                WHERE table_name = 'properties'
+                GROUP BY table_schema
+                ORDER BY COUNT(*) DESC
+                LIMIT 1
+            """)
+            row = cur.fetchone()
+        conn.close()
+        if row:
+            # row may be dict or tuple depending on cursorclass
+            if isinstance(row, dict):
+                return row.get("table_schema")
+            return list(row.values())[0] if hasattr(row, 'values') else row[0]
+    except Exception:
+        return None
+    return None
+
+def _db_connect_to(database_name: str):
+    host = os.getenv("DB_HOST", "localhost")
+    user = os.getenv("DB_USER", "root")
+    password = os.getenv("DB_PASSWORD", "")
+    port = int(os.getenv("DB_PORT", "3306"))
+    return pymysql.connect(host=host, user=user, password=password, database=database_name, port=port, cursorclass=DictCursor, autocommit=True)
+
+def _fetch_properties_by_location(location: str, limit: int = 10) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+    if not location:
+        return [], {"reason": "no_location"}
+    if not PYMYSQL_AVAILABLE:
+        return [], {"reason": "pymysql_not_available"}
+    like_core = f"%{location.strip()}%"
+    # Primary query (with image subselect). If it fails, retry with a simpler query.
+    sql_primary = (
+        "SELECT p.id, p.name, p.city, p.state, p.country, p.price_per_night, "
+        "(SELECT pi.image_url FROM property_images pi WHERE pi.property_id = p.id AND pi.image_type = 'main' ORDER BY pi.display_order ASC LIMIT 1) AS main_image "
+        "FROM properties p "
+        "WHERE p.is_active = TRUE AND (p.city = %s OR p.city LIKE %s OR p.state = %s OR p.country = %s OR p.address LIKE %s) "
+        "ORDER BY p.created_at DESC LIMIT %s"
+    )
+    sql_simple = (
+        "SELECT p.id, p.name, p.city, p.state, p.country, p.price_per_night "
+        "FROM properties p "
+        "WHERE p.is_active = TRUE AND (p.city = %s OR p.city LIKE %s OR p.state = %s OR p.country = %s OR p.address LIKE %s) "
+        "ORDER BY p.created_at DESC LIMIT %s"
+    )
+    rows: List[Dict[str, Any]] = []
+    dbg: Dict[str, Any] = {"sql": "primary", "error": None, "counts": {}, "db": {}}
+    try:
+        conn = _db_connect()
+        dbg["db"] = {
+            "host": os.getenv("DB_HOST", "localhost"),
+            "db": os.getenv("DB_NAME", "airbnb_db"),
+            "user": os.getenv("DB_USER", "root"),
+        }
+        with conn.cursor() as cur:
+            # total properties (active) for sanity
+            cur.execute("SELECT COUNT(*) AS c FROM properties WHERE is_active=TRUE")
+            total_active = cur.fetchone()["c"] if isinstance(cur.fetchone(), dict) else None
+            # Need to re-fetch because cur.fetchone() consumed a row; adjust to store value safely
+        conn.close()
+        # Re-open to avoid interfering with next result set
+        conn = _db_connect()
+        with conn.cursor() as cur:
+            cur.execute("SELECT COUNT(*) FROM properties WHERE is_active=TRUE")
+            dbg["counts"]["active_total"] = int(list(cur.fetchone().values())[0])
+            cur.execute(sql_primary, (location, like_core, location, location, like_core, int(limit)))
+            rows = cur.fetchall() or []
+        conn.close()
+    except Exception as e:
+        # Retry without image subselect
+        dbg["error"] = str(e)
+        dbg["sql"] = "simple"
+        try:
+            # Unknown database? Try discovery and connect directly to discovered DB
+            discovered = _discover_db_with_properties()
+            if discovered:
+                dbg.setdefault("db", {})["discovered"] = discovered
+                conn = _db_connect_to(discovered)
+            else:
+                conn = _db_connect()
+            with conn.cursor() as cur:
+                cur.execute("SELECT COUNT(*) FROM properties WHERE is_active=TRUE")
+                dbg["counts"]["active_total"] = int(list(cur.fetchone().values())[0])
+                cur.execute(sql_simple, (location, like_core, location, location, like_core, int(limit)))
+                rows = cur.fetchall() or []
+            conn.close()
+        except Exception:
+            return [], dbg
+    normalized: List[Dict[str, Any]] = []
+    for r in rows:
+        price = float(r.get("price_per_night") or 0)
+        normalized.append({
+            "id": r.get("id"),
+            "name": r.get("name"),
+            "city": r.get("city"),
+            "state": r.get("state"),
+            "country": r.get("country"),
+            "price_per_night": price,
+            "main_image": r.get("main_image"),
+        })
+    dbg["counts"]["filtered"] = len(normalized)
+    return normalized, dbg
+
 async def _tavily_search(query: str, max_results: int = 5) -> List[Dict[str, Any]]:
     """Prefer official Tavily client if available; otherwise fallback to raw HTTP API."""
     api_key = os.getenv("TAVILY_API_KEY")
@@ -257,6 +394,8 @@ def _tavily_enabled() -> bool:
 
 def _normalize_str(s: Optional[str]) -> str:
     return (s or "").strip().lower()
+
+# Note: No hard-coded or file-based fallbacks. Results may be empty if live search returns nothing.
 
 def _city_aliases(location: Optional[str]) -> List[str]:
     """Return a set of useful aliases for a city name to help filter search results.
@@ -709,31 +848,7 @@ async def concierge_agent(payload: Union[AgentV2Input, AgentLegacyInput] = Body(
     for e in events[:6]:
         add_activity_from_item(e, ["event"]) 
 
-    # Fallback if no activities from Tavily/context
-    if not activities:
-        base_city = booking.location or "City"
-        fallback = [
-            {"title": f"{base_city} Museum", "url": None, "tag": ["museum"]},
-            {"title": f"{base_city} Scenic Park", "url": None, "tag": ["outdoors"]},
-            {"title": f"Historic {base_city} Walk", "url": None, "tag": ["sightseeing"]},
-            {"title": f"Sunset Viewpoint", "url": None, "tag": ["outdoors"]},
-            {"title": f"Farmers Market", "url": None, "tag": ["food","market"]},
-        ]
-        for f in fallback:
-            activities.append(Activity(
-                id=_slugify(f["title"]),
-                title=f["title"],
-                address="",
-                geo=Geo(lat=0.0, lng=0.0),
-                price_tier=None,
-                duration_minutes=90,
-                tags=f["tag"],
-                wheelchair_friendly=bool(getattr(prefs.mobility_needs or MobilityNeeds(), 'wheelchair', False)),
-                child_friendly=(booking.party_type == 'family' or bool(booking.children_ages)),
-                stroller_friendly=bool(getattr(prefs.mobility_needs or MobilityNeeds(), 'stroller', False)),
-                booking_link=None,
-                source={"name": "fallback", "url": None}
-            ))
+    # No fallback activities: if live results are empty, activities remains empty.
 
     # 3) Restaurants based on dietary
     dietary_filters = _dietary_keys(prefs.dietary)
@@ -760,25 +875,7 @@ async def concierge_agent(payload: Union[AgentV2Input, AgentLegacyInput] = Body(
         ))
     if rest_results:
         sources.append(DebugSource(type="tavily", query=rest_query, url=rest_results[0].get("url")))
-    # Fallback restaurants
-    if not restaurants:
-        base_city = booking.location or "City"
-        defaults = [
-            {"name": f"{base_city} Family Cafe", "tier": "$"},
-            {"name": f"{base_city} Vegan Kitchen", "tier": "$$"},
-            {"name": f"{base_city} Diner", "tier": "$"},
-        ]
-        for d in defaults:
-            restaurants.append(Restaurant(
-                name=d["name"],
-                address="",
-                geo=Geo(lat=0.0, lng=0.0),
-                dietary_match=[*dietary_filters],
-                price_tier=d["tier"],
-                kid_friendly=(booking.party_type == 'family'),
-                reservation_link=None,
-                source={"name": "fallback", "url": None}
-            ))
+    # No fallback restaurants: if live results are empty, restaurants remains empty.
 
     # 4) Itinerary mapping across dates
     dates = _date_range(booking.start_date, booking.end_date)
@@ -800,6 +897,17 @@ async def concierge_agent(payload: Union[AgentV2Input, AgentLegacyInput] = Body(
     if prefs.mobility_needs and (getattr(prefs.mobility_needs, 'wheelchair', False) or getattr(prefs.mobility_needs, 'stroller', False)):
         notes.append(Note(type="mobility", text="Routes kept wheelchair/stroller-friendly where possible."))
 
+    # 6) Airbnb properties in the requested location (from DB)
+    properties_list: List[Dict[str, Any]] = []
+    properties_dbg: Dict[str, Any] = {"reason": "skipped"}
+    try:
+        if booking.location:
+            properties_list, properties_dbg = _fetch_properties_by_location(booking.location, limit=10)
+        else:
+            properties_list, properties_dbg = [], {"reason": "no_location"}
+    except Exception as e:
+        properties_list, properties_dbg = [], {"error": str(e)}
+
     tavily_on = _tavily_enabled()
     computed_dates = _date_range(booking.start_date, booking.end_date)
     debug = {
@@ -818,6 +926,7 @@ async def concierge_agent(payload: Union[AgentV2Input, AgentLegacyInput] = Body(
             "pois": {"before": len(pois_all or []), "after": len(pois or [])},
             "restaurants": {"before": len(rest_results_raw or []), "after": len(rest_results or [])},
         },
+    "properties": {"location": booking.location, "count": len(properties_list), **(properties_dbg or {})},
     }
 
     # Build backward-compatible response shape along with the new one
@@ -862,6 +971,7 @@ async def concierge_agent(payload: Union[AgentV2Input, AgentLegacyInput] = Body(
         "itinerary": itinerary,
         "activities": [a.model_dump() if hasattr(a, "model_dump") else a.dict() for a in activities],
         "restaurants": [r.model_dump() if hasattr(r, "model_dump") else r.dict() for r in restaurants],
+        "properties": (properties_list if properties_list else "no property"),
         "packing_checklist": packing,
         "notes": [n.model_dump() if hasattr(n, "model_dump") else n.dict() for n in notes],
         "debug": debug,

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { agentApi } from '../services/api'
 
 export default function AgentAIModal({ show, onClose }) {
@@ -66,6 +67,27 @@ export default function AgentAIModal({ show, onClose }) {
                         <li key={idx}><strong>Day {d.day}:</strong> {d.title} — {(d.highlights||[]).join(', ')}</li>
                       ))}
                     </ul>
+                  </div>
+                )}
+                {Array.isArray(result.properties) && (
+                  <div className="mb-3">
+                    <h6>Properties in location</h6>
+                    <ul>
+                      {result.properties.map((p, idx) => (
+                        <li key={idx}>
+                          <strong>{p.id ? (
+                            <Link to={`/properties/${p.id}`} className="text-decoration-none">{p.name}</Link>
+                          ) : p.name}</strong> — ${p.price_per_night} night
+                          {p.city && (<span className="text-muted"> ({[p.city,p.state,p.country].filter(Boolean).join(', ')})</span>)}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {typeof result.properties === 'string' && result.properties === 'no property' && (
+                  <div className="mb-3">
+                    <h6>Properties in location</h6>
+                    <p className="text-muted">No property listed for this location.</p>
                   </div>
                 )}
                 {Array.isArray(result.activity_cards) && (

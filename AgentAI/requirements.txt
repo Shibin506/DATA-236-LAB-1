@@ -7,6 +7,9 @@ httpx>=0.27.0
 # Official Tavily client for search
 tavily-python>=0.3.5
 python-dotenv>=1.0.1
+# MySQL driver for property lookup from main Airbnb database
+PyMySQL>=1.1.0
+cryptography>=43.0.0
 # If you prefer to call Ollama directly from Python, install the client (optional)
 # ollama>=0.3.0
 # Optional: external search tool used by TavilySearchAPITool

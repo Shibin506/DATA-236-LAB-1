@@ -1,0 +1,157 @@
+# ---- Global ignores for multi-stack project (Node + Python + Misc) ----
+# Node.js dependencies and build artifacts
+node_modules/
+**/node_modules/
+dist/
+.build/
+.vite/
+.next/
+.nuxt/
+jspm_packages/
+coverage/
+*.lcov
+.nyc_output/
+.cache/
+.parcel-cache/
+.storybook-out/
+.out/
+
+# Python virtual environments and caches
+.venv/
+venv/
+ENV/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.mypy_cache/
+.pytest_cache/
+.python-version
+
+# Package/build metadata
+*.egg-info/
+.eggs/
+build/
+DevelopEggs/
+.installed.cfg
+pip-wheel-metadata/
+
+# Logs & diagnostics
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime PIDs
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Environment variable files (keep examples)
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+
+# OS / Editor / IDE cruft
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.iml
+
+# TypeScript cache
+*.tsbuildinfo
+
+# REPL & history
+.node_repl_history
+.python_history
+
+# Output of 'npm pack'
+*.tgz
+.yarn-integrity
+.npm/
+.eslintcache
+.rpt2_cache/
+.rts2_cache_*/
+
+# Test & coverage temp
+lib-cov/
+
+# Binaries / compiled addons
+build/Release/
+
+# Parcel/Next/Gatsby/Vuepress/Public outputs
+public/
+.vuepress/dist/
+
+# Serverless / infra
+.serverless/
+.fusebox/
+.dynamodb/
+
+# Temporary directories
+.tmp/
+tmp/
+.temp/
+
+# Database & local data dumps
+*.db
+*.sqlite
+*.sqlite3
+*.bak
+*.backup
+*.old
+
+# Uploads / media (commit only placeholders) - create folder later if needed
+uploads/
+media/
+
+# Local scripts not for production (backend utilities)
+Backend/real-server.js
+Backend/setup.js
+Backend/simple-test.js
+Backend/test-api.js
+Backend/check-table-structure.js
+Backend/frontend-test.html
+
+# Python specific tooling caches
+.pyre/
+.pytype/
+
+# Security / secrets (never commit)
+*.pem
+*.key
+*.crt
+*.cert
+*.der
+*.p12
+*.pfx
+
+# Ignore lockfiles if not desired (uncomment to ignore)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+# Pipfile.lock
+# poetry.lock
+
+# VSCode testing directories
+.vscode-test/
+
+# Node profiler output
+isolate-*.log
+
+# Sentry / instrumentation temp
+.sentry-cli
+
+# --- End of root .gitignore ---

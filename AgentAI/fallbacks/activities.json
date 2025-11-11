@@ -1,0 +1,17 @@
+{
+  "default": [
+    {"title": "City Museum", "tags": ["museum"], "duration_minutes": 90},
+    {"title": "Central Park Walk", "tags": ["outdoors"], "duration_minutes": 60},
+    {"title": "Historic Old Town Tour", "tags": ["sightseeing"], "duration_minutes": 120}
+  ],
+  "by_city": {
+    "new york": [
+      {"title": "Metropolitan Museum Highlights", "tags": ["museum"], "duration_minutes": 120},
+      {"title": "High Line Stroll", "tags": ["outdoors"], "duration_minutes": 60}
+    ],
+    "san francisco": [
+      {"title": "Golden Gate Bridge Vista", "tags": ["outdoors"], "duration_minutes": 45},
+      {"title": "Fisherman's Wharf Food Sampling", "tags": ["food"], "duration_minutes": 90}
+    ]
+  }
+}

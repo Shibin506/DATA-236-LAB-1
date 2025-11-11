@@ -1,0 +1,16 @@
+{
+  "default": [
+    {"name": "Family Friendly Grill", "price_tier": "$$", "dietary_match": ["vegetarian"]},
+    {"name": "Local Vegan Deli", "price_tier": "$$", "dietary_match": ["vegan"]}
+  ],
+  "by_city": {
+    "new york": [
+      {"name": "NYC Kids Diner", "price_tier": "$"},
+      {"name": "Brooklyn Vegan Spot", "price_tier": "$$", "dietary_match": ["vegan"]}
+    ],
+    "san francisco": [
+      {"name": "SF Family Cafe", "price_tier": "$$"},
+      {"name": "Mission Vegan Kitchen", "price_tier": "$$", "dietary_match": ["vegan"]}
+    ]
+  }
+}
