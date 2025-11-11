@@ -13,10 +13,22 @@ const { testConnection, initializeDatabase } = require('./config/database');
 // Import routes
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
-// Use full-featured properties routes (includes images upload/delete, availability, etc.)
 const propertyRoutes = require('./routes/properties');
 const bookingRoutes = require('./routes/bookings');
 const favoriteRoutes = require('./routes/favorites');
+
+// Service role (microservice slicing) - one image can serve different logical roles
+// SERVICE_ROLE options: traveler | owner | property | booking | all
+// Each deployment (Kubernetes) will set SERVICE_ROLE to limit mounted routes for clarity & scaling
+const SERVICE_ROLE = process.env.SERVICE_ROLE || 'all';
+const roleConfig = {
+  traveler: ['auth', 'users', 'properties', 'bookings', 'favorites'],
+  owner: ['auth', 'users', 'properties'],
+  property: ['properties'],
+  booking: ['bookings'],
+  all: ['auth', 'users', 'properties', 'bookings', 'favorites']
+};
+const enabledRoutes = roleConfig[SERVICE_ROLE] || roleConfig['all'];
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -27,46 +39,25 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false
 }));
 
-// CORS configuration - must be BEFORE rate limiting so CORS headers are set even on errors
-const frontendWhitelist = (process.env.FRONTEND_URLS || 'http://localhost:3000,http://localhost:3002,http://127.0.0.1:3000')
-  .split(',')
-  .map(s => s.trim())
-  .filter(Boolean)
-
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow non-browser or same-origin requests (no Origin header)
-    if (!origin) return callback(null, true)
-    if (frontendWhitelist.includes(origin)) return callback(null, true)
-    return callback(new Error(`Not allowed by CORS: ${origin}`))
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cookie']
-}));
-
-// Explicitly handle preflight requests for all routes
-app.options('*', cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true)
-    if (frontendWhitelist.includes(origin)) return callback(null, true)
-    return callback(new Error(`Not allowed by CORS: ${origin}`))
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cookie']
-}));
-
-// Rate limiting (after CORS). Skip preflight and health to avoid noisy 429s on OPTIONS
+// Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
   message: 'Too many requests from this IP, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req) => req.method === 'OPTIONS' || req.path === '/health'
 });
 app.use('/api/', limiter);
+
+// CORS configuration
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://your-frontend-domain.com'] 
+    : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
 
 // Session configuration
 app.use(session({
@@ -75,7 +66,6 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   },
@@ -105,12 +95,20 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API routes
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/properties', propertyRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/favorites', favoriteRoutes);
+// Conditionally mount API routes based on SERVICE_ROLE
+if (enabledRoutes.includes('auth')) app.use('/api/auth', authRoutes);
+if (enabledRoutes.includes('users')) app.use('/api/users', userRoutes);
+if (enabledRoutes.includes('properties')) app.use('/api/properties', propertyRoutes);
+if (enabledRoutes.includes('bookings')) app.use('/api/bookings', bookingRoutes);
+if (enabledRoutes.includes('favorites')) app.use('/api/favorites', favoriteRoutes);
+
+app.get('/role-info', (req, res) => {
+  res.json({
+    service_role: SERVICE_ROLE,
+    mounted_routes: enabledRoutes,
+    timestamp: new Date().toISOString()
+  });
+});
 
 // 404 handler
 app.use('*', (req, res) => {

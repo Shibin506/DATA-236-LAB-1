@@ -154,6 +154,11 @@ app.add_middleware(
 )
 router = APIRouter(prefix="/api/v1", tags=["concierge-agent"]) 
 
+# Simple health endpoint for container probes
+@app.get("/health")
+def health():
+    return {"status": "ok", "service": "agentai", "timestamp": datetime.utcnow().isoformat()}
+
 
 # ------------------------------
 # Task 2: LangChain Tools & Agent Core

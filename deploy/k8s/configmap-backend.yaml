@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: travel-platform
+data:
+  NODE_ENV: "production"
+  PORT: "3001"
+  # DB connectivity - set to your MySQL service DNS name or external host
+  DB_HOST: "mysql" # change if using external DB
+  DB_NAME: "air_bnb"
+  DB_USER: "root"
+  DB_PORT: "3306"
+  # CORS frontend origins (adjust as needed)
+  FRONTEND_URL: "http://localhost:3000"

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: agentai
+  namespace: travel-platform
+spec:
+  selector:
+    app: agentai
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP

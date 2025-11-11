@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agentai
+  namespace: travel-platform
+  labels:
+    app: agentai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agentai
+  template:
+    metadata:
+      labels:
+        app: agentai
+    spec:
+      containers:
+        - name: agentai
+          image: ghcr.io/your-org/agentai:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: FRONTEND_URL
+              value: "http://localhost:3000"
+            - name: DB_HOST
+              value: "mysql"
+            - name: DB_NAME
+              value: "air_bnb"
+            - name: DB_USER
+              value: "root"
+            - name: DB_PORT
+              value: "3306"
+            - name: SERVICE_ROLE
+              value: "agentai"
+          envFrom:
+            - secretRef:
+                name: db-secret
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"

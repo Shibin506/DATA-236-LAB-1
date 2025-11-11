@@ -100,6 +100,16 @@ public/
 .fusebox/
 .dynamodb/
 
+# Kubernetes and Docker local overrides/secrets (keep templates committed)
+deploy/k8s/secret-*.yaml
+deploy/k8s/*.secret.yaml
+deploy/k8s/*-local.yaml
+deploy/k8s/*.local.yaml
+deploy/k8s/*.override.yaml
+deploy/k8s/*.generated.yaml
+.kube/
+.helm/
+
 # Temporary directories
 .tmp/
 tmp/
