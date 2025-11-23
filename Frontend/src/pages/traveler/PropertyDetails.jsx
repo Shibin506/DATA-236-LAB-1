@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { bookingApi, propertyApi } from '../../services/api'
+import { useDispatch } from 'react-redux'
+import { createBooking } from '../../store/travelerBookingSlice'
 
 export default function PropertyDetails() {
   const { id } = useParams()
@@ -28,6 +30,8 @@ export default function PropertyDetails() {
     return false
   })()
 
+  const dispatch = useDispatch()
+
   const book = async () => {
     setMsg(''); setError('')
     if (!isDatesValid) {
@@ -43,12 +47,12 @@ export default function PropertyDetails() {
       return
     }
     try {
-      await bookingApi.create({ propertyId: id, ...form })
+      const result = await dispatch(createBooking({ propertyId: id, ...form })).unwrap()
       setMsg('Booking requested. Status: Pending')
       // Redirect to trips so user can see their pending booking
       setTimeout(() => navigate('/trips'), 500)
     } catch (e) {
-      const m = e?.response?.data?.message || 'Booking failed'
+      const m = e?.response?.data?.message || (e && e.message) || 'Booking failed'
       if (/not available/i.test(m) || /guest limit/i.test(m)) setError(m)
       else setMsg(m)
     }

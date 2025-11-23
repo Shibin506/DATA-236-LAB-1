@@ -148,6 +148,16 @@ export const authApi = {
   changePassword: (payload) => api.post('/auth/change-password', payload)
 }
 
+// Utility to set auth token on the axios instance (Bearer token)
+export function setAuthToken(token) {
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    // If using cookie/session auth, leave withCredentials untouched
+  } else {
+    delete api.defaults.headers.common['Authorization']
+  }
+}
+
 // Users endpoints (backend):
 // GET  /api/users/profile
 // PUT  /api/users/profile

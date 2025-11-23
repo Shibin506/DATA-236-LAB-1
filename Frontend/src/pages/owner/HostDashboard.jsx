@@ -1,32 +1,34 @@
 import React, { useEffect, useState } from 'react'
 import { bookingApi, propertyApi } from '../../services/api'
 import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchOwnerBookings, acceptBooking, rejectBooking } from '../../store/bookingSlice'
 
 export default function HostDashboard() {
-  const [requests, setRequests] = useState([])
   const [history, setHistory] = useState([])
   const [properties, setProperties] = useState([])
+  const dispatch = useDispatch()
+  const ownerBookings = useSelector(state => state.bookings.ownerBookings || [])
 
   const load = async () => {
     try {
-      const [bookingsRes, propsRes] = await Promise.all([
-        bookingApi.listOwnerRequests(),
-        propertyApi.ownerMyProperties()
-      ])
-      const data = bookingsRes.data || {}
-      setRequests((data.bookings||[]).filter(r => r.status === 'Pending'))
-      setHistory((data.bookings||[]).filter(r => r.status !== 'Pending'))
+      dispatch(fetchOwnerBookings())
+      const propsRes = await propertyApi.ownerMyProperties()
       setProperties(propsRes?.data?.properties || [])
     } catch {
-      setRequests([]); setHistory([]); setProperties([])
+      setHistory([]); setProperties([])
     }
   }
   useEffect(() => { load() }, [])
+  useEffect(() => {
+    // Keep history derived from ownerBookings
+    setHistory(ownerBookings.filter(r => r.status && r.status.toLowerCase() !== 'pending'))
+  }, [ownerBookings])
 
   const respond = async (id, action) => {
-    if (action === 'accept') await bookingApi.accept(id)
-    else if (action === 'reject') await bookingApi.reject(id)
-    await load()
+    if (action === 'accept') await dispatch(acceptBooking(id))
+    else if (action === 'reject') await dispatch(rejectBooking({ id }))
+    await dispatch(fetchOwnerBookings())
   }
 
   return (
@@ -56,7 +58,7 @@ export default function HostDashboard() {
 
       <h5>Incoming requests</h5>
       <div className="list-group mb-4">
-        {requests.map(r => (
+        {ownerBookings.filter(r => r.status && r.status.toLowerCase() === 'pending').map(r => (
           <div className="list-group-item d-flex justify-content-between align-items-center" key={r.id}>
             <div>
               <div className="fw-semibold">{r.property?.name} • {r.guests} guests</div>
@@ -68,7 +70,7 @@ export default function HostDashboard() {
             </div>
           </div>
         ))}
-        {requests.length === 0 && <div className="list-group-item">No pending requests.</div>}
+        {ownerBookings.filter(r => r.status && r.status.toLowerCase() === 'pending').length === 0 && <div className="list-group-item">No pending requests.</div>}
       </div>
 
       <h5>History</h5>

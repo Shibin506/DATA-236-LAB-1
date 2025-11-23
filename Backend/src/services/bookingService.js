@@ -88,6 +88,7 @@ class BookingService {
       return {
         id: result.insertId,
         property_id,
+        owner_id: property.owner_id,
         check_in_date,
         check_out_date,
         number_of_guests,
