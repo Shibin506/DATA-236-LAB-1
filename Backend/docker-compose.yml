@@ -160,7 +160,7 @@ services:
       context: ../Frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_BASE: http://localhost:3002/api
+        VITE_API_BASE: ${VITE_API_BASE:-http://localhost:3002/api}
     container_name: airbnb_frontend_app
     restart: unless-stopped
     ports:
@@ -171,6 +171,27 @@ services:
       - airbnb_network
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+  agentai:
+    build:
+      context: ../AgentAI
+      dockerfile: Dockerfile
+    container_name: airbnb_agentai
+    restart: unless-stopped
+    ports:
+      - "5001:5000"
+    environment:
+      BACKEND_URL: ${BACKEND_URL:-http://backend:3001}
+      FLASK_ENV: ${FLASK_ENV:-production}
+    depends_on:
+      - backend
+    networks:
+      - airbnb_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
       interval: 30s
       timeout: 3s
       retries: 3

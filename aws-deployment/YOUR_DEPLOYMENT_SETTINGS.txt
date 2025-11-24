@@ -1,0 +1,29 @@
+# Your AWS Deployment Settings
+# Generated: November 24, 2025
+
+## MongoDB Atlas
+Connection String: mongodb+srv://sarveshwaghmare101_db_user:Z3WNwIKBCUVw390a@airbnb-main.d4apnix.mongodb.net/airbnb
+
+## Generated Secrets (DO NOT SHARE)
+SESSION_SECRET: H5TRRXE8bHScJnVZOXtoSZxI7JJLLJ0yXdGgrhL/pms=
+JWT_SECRET: XYbB3U4+B0HQxq7EkvqaaXW3cyixmz9I+b4OTu6ZX2I=
+
+## EC2 Instance (To be filled after creation)
+Public IP: ___________________
+Instance Type: t3.large
+Region: ___________________
+Key Pair Name: ___________________
+
+## Security Group Ports
+- 22 (SSH)
+- 3000 (Frontend)
+- 3002 (Backend API)
+- 5001 (AgentAI)
+- 8080 (Adminer - optional)
+
+## Next Steps After EC2 Creation:
+1. Replace PLACEHOLDER in Backend/.env.aws with EC2 IP
+2. Replace PLACEHOLDER in Frontend/.env.aws with EC2 IP  
+3. Copy .env.aws to .env in both directories
+4. Push to GitHub
+5. Deploy to EC2
