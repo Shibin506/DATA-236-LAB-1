@@ -1,5 +1,6 @@
 const app = require('./app');
 const { testConnection, initializeDatabase } = require('./config/database');
+const kafkaService = require('./services/kafka')
 
 const PORT = process.env.PORT || 3001;
 
@@ -13,6 +14,15 @@ async function startServer() {
     await initializeDatabase();
     console.log('✅ Database tables initialized successfully');
     
+    // Initialize Kafka
+    try {
+      await kafkaService.init();
+      console.log('✅ Kafka initialized successfully');
+    } catch (error) {
+      console.error('⚠️  Kafka initialization failed:', error.message);
+      console.log('⚠️  Continuing without Kafka - some features may be limited');
+    }
+
     // Start server
     app.listen(PORT, () => {
       console.log('\n🚀 Airbnb Backend Server Started Successfully!');

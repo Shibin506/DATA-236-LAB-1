@@ -53,10 +53,16 @@ class AuthController {
       req.session.userId = user.id;
       req.session.userType = user.user_type;
       
-      res.json({
-        success: true,
-        message: 'Login successful',
-        data: { user }
+      // Save session explicitly
+      req.session.save((err) => {
+        if (err) {
+          console.error('Session save error:', err);
+        }
+        res.json({
+          success: true,
+          message: 'Login successful',
+          data: { user }
+        });
       });
       
     } catch (error) {

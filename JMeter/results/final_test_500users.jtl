@@ -1,0 +1,401 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1763976830527,776,User Login,200,OK,100 Concurrent Users 1-1,text,true,,1383,288,19,19,http://localhost:3002/api/auth/login,772,0,8
+1763976830592,1498,User Login,200,OK,100 Concurrent Users 1-2,text,true,,1389,288,27,27,http://localhost:3002/api/auth/login,1498,0,0
+1763976830697,2103,User Login,200,OK,100 Concurrent Users 1-3,text,true,,1385,288,34,34,http://localhost:3002/api/auth/login,2103,0,6
+1763976830795,2006,User Login,200,OK,100 Concurrent Users 1-4,text,true,,1385,288,34,34,http://localhost:3002/api/auth/login,2006,0,1
+1763976831095,3545,User Login,200,OK,100 Concurrent Users 1-7,text,true,,1385,288,52,52,http://localhost:3002/api/auth/login,3545,0,1
+1763976831195,3445,User Login,200,OK,100 Concurrent Users 1-8,text,true,,1387,288,52,52,http://localhost:3002/api/auth/login,3445,0,1
+1763976831292,3551,User Login,200,OK,100 Concurrent Users 1-9,text,true,,1385,288,54,54,http://localhost:3002/api/auth/login,3551,0,0
+1763976830896,3947,User Login,200,OK,100 Concurrent Users 1-5,text,true,,1385,288,54,54,http://localhost:3002/api/auth/login,3947,0,1
+1763976830990,3853,User Login,200,OK,100 Concurrent Users 1-6,text,true,,1387,288,54,54,http://localhost:3002/api/auth/login,3853,0,1
+1763976831394,3450,User Login,200,OK,100 Concurrent Users 1-10,text,true,,1385,288,54,54,http://localhost:3002/api/auth/login,3450,0,1
+1763976831494,3350,User Login,200,OK,100 Concurrent Users 1-11,text,true,,1385,288,54,54,http://localhost:3002/api/auth/login,3350,0,1
+1763976831896,4876,User Login,200,OK,100 Concurrent Users 1-15,text,true,,1387,288,73,73,http://localhost:3002/api/auth/login,4875,0,1
+1763976831596,5277,User Login,200,OK,100 Concurrent Users 1-12,text,true,,1387,288,74,74,http://localhost:3002/api/auth/login,5277,0,2
+1763976832790,4621,User Login,200,OK,100 Concurrent Users 1-24,text,true,,1387,288,80,80,http://localhost:3002/api/auth/login,4621,0,1
+1763976832496,4917,User Login,200,OK,100 Concurrent Users 1-21,text,true,,1383,288,80,80,http://localhost:3002/api/auth/login,4917,0,1
+1763976832289,5124,User Login,200,OK,100 Concurrent Users 1-19,text,true,,1383,288,80,80,http://localhost:3002/api/auth/login,5124,0,1
+1763976832696,4718,User Login,200,OK,100 Concurrent Users 1-23,text,true,,1383,288,80,80,http://localhost:3002/api/auth/login,4718,0,1
+1763976832590,4824,User Login,200,OK,100 Concurrent Users 1-22,text,true,,1387,288,80,80,http://localhost:3002/api/auth/login,4824,0,1
+1763976832088,5326,User Login,200,OK,100 Concurrent Users 1-17,text,true,,1391,288,80,80,http://localhost:3002/api/auth/login,5326,0,1
+1763976831989,5426,User Login,200,OK,100 Concurrent Users 1-16,text,true,,1385,288,80,80,http://localhost:3002/api/auth/login,5426,0,1
+1763976831693,5722,User Login,200,OK,100 Concurrent Users 1-13,text,true,,1385,288,80,80,http://localhost:3002/api/auth/login,5722,0,1
+1763976832893,4522,User Login,200,OK,100 Concurrent Users 1-25,text,true,,1389,288,80,80,http://localhost:3002/api/auth/login,4522,0,1
+1763976831794,5621,User Login,200,OK,100 Concurrent Users 1-14,text,true,,1385,288,80,80,http://localhost:3002/api/auth/login,5621,0,1
+1763976832992,4423,User Login,200,OK,100 Concurrent Users 1-26,text,true,,1383,288,80,80,http://localhost:3002/api/auth/login,4423,0,1
+1763976832196,5629,User Login,200,OK,100 Concurrent Users 1-18,text,true,,1387,288,84,84,http://localhost:3002/api/auth/login,5629,0,1
+1763976832391,5640,User Login,200,OK,100 Concurrent Users 1-20,text,true,,1385,288,86,86,http://localhost:3002/api/auth/login,5640,0,1
+1763976833091,7496,User Login,200,OK,100 Concurrent Users 1-27,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,7495,0,1
+1763976833190,10074,User Login,200,OK,100 Concurrent Users 1-28,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,10074,0,1
+1763976833397,12070,User Login,200,OK,100 Concurrent Users 1-30,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,12070,0,1
+1763976833994,11474,User Login,200,OK,100 Concurrent Users 1-36,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,11474,0,1
+1763976834097,11371,User Login,200,OK,100 Concurrent Users 1-37,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,11371,0,1
+1763976833695,11774,User Login,200,OK,100 Concurrent Users 1-33,text,true,,1389,288,100,100,http://localhost:3002/api/auth/login,11773,0,1
+1763976833597,11872,User Login,200,OK,100 Concurrent Users 1-32,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,11872,0,0
+1763976833795,11674,User Login,200,OK,100 Concurrent Users 1-34,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,11674,0,1
+1763976834990,11593,User Login,200,OK,100 Concurrent Users 1-46,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,11593,0,1
+1763976834896,11688,User Login,200,OK,100 Concurrent Users 1-45,text,true,,1389,288,100,100,http://localhost:3002/api/auth/login,11688,0,1
+1763976834793,11791,User Login,200,OK,100 Concurrent Users 1-44,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,11791,0,1
+1763976834690,11894,User Login,200,OK,100 Concurrent Users 1-43,text,true,,1389,288,100,100,http://localhost:3002/api/auth/login,11894,0,1
+1763976834590,11995,User Login,200,OK,100 Concurrent Users 1-42,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,11995,0,1
+1763976834496,12089,User Login,200,OK,100 Concurrent Users 1-41,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,12089,0,1
+1763976834391,12194,User Login,200,OK,100 Concurrent Users 1-40,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,12194,0,1
+1763976833894,12691,User Login,200,OK,100 Concurrent Users 1-35,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,12691,0,1
+1763976835496,11094,User Login,200,OK,100 Concurrent Users 1-51,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,11094,0,0
+1763976835191,11400,User Login,200,OK,100 Concurrent Users 1-48,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,11400,0,0
+1763976835392,11199,User Login,200,OK,100 Concurrent Users 1-50,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,11199,0,1
+1763976835291,11301,User Login,200,OK,100 Concurrent Users 1-49,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,11301,0,1
+1763976835095,11497,User Login,200,OK,100 Concurrent Users 1-47,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,11497,0,1
+1763976835593,12447,User Login,200,OK,100 Concurrent Users 1-52,text,true,,1389,288,100,100,http://localhost:3002/api/auth/login,12447,0,1
+1763976835697,12344,User Login,200,OK,100 Concurrent Users 1-53,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,12344,0,0
+1763976835789,12252,User Login,200,OK,100 Concurrent Users 1-54,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,12252,0,1
+1763976835896,12146,User Login,200,OK,100 Concurrent Users 1-55,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,12146,0,1
+1763976835991,12051,User Login,200,OK,100 Concurrent Users 1-56,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,12051,0,1
+1763976836597,11445,User Login,200,OK,100 Concurrent Users 1-62,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,11445,0,1
+1763976836398,11645,User Login,200,OK,100 Concurrent Users 1-60,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,11645,0,1
+1763976836490,11553,User Login,200,OK,100 Concurrent Users 1-61,text,true,,1393,288,100,100,http://localhost:3002/api/auth/login,11553,0,1
+1763976836293,11750,User Login,200,OK,100 Concurrent Users 1-59,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,11750,0,1
+1763976836195,11848,User Login,200,OK,100 Concurrent Users 1-58,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,11848,0,1
+1763976836097,11947,User Login,200,OK,100 Concurrent Users 1-57,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,11947,0,1
+1763976837096,13235,User Login,200,OK,100 Concurrent Users 1-67,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,13235,0,0
+1763976836990,13544,User Login,200,OK,100 Concurrent Users 1-66,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,13544,0,1
+1763976836890,13644,User Login,200,OK,100 Concurrent Users 1-65,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,13644,0,1
+1763976836789,13746,User Login,200,OK,100 Concurrent Users 1-64,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,13746,0,1
+1763976836694,13841,User Login,200,OK,100 Concurrent Users 1-63,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,13841,0,1
+1763976837289,13254,User Login,200,OK,100 Concurrent Users 1-69,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,13254,0,0
+1763976837391,13153,User Login,200,OK,100 Concurrent Users 1-70,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,13153,0,1
+1763976837194,13349,User Login,200,OK,100 Concurrent Users 1-68,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,13349,0,1
+1763976833492,19686,User Login,200,OK,100 Concurrent Users 1-31,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,19686,0,1
+1763976833289,19889,User Login,200,OK,100 Concurrent Users 1-29,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,19889,0,1
+1763976837488,15691,User Login,200,OK,100 Concurrent Users 1-71,text,true,,1389,288,100,100,http://localhost:3002/api/auth/login,15691,0,1
+1763976837592,15587,User Login,200,OK,100 Concurrent Users 1-72,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,15587,0,0
+1763976837693,15546,User Login,200,OK,100 Concurrent Users 1-73,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,15546,0,0
+1763976837790,15450,User Login,200,OK,100 Concurrent Users 1-74,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,15449,0,0
+1763976837894,15346,User Login,200,OK,100 Concurrent Users 1-75,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,15346,0,0
+1763976837996,15244,User Login,200,OK,100 Concurrent Users 1-76,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,15244,0,2
+1763976838092,15148,User Login,200,OK,100 Concurrent Users 1-77,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,15148,0,1
+1763976838191,15049,User Login,200,OK,100 Concurrent Users 1-78,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,15049,0,1
+1763976838298,14943,User Login,200,OK,100 Concurrent Users 1-79,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,14943,0,1
+1763976838394,14847,User Login,200,OK,100 Concurrent Users 1-80,text,true,,1389,288,100,100,http://localhost:3002/api/auth/login,14847,0,1
+1763976838491,14750,User Login,200,OK,100 Concurrent Users 1-81,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,14750,0,1
+1763976838592,14649,User Login,200,OK,100 Concurrent Users 1-82,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,14649,0,0
+1763976838695,14547,User Login,200,OK,100 Concurrent Users 1-83,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,14547,0,1
+1763976838795,14447,User Login,200,OK,100 Concurrent Users 1-84,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,14447,0,1
+1763976839393,13895,User Login,200,OK,100 Concurrent Users 1-90,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,13895,0,2
+1763976839795,13493,User Login,200,OK,100 Concurrent Users 1-94,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,13493,0,1
+1763976839595,13694,User Login,200,OK,100 Concurrent Users 1-92,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,13694,0,1
+1763976839093,14197,User Login,200,OK,100 Concurrent Users 1-87,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,14197,0,0
+1763976834191,19101,User Login,200,OK,100 Concurrent Users 1-38,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,19101,0,1
+1763976839493,13817,User Login,200,OK,100 Concurrent Users 1-91,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,13817,0,1
+1763976840296,13015,User Login,200,OK,100 Concurrent Users 1-99,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,13015,0,6
+1763976838992,14320,User Login,200,OK,100 Concurrent Users 1-86,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,14320,0,1
+1763976839195,14118,User Login,200,OK,100 Concurrent Users 1-88,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,14118,0,0
+1763976838890,14425,User Login,200,OK,100 Concurrent Users 1-85,text,true,,1391,288,100,100,http://localhost:3002/api/auth/login,14425,0,0
+1763976840096,13219,User Login,200,OK,100 Concurrent Users 1-97,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,13219,0,1
+1763976839293,14023,User Login,200,OK,100 Concurrent Users 1-89,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,14023,0,1
+1763976834295,19035,User Login,200,OK,100 Concurrent Users 1-39,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,19035,0,0
+1763976839690,13641,User Login,200,OK,100 Concurrent Users 1-93,text,true,,1389,288,100,100,http://localhost:3002/api/auth/login,13641,0,1
+1763976840395,12936,User Login,200,OK,100 Concurrent Users 1-100,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,12936,0,2
+1763976840192,13140,User Login,200,OK,100 Concurrent Users 1-98,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,13140,0,0
+1763976839893,15322,User Login,200,OK,100 Concurrent Users 1-95,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,15322,0,1
+1763976839995,15225,User Login,200,OK,100 Concurrent Users 1-96,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,15225,0,1
+1763976832321,31964,Search Properties,200,OK,100 Concurrent Users 1-1,text,true,,13631,328,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,31964,0,0
+1763976833092,32271,Search Properties,200,OK,100 Concurrent Users 1-2,text,true,,13637,334,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,32271,0,0
+1763976835845,30473,Search Properties,200,OK,100 Concurrent Users 1-11,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,30473,0,0
+1763976833804,32529,Search Properties,200,OK,100 Concurrent Users 1-3,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,32529,0,0
+1763976833804,32530,Search Properties,200,OK,100 Concurrent Users 1-4,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,32530,0,0
+1763976835645,30691,Search Properties,200,OK,100 Concurrent Users 1-8,text,true,,13635,332,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,30691,0,0
+1763976835847,30530,Search Properties,200,OK,100 Concurrent Users 1-9,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,30529,0,0
+1763976865291,2023,Get Property Details,200,OK,100 Concurrent Users 1-1,text,true,,1917,295,100,100,http://localhost:3002/api/properties/1,2022,0,0
+1763976835845,31514,Search Properties,200,OK,100 Concurrent Users 1-6,text,true,,13635,332,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,31514,0,0
+1763976835845,31515,Search Properties,200,OK,100 Concurrent Users 1-5,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,31515,0,0
+1763976835846,31548,Search Properties,200,OK,100 Concurrent Users 1-10,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,31548,0,0
+1763976838417,29856,Search Properties,200,OK,100 Concurrent Users 1-22,text,true,,13635,332,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,29856,0,0
+1763976835642,32636,Search Properties,200,OK,100 Concurrent Users 1-7,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,32636,0,0
+1763976838422,29859,Search Properties,200,OK,100 Concurrent Users 1-14,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,29859,0,0
+1763976838417,29894,Search Properties,200,OK,100 Concurrent Users 1-17,text,true,,13639,336,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,29894,0,0
+1763976866367,1948,Get Property Details,200,OK,100 Concurrent Users 1-2,text,true,,1791,302,100,100,http://localhost:3002/api/properties/16,1948,0,0
+1763976838413,29905,Search Properties,200,OK,100 Concurrent Users 1-24,text,true,,13635,332,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,29905,0,0
+1763976837878,30440,Search Properties,200,OK,100 Concurrent Users 1-12,text,true,,13635,332,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,30440,0,0
+1763976867344,1881,Get Property Details,200,OK,100 Concurrent Users 1-8,text,true,,1784,300,100,100,http://localhost:3002/api/properties/18,1881,0,0
+1763976838830,30397,Search Properties,200,OK,100 Concurrent Users 1-18,text,true,,13635,332,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,30396,0,0
+1763976867321,1910,Get Property Details,200,OK,100 Concurrent Users 1-11,text,true,,1802,298,100,100,http://localhost:3002/api/properties/13,1910,0,0
+1763976839038,30204,Search Properties,200,OK,100 Concurrent Users 1-20,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,30204,0,0
+1763976837773,31471,Search Properties,200,OK,100 Concurrent Users 1-15,text,true,,13635,332,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,31471,0,0
+1763976838417,30828,Search Properties,200,OK,100 Concurrent Users 1-13,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,30828,0,0
+1763976867339,1907,Get Property Details,200,OK,100 Concurrent Users 1-4,text,true,,1843,297,100,100,http://localhost:3002/api/properties/2,1907,0,0
+1763976841604,27642,Search Properties,200,OK,100 Concurrent Users 1-27,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,27642,0,0
+1763976867339,1910,Get Property Details,200,OK,100 Concurrent Users 1-3,text,true,,1807,297,100,100,http://localhost:3002/api/properties/6,1910,0,0
+1763976838421,30830,Search Properties,200,OK,100 Concurrent Users 1-25,text,true,,13637,334,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,30830,0,0
+1763976844272,24992,Search Properties,200,OK,100 Concurrent Users 1-28,text,true,,13631,328,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,24991,0,0
+1763976838415,30849,Search Properties,200,OK,100 Concurrent Users 1-19,text,true,,13631,328,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,30849,0,0
+1763976838421,30844,Search Properties,200,OK,100 Concurrent Users 1-26,text,true,,13631,328,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,30844,0,0
+1763976838417,30865,Search Properties,200,OK,100 Concurrent Users 1-23,text,true,,13631,328,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,30865,0,0
+1763976846472,22813,Search Properties,200,OK,100 Concurrent Users 1-34,text,true,,13631,328,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,22813,0,0
+1763976846471,22815,Search Properties,200,OK,100 Concurrent Users 1-33,text,true,,13637,334,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,22815,0,0
+1763976846471,22842,Search Properties,200,OK,100 Concurrent Users 1-36,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,22841,0,0
+1763976846471,22842,Search Properties,200,OK,100 Concurrent Users 1-32,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,22842,0,0
+1763976838414,30903,Search Properties,200,OK,100 Concurrent Users 1-21,text,true,,13631,328,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,30903,0,0
+1763976847596,21724,Search Properties,200,OK,100 Concurrent Users 1-51,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,21724,0,0
+1763976847597,22628,Search Properties,200,OK,100 Concurrent Users 1-49,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,22627,0,0
+1763976849046,21181,Search Properties,200,OK,100 Concurrent Users 1-53,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,21181,0,0
+1763976867382,2845,Get Property Details,200,OK,100 Concurrent Users 1-9,text,true,,1809,298,100,100,http://localhost:3002/api/properties/15,2845,0,0
+1763976851540,18689,Search Properties,200,OK,100 Concurrent Users 1-66,text,true,,13631,328,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,18689,0,0
+1763976846471,23761,Search Properties,200,OK,100 Concurrent Users 1-37,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,23761,0,0
+1763976847588,22645,Search Properties,200,OK,100 Concurrent Users 1-44,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,22645,0,0
+1763976851338,18931,Search Properties,200,OK,100 Concurrent Users 1-67,text,true,,13635,332,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,18931,0,0
+1763976847588,22682,Search Properties,200,OK,100 Concurrent Users 1-46,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,22682,0,0
+1763976868316,1955,Create Booking,400,Bad Request,100 Concurrent Users 1-1,text,false,,1245,484,100,100,http://localhost:3002/api/bookings,1955,0,0
+1763976847597,22675,Search Properties,200,OK,100 Concurrent Users 1-50,text,true,,13633,330,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,22675,0,0
+1763976847590,22683,Search Properties,200,OK,100 Concurrent Users 1-40,text,true,,13635,332,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,22682,0,0
+1763976847588,22685,Search Properties,200,OK,100 Concurrent Users 1-41,text,true,,13633,330,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,22685,0,0
+1763976849045,21228,Search Properties,200,OK,100 Concurrent Users 1-59,text,true,,13631,328,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,21228,0,0
+1763976868360,1914,Get Property Details,200,OK,100 Concurrent Users 1-6,text,true,,1784,300,99,99,http://localhost:3002/api/properties/18,1914,0,0
+1763976847588,22688,Search Properties,200,OK,100 Concurrent Users 1-45,text,true,,13637,334,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,22688,0,0
+1763976838417,31862,Search Properties,200,OK,100 Concurrent Users 1-16,text,true,,13633,330,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,31862,0,0
+1763976849045,21234,Search Properties,200,OK,100 Concurrent Users 1-55,text,true,,13633,330,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,21234,0,0
+1763976868399,1881,Get Property Details,200,OK,100 Concurrent Users 1-10,text,true,,1788,298,99,99,http://localhost:3002/api/properties/10,1881,0,0
+1763976851540,18740,Search Properties,200,OK,100 Concurrent Users 1-63,text,true,,13633,330,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,18740,0,0
+1763976849049,21232,Search Properties,200,OK,100 Concurrent Users 1-60,text,true,,13633,330,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,21232,0,0
+1763976849045,21237,Search Properties,200,OK,100 Concurrent Users 1-52,text,true,,13637,334,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,21237,0,0
+1763976851540,18743,Search Properties,200,OK,100 Concurrent Users 1-64,text,true,,13633,330,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,18743,0,0
+1763976849047,21237,Search Properties,200,OK,100 Concurrent Users 1-54,text,true,,13633,330,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,21237,0,0
+1763976847596,22710,Search Properties,200,OK,100 Concurrent Users 1-48,text,true,,13631,328,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,22710,0,0
+1763976847599,22710,Search Properties,200,OK,100 Concurrent Users 1-47,text,true,,13633,330,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,22710,0,0
+1763976868362,1953,Get Property Details,200,OK,100 Concurrent Users 1-5,text,true,,1807,297,99,99,http://localhost:3002/api/properties/6,1953,0,0
+1763976847589,22727,Search Properties,200,OK,100 Concurrent Users 1-35,text,true,,13631,328,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,22727,0,0
+1763976854245,16977,Search Properties,200,OK,100 Concurrent Users 1-83,text,true,,13633,330,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,16977,0,0
+1763976869281,1944,Get Property Details,200,OK,100 Concurrent Users 1-7,text,true,,1843,297,99,99,http://localhost:3002/api/properties/2,1944,0,0
+1763976869276,1951,Get Property Details,200,OK,100 Concurrent Users 1-22,text,true,,1792,299,99,99,http://localhost:3002/api/properties/9,1951,0,0
+1763976854181,17047,Search Properties,200,OK,100 Concurrent Users 1-71,text,true,,13637,334,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17047,0,0
+1763976854179,17050,Search Properties,200,OK,100 Concurrent Users 1-31,text,true,,13631,328,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17050,0,0
+1763976869322,1908,Get Property Details,200,OK,100 Concurrent Users 1-24,text,true,,1784,300,99,99,http://localhost:3002/api/properties/18,1908,0,0
+1763976869316,1920,Create Booking,400,Bad Request,100 Concurrent Users 1-2,text,false,,1251,490,99,99,http://localhost:3002/api/bookings,1919,0,0
+1763976849046,22192,Search Properties,200,OK,100 Concurrent Users 1-61,text,true,,13641,338,98,98,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,22192,0,0
+1763976846473,24766,Search Properties,200,OK,100 Concurrent Users 1-30,text,true,,13635,332,98,98,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,24766,0,0
+1763976854245,16994,Search Properties,200,OK,100 Concurrent Users 1-74,text,true,,13633,330,98,98,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,16994,0,0
+1763976849048,22192,Search Properties,200,OK,100 Concurrent Users 1-58,text,true,,13635,332,98,98,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,22192,0,0
+1763976869313,1928,Get Property Details,200,OK,100 Concurrent Users 1-17,text,true,,1796,303,98,98,http://localhost:3002/api/properties/3,1928,0,0
+1763976851547,19698,Search Properties,200,OK,100 Concurrent Users 1-69,text,true,,13633,330,98,98,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,19698,0,0
+1763976870248,1030,Get Property Details,200,OK,100 Concurrent Users 1-13,text,true,,1786,298,98,98,http://localhost:3002/api/properties/20,1030,0,0
+1763976870248,1030,Get Property Details,200,OK,100 Concurrent Users 1-20,text,true,,1784,297,98,98,http://localhost:3002/api/properties/8,1030,0,0
+1763976847590,23689,Search Properties,200,OK,100 Concurrent Users 1-43,text,true,,13637,334,98,98,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,23689,0,0
+1763976851535,19745,Search Properties,200,OK,100 Concurrent Users 1-65,text,true,,13633,330,98,98,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,19745,0,0
+1763976854246,17035,Search Properties,200,OK,100 Concurrent Users 1-75,text,true,,13633,330,98,98,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17035,0,0
+1763976870232,1049,Create Booking,400,Bad Request,100 Concurrent Users 1-11,text,false,,1247,486,98,98,http://localhost:3002/api/bookings,1049,0,0
+1763976869320,1962,Get Property Details,200,OK,100 Concurrent Users 1-12,text,true,,1789,300,97,97,http://localhost:3002/api/properties/16,1962,0,0
+1763976854247,17037,Search Properties,200,OK,100 Concurrent Users 1-84,text,true,,13631,328,97,97,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17037,0,0
+1763976854295,16990,Search Properties,200,OK,100 Concurrent Users 1-87,text,true,,13631,328,97,97,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,16990,0,0
+1763976854317,16968,Search Properties,200,OK,100 Concurrent Users 1-99,text,true,,13635,332,97,97,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,16968,0,0
+1763976870229,1057,Create Booking,400,Bad Request,100 Concurrent Users 1-8,text,false,,1249,488,97,97,http://localhost:3002/api/bookings,1057,0,0
+1763976854333,16956,Search Properties,200,OK,100 Concurrent Users 1-100,text,true,,13633,330,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,16956,0,0
+1763976854332,16960,Search Properties,200,OK,100 Concurrent Users 1-93,text,true,,13637,334,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,16960,0,0
+1763976854181,17111,Search Properties,200,OK,100 Concurrent Users 1-72,text,true,,13631,328,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17111,0,0
+1763976854246,17053,Search Properties,200,OK,100 Concurrent Users 1-80,text,true,,13637,334,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17053,0,0
+1763976854335,16965,Search Properties,200,OK,100 Concurrent Users 1-39,text,true,,13633,330,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,16965,0,0
+1763976854245,17056,Search Properties,200,OK,100 Concurrent Users 1-73,text,true,,13631,328,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17056,0,0
+1763976870232,1070,Get Property Details,200,OK,100 Concurrent Users 1-18,text,true,,1800,300,96,96,http://localhost:3002/api/properties/19,1070,0,0
+1763976854246,17058,Search Properties,200,OK,100 Concurrent Users 1-78,text,true,,13631,328,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17058,0,0
+1763976869287,2018,Get Property Details,200,OK,100 Concurrent Users 1-14,text,true,,1792,298,96,96,http://localhost:3002/api/properties/17,2018,0,0
+1763976854294,17011,Search Properties,200,OK,100 Concurrent Users 1-94,text,true,,13633,330,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17011,0,0
+1763976854246,17060,Search Properties,200,OK,100 Concurrent Users 1-82,text,true,,13631,328,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17060,0,0
+1763976854245,17071,Search Properties,200,OK,100 Concurrent Users 1-76,text,true,,13635,332,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17071,0,0
+1763976854247,17075,Search Properties,200,OK,100 Concurrent Users 1-81,text,true,,13631,328,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17075,0,0
+1763976870266,1961,Get Property Details,200,OK,100 Concurrent Users 1-19,text,true,,1786,295,96,96,http://localhost:3002/api/properties/7,1961,0,0
+1763976870250,1976,Get Property Details,200,OK,100 Concurrent Users 1-15,text,true,,1792,299,96,96,http://localhost:3002/api/properties/3,1976,0,0
+1763976849047,23184,Search Properties,200,OK,100 Concurrent Users 1-56,text,true,,13631,328,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,23184,0,0
+1763976847588,24648,Search Properties,200,OK,100 Concurrent Users 1-42,text,true,,13633,330,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,24647,0,0
+1763976870254,1982,Get Property Details,200,OK,100 Concurrent Users 1-25,text,true,,1786,302,96,96,http://localhost:3002/api/properties/18,1982,0,0
+1763976870248,1989,Get Property Details,200,OK,100 Concurrent Users 1-27,text,true,,1784,297,96,96,http://localhost:3002/api/properties/8,1989,0,0
+1763976870283,1955,Get Property Details,200,OK,100 Concurrent Users 1-23,text,true,,1917,295,96,96,http://localhost:3002/api/properties/1,1955,0,0
+1763976849048,23193,Search Properties,200,OK,100 Concurrent Users 1-62,text,true,,13635,332,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,23193,0,0
+1763976870290,1952,Get Property Details,200,OK,100 Concurrent Users 1-34,text,true,,1807,296,96,96,http://localhost:3002/api/properties/15,1952,0,0
+1763976870291,1952,Get Property Details,200,OK,100 Concurrent Users 1-33,text,true,,1783,302,96,96,http://localhost:3002/api/properties/12,1952,0,0
+1763976854317,17927,Search Properties,200,OK,100 Concurrent Users 1-86,text,true,,13631,328,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17927,0,0
+1763976870322,1922,Get Property Details,200,OK,100 Concurrent Users 1-51,text,true,,1843,297,96,96,http://localhost:3002/api/properties/2,1922,0,0
+1763976870251,1995,Create Booking,400,Bad Request,100 Concurrent Users 1-3,text,false,,1247,486,96,96,http://localhost:3002/api/bookings,1995,0,0
+1763976870319,1929,Get Property Details,200,OK,100 Concurrent Users 1-21,text,true,,1800,296,95,95,http://localhost:3002/api/properties/13,1929,0,0
+1763976854296,17952,Search Properties,200,OK,100 Concurrent Users 1-38,text,true,,13635,332,95,95,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17952,0,0
+1763976870319,1929,Get Property Details,200,OK,100 Concurrent Users 1-32,text,true,,1788,297,95,95,http://localhost:3002/api/properties/7,1929,0,0
+1763976854337,17912,Search Properties,200,OK,100 Concurrent Users 1-98,text,true,,13635,332,95,95,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17912,0,0
+1763976854247,18004,Search Properties,200,OK,100 Concurrent Users 1-79,text,true,,13633,330,95,95,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,18004,0,0
+1763976870315,1936,Get Property Details,200,OK,100 Concurrent Users 1-36,text,true,,1798,298,95,95,http://localhost:3002/api/properties/19,1936,0,0
+1763976870269,1982,Get Property Details,200,OK,100 Concurrent Users 1-28,text,true,,1784,296,95,95,http://localhost:3002/api/properties/20,1982,0,0
+1763976854290,17962,Search Properties,200,OK,100 Concurrent Users 1-92,text,true,,13635,332,95,95,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17962,0,0
+1763976870251,2007,Create Booking,400,Bad Request,100 Concurrent Users 1-4,text,false,,1247,486,95,95,http://localhost:3002/api/bookings,2006,0,0
+1763976854246,18012,Search Properties,200,OK,100 Concurrent Users 1-77,text,true,,13635,332,94,94,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,18012,0,0
+1763976870266,1993,Get Property Details,200,OK,100 Concurrent Users 1-26,text,true,,1779,295,94,94,http://localhost:3002/api/properties/5,1993,0,0
+1763976851546,20714,Search Properties,200,OK,100 Concurrent Users 1-68,text,true,,13633,330,94,94,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,20714,0,0
+1763976851546,20719,Search Properties,200,OK,100 Concurrent Users 1-70,text,true,,13633,330,94,94,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,20719,0,0
+1763976871274,996,Get Property Details,200,OK,100 Concurrent Users 1-67,text,true,,1784,300,94,94,http://localhost:3002/api/properties/18,996,0,0
+1763976849046,23225,Search Properties,200,OK,100 Concurrent Users 1-57,text,true,,13631,328,94,94,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,23225,0,0
+1763976871274,997,Get Property Details,200,OK,100 Concurrent Users 1-46,text,true,,1785,298,94,94,http://localhost:3002/api/properties/14,997,0,0
+1763976856222,16050,Search Properties,200,OK,100 Concurrent Users 1-95,text,true,,13631,328,94,94,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,16050,0,0
+1763976854313,17965,Search Properties,200,OK,100 Concurrent Users 1-91,text,true,,13633,330,94,94,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17965,0,0
+1763976871230,1048,Get Property Details,200,OK,100 Concurrent Users 1-66,text,true,,1790,296,94,94,http://localhost:3002/api/properties/17,1048,0,0
+1763976871235,1044,Get Property Details,200,OK,100 Concurrent Users 1-44,text,true,,1787,298,94,94,http://localhost:3002/api/properties/16,1043,0,0
+1763976854318,17961,Search Properties,200,OK,100 Concurrent Users 1-88,text,true,,13631,328,94,94,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17961,0,0
+1763976871274,1010,Create Booking,400,Bad Request,100 Concurrent Users 1-6,text,false,,1249,488,94,94,http://localhost:3002/api/bookings,1010,0,0
+1763976854321,17963,Search Properties,200,OK,100 Concurrent Users 1-85,text,true,,13639,336,94,94,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17963,0,0
+1763976871228,1056,Get Property Details,200,OK,100 Concurrent Users 1-53,text,true,,1787,298,93,93,http://localhost:3002/api/properties/16,1056,0,0
+1763976871274,1012,Get Property Details,200,OK,100 Concurrent Users 1-50,text,true,,1792,298,93,93,http://localhost:3002/api/properties/17,1012,0,0
+1763976871274,1012,Get Property Details,200,OK,100 Concurrent Users 1-59,text,true,,1841,295,93,93,http://localhost:3002/api/properties/2,1012,0,0
+1763976871282,1005,Create Booking,400,Bad Request,100 Concurrent Users 1-10,text,false,,1231,486,93,93,http://localhost:3002/api/bookings,1005,0,0
+1763976871228,1062,Get Property Details,200,OK,100 Concurrent Users 1-49,text,true,,1788,298,92,92,http://localhost:3002/api/properties/10,1062,0,0
+1763976871274,1018,Get Property Details,200,OK,100 Concurrent Users 1-40,text,true,,1845,299,92,92,http://localhost:3002/api/properties/2,1018,0,0
+1763976871229,1068,Create Booking,400,Bad Request,100 Concurrent Users 1-9,text,false,,1247,486,92,92,http://localhost:3002/api/bookings,1068,0,0
+1763976871235,1063,Get Property Details,200,OK,100 Concurrent Users 1-37,text,true,,1786,298,91,91,http://localhost:3002/api/properties/20,1063,0,0
+1763976854321,17985,Search Properties,200,OK,100 Concurrent Users 1-97,text,true,,13633,330,91,91,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17985,0,0
+1763976871274,1033,Get Property Details,200,OK,100 Concurrent Users 1-41,text,true,,1919,297,91,91,http://localhost:3002/api/properties/1,1033,0,0
+1763976871319,997,Get Property Details,200,OK,100 Concurrent Users 1-35,text,true,,1786,296,91,91,http://localhost:3002/api/properties/10,997,0,0
+1763976871313,1003,Get Property Details,200,OK,100 Concurrent Users 1-47,text,true,,1779,298,91,91,http://localhost:3002/api/properties/12,1003,0,0
+1763976871287,1034,Get Property Details,200,OK,100 Concurrent Users 1-64,text,true,,1807,297,91,91,http://localhost:3002/api/properties/4,1034,0,0
+1763976871284,1038,Get Property Details,200,OK,100 Concurrent Users 1-52,text,true,,1811,301,91,91,http://localhost:3002/api/properties/6,1038,0,0
+1763976871308,1025,Get Property Details,200,OK,100 Concurrent Users 1-48,text,true,,1780,296,91,91,http://localhost:3002/api/properties/18,1025,0,0
+1763976871282,1052,Get Property Details,200,OK,100 Concurrent Users 1-60,text,true,,1785,298,91,91,http://localhost:3002/api/properties/14,1052,0,0
+1763976871282,1052,Get Property Details,200,OK,100 Concurrent Users 1-55,text,true,,1788,298,91,91,http://localhost:3002/api/properties/10,1052,0,0
+1763976871320,1015,Create Booking,400,Bad Request,100 Concurrent Users 1-5,text,false,,1247,486,91,91,http://localhost:3002/api/bookings,1015,0,0
+1763976872229,1015,Create Booking,400,Bad Request,100 Concurrent Users 1-7,text,false,,1247,486,90,90,http://localhost:3002/api/bookings,1015,0,0
+1763976871279,1968,Get Property Details,200,OK,100 Concurrent Users 1-45,text,true,,1801,302,89,89,http://localhost:3002/api/properties/11,1968,0,0
+1763976872230,1020,Get Property Details,200,OK,100 Concurrent Users 1-71,text,true,,1811,301,89,89,http://localhost:3002/api/properties/6,1020,0,0
+1763976871282,1969,Get Property Details,200,OK,100 Concurrent Users 1-63,text,true,,1785,298,89,89,http://localhost:3002/api/properties/14,1969,0,0
+1763976872284,971,Create Booking,400,Bad Request,100 Concurrent Users 1-20,text,false,,1231,486,89,89,http://localhost:3002/api/bookings,971,0,0
+1763976854321,18937,Search Properties,200,OK,100 Concurrent Users 1-89,text,true,,13631,328,88,88,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,18937,0,0
+1763976872225,1037,Get Property Details,200,OK,100 Concurrent Users 1-83,text,true,,1797,298,88,88,http://localhost:3002/api/properties/11,1037,0,0
+1763976871282,1980,Get Property Details,200,OK,100 Concurrent Users 1-16,text,true,,1797,298,88,88,http://localhost:3002/api/properties/11,1980,0,0
+1763976872284,1002,Get Property Details,200,OK,100 Concurrent Users 1-43,text,true,,1789,302,88,88,http://localhost:3002/api/properties/14,1002,0,0
+1763976872243,1043,Create Booking,400,Bad Request,100 Concurrent Users 1-17,text,false,,1253,492,88,88,http://localhost:3002/api/bookings,1043,0,0
+1763976872241,1046,Get Property Details,200,OK,100 Concurrent Users 1-74,text,true,,1919,297,87,87,http://localhost:3002/api/properties/1,1046,0,0
+1763976854290,18998,Search Properties,200,OK,100 Concurrent Users 1-90,text,true,,13633,330,87,87,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,18998,0,0
+1763976872239,1050,Get Property Details,200,OK,100 Concurrent Users 1-61,text,true,,1810,306,87,87,http://localhost:3002/api/properties/13,1050,0,0
+1763976872284,1005,Get Property Details,200,OK,100 Concurrent Users 1-75,text,true,,1807,297,87,87,http://localhost:3002/api/properties/4,1005,0,0
+1763976854181,19113,Search Properties,200,OK,100 Concurrent Users 1-29,text,true,,13633,330,87,87,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,19113,0,0
+1763976872246,1050,Get Property Details,200,OK,100 Concurrent Users 1-69,text,true,,1809,298,87,87,http://localhost:3002/api/properties/15,1050,0,0
+1763976872245,1053,Get Property Details,200,OK,100 Concurrent Users 1-58,text,true,,1784,300,87,87,http://localhost:3002/api/properties/18,1053,0,0
+1763976872231,1067,Create Booking,400,Bad Request,100 Concurrent Users 1-24,text,false,,1249,488,87,87,http://localhost:3002/api/bookings,1067,0,0
+1763976872284,1019,Get Property Details,200,OK,100 Concurrent Users 1-65,text,true,,1797,298,86,86,http://localhost:3002/api/properties/11,1019,0,0
+1763976872242,1062,Get Property Details,200,OK,100 Concurrent Users 1-30,text,true,,1790,300,86,86,http://localhost:3002/api/properties/10,1062,0,0
+1763976856222,17088,Search Properties,200,OK,100 Concurrent Users 1-96,text,true,,13633,330,86,86,http://localhost:3002/api/properties?page=1&limit=10&city=San+Francisco,17088,0,0
+1763976872285,1025,Get Property Details,200,OK,100 Concurrent Users 1-84,text,true,,1782,295,86,86,http://localhost:3002/api/properties/8,1025,0,0
+1763976872231,1079,Get Property Details,200,OK,100 Concurrent Users 1-31,text,true,,1785,296,86,86,http://localhost:3002/api/properties/16,1079,0,0
+1763976872284,1027,Create Booking,400,Bad Request,100 Concurrent Users 1-13,text,false,,1247,486,86,86,http://localhost:3002/api/bookings,1027,0,0
+1763976872232,1080,Create Booking,400,Bad Request,100 Concurrent Users 1-22,text,false,,1249,488,85,85,http://localhost:3002/api/bookings,1080,0,0
+1763976872285,1028,Get Property Details,200,OK,100 Concurrent Users 1-87,text,true,,1800,296,84,84,http://localhost:3002/api/properties/13,1028,0,0
+1763976872297,1033,Get Property Details,200,OK,100 Concurrent Users 1-72,text,true,,1917,295,84,84,http://localhost:3002/api/properties/1,1033,0,0
+1763976872306,1034,Get Property Details,200,OK,100 Concurrent Users 1-82,text,true,,1796,296,84,84,http://localhost:3002/api/properties/19,1034,0,0
+1763976872303,1041,Get Property Details,200,OK,100 Concurrent Users 1-39,text,true,,1790,297,84,84,http://localhost:3002/api/properties/3,1041,0,0
+1763976871285,2059,Get Property Details,200,OK,100 Concurrent Users 1-54,text,true,,1781,297,84,84,http://localhost:3002/api/properties/5,2059,0,0
+1763976872284,1060,Create Booking,400,Bad Request,100 Concurrent Users 1-12,text,false,,1249,488,84,84,http://localhost:3002/api/bookings,1060,0,0
+1763976872287,1058,Get Property Details,200,OK,100 Concurrent Users 1-99,text,true,,1781,300,84,84,http://localhost:3002/api/properties/12,1058,0,0
+1763976872295,1051,Get Property Details,200,OK,100 Concurrent Users 1-93,text,true,,1785,301,83,83,http://localhost:3002/api/properties/5,1051,0,0
+1763976872300,1046,Get Property Details,200,OK,100 Concurrent Users 1-80,text,true,,1792,302,83,83,http://localhost:3002/api/properties/10,1046,0,0
+1763976872304,1043,Create Booking,400,Bad Request,100 Concurrent Users 1-18,text,false,,1249,488,83,83,http://localhost:3002/api/bookings,1043,0,0
+1763976872325,1022,Get Property Details,200,OK,100 Concurrent Users 1-81,text,true,,1807,296,82,82,http://localhost:3002/api/properties/15,1022,0,0
+1763976872302,1046,Get Property Details,200,OK,100 Concurrent Users 1-73,text,true,,1777,296,82,82,http://localhost:3002/api/properties/12,1046,0,0
+1763976873240,115,Create Booking,400,Bad Request,100 Concurrent Users 1-25,text,false,,1235,490,82,82,http://localhost:3002/api/bookings,115,0,0
+1763976872318,1960,Get Property Details,200,OK,100 Concurrent Users 1-76,text,true,,1921,299,81,81,http://localhost:3002/api/properties/1,1960,0,0
+1763976873240,1040,Create Booking,400,Bad Request,100 Concurrent Users 1-23,text,false,,1245,484,81,81,http://localhost:3002/api/bookings,1040,0,0
+1763976873230,1055,Create Booking,400,Bad Request,100 Concurrent Users 1-15,text,false,,1249,488,80,80,http://localhost:3002/api/bookings,1055,0,0
+1763976872306,1980,Get Property Details,200,OK,100 Concurrent Users 1-94,text,true,,1792,298,79,79,http://localhost:3002/api/properties/17,1980,0,0
+1763976873259,1028,Get Property Details,200,OK,100 Concurrent Users 1-77,text,true,,1809,299,79,79,http://localhost:3002/api/properties/6,1028,0,0
+1763976872309,1979,Get Property Details,200,OK,100 Concurrent Users 1-78,text,true,,1807,296,79,79,http://localhost:3002/api/properties/15,1979,0,0
+1763976873234,1054,Get Property Details,200,OK,100 Concurrent Users 1-56,text,true,,1783,296,79,79,http://localhost:3002/api/properties/14,1054,0,0
+1763976873238,1050,Get Property Details,200,OK,100 Concurrent Users 1-42,text,true,,1792,298,79,79,http://localhost:3002/api/properties/17,1050,0,0
+1763976872306,1985,Create Booking,400,Bad Request,100 Concurrent Users 1-14,text,false,,1247,486,79,79,http://localhost:3002/api/bookings,1985,0,0
+1763976873228,1064,Create Booking,400,Bad Request,100 Concurrent Users 1-19,text,false,,1245,484,78,78,http://localhost:3002/api/bookings,1064,0,0
+1763976873250,1044,Create Booking,400,Bad Request,100 Concurrent Users 1-32,text,false,,1231,486,77,77,http://localhost:3002/api/bookings,1044,0,0
+1763976873260,1043,Get Property Details,200,OK,100 Concurrent Users 1-68,text,true,,1786,298,76,76,http://localhost:3002/api/properties/20,1043,0,0
+1763976873267,1046,Get Property Details,200,OK,100 Concurrent Users 1-70,text,true,,1784,297,76,76,http://localhost:3002/api/properties/8,1046,0,0
+1763976873303,1010,Create Booking,400,Bad Request,100 Concurrent Users 1-37,text,false,,1231,486,76,76,http://localhost:3002/api/bookings,1010,0,0
+1763976873275,1046,Create Booking,400,Bad Request,100 Concurrent Users 1-67,text,false,,1249,488,75,75,http://localhost:3002/api/bookings,1046,0,0
+1763976873250,1072,Create Booking,400,Bad Request,100 Concurrent Users 1-21,text,false,,1245,484,74,74,http://localhost:3002/api/bookings,1072,0,0
+1763976873245,1078,Create Booking,400,Bad Request,100 Concurrent Users 1-34,text,false,,1245,484,73,73,http://localhost:3002/api/bookings,1078,0,0
+1763976873252,1072,Create Booking,400,Bad Request,100 Concurrent Users 1-28,text,false,,1245,484,72,72,http://localhost:3002/api/bookings,1071,0,0
+1763976873253,1071,Create Booking,400,Bad Request,100 Concurrent Users 1-36,text,false,,1247,486,71,71,http://localhost:3002/api/bookings,1071,0,0
+1763976873246,1078,Create Booking,400,Bad Request,100 Concurrent Users 1-51,text,false,,1247,486,70,70,http://localhost:3002/api/bookings,1078,0,0
+1763976873252,1078,Get Property Details,200,OK,100 Concurrent Users 1-98,text,true,,1799,300,69,69,http://localhost:3002/api/properties/11,1078,0,0
+1763976873264,1068,Create Booking,400,Bad Request,100 Concurrent Users 1-26,text,false,,1245,484,69,69,http://localhost:3002/api/bookings,1068,0,0
+1763976873239,1096,Create Booking,400,Bad Request,100 Concurrent Users 1-27,text,false,,1247,486,68,68,http://localhost:3002/api/bookings,1096,0,0
+1763976873247,1089,Get Property Details,200,OK,100 Concurrent Users 1-62,text,true,,1790,299,68,68,http://localhost:3002/api/properties/7,1089,0,0
+1763976873249,1087,Get Property Details,200,OK,100 Concurrent Users 1-86,text,true,,1788,295,68,68,http://localhost:3002/api/properties/3,1087,0,0
+1763976873274,1063,Create Booking,400,Bad Request,100 Concurrent Users 1-46,text,false,,1247,486,67,67,http://localhost:3002/api/bookings,1063,0,0
+1763976873252,1087,Get Property Details,200,OK,100 Concurrent Users 1-79,text,true,,1779,298,66,66,http://localhost:3002/api/properties/12,1087,0,0
+1763976873250,1089,Get Property Details,200,OK,100 Concurrent Users 1-38,text,true,,1799,300,66,66,http://localhost:3002/api/properties/11,1089,0,0
+1763976873280,1061,Get Property Details,200,OK,100 Concurrent Users 1-91,text,true,,1786,298,66,66,http://localhost:3002/api/properties/20,1061,0,0
+1763976873245,1098,Create Booking,400,Bad Request,100 Concurrent Users 1-33,text,false,,1251,490,66,66,http://localhost:3002/api/bookings,1098,0,0
+1763976873287,1070,Create Booking,400,Bad Request,100 Concurrent Users 1-50,text,false,,1247,486,65,65,http://localhost:3002/api/bookings,1070,0,0
+1763976873274,1083,Get Property Details,200,OK,100 Concurrent Users 1-57,text,true,,1795,296,65,65,http://localhost:3002/api/properties/11,1083,0,0
+1763976873286,1073,Get Property Details,200,OK,100 Concurrent Users 1-85,text,true,,1808,304,64,64,http://localhost:3002/api/properties/13,1073,0,0
+1763976873308,1056,Create Booking,400,Bad Request,100 Concurrent Users 1-41,text,false,,1247,486,64,64,http://localhost:3002/api/bookings,1056,0,0
+1763976872290,2085,Get Property Details,200,OK,100 Concurrent Users 1-100,text,true,,1843,297,63,63,http://localhost:3002/api/properties/2,2085,0,0
+1763976873287,1089,Create Booking,400,Bad Request,100 Concurrent Users 1-59,text,false,,1245,484,63,63,http://localhost:3002/api/bookings,1089,0,0
+1763976873280,1096,Create Booking,400,Bad Request,100 Concurrent Users 1-44,text,false,,1247,486,62,62,http://localhost:3002/api/bookings,1096,0,0
+1763976874253,974,Create Booking,400,Bad Request,100 Concurrent Users 1-45,text,false,,1251,490,61,61,http://localhost:3002/api/bookings,974,0,0
+1763976873274,1953,Get Property Details,200,OK,100 Concurrent Users 1-95,text,true,,1783,296,61,61,http://localhost:3002/api/properties/14,1953,0,0
+1763976873293,1934,Create Booking,400,Bad Request,100 Concurrent Users 1-49,text,false,,1247,486,61,61,http://localhost:3002/api/bookings,1934,0,0
+1763976873285,1943,Get Property Details,200,OK,100 Concurrent Users 1-88,text,true,,1800,296,61,61,http://localhost:3002/api/properties/13,1943,0,0
+1763976873308,1920,Get Property Details,200,OK,100 Concurrent Users 1-97,text,true,,1809,298,59,59,http://localhost:3002/api/properties/15,1920,0,0
+1763976873338,1891,Create Booking,400,Bad Request,100 Concurrent Users 1-48,text,false,,1245,484,59,59,http://localhost:3002/api/bookings,1891,0,0
+1763976873319,1910,Create Booking,400,Bad Request,100 Concurrent Users 1-47,text,false,,1247,486,59,59,http://localhost:3002/api/bookings,1910,0,0
+1763976874254,977,Create Booking,400,Bad Request,100 Concurrent Users 1-63,text,false,,1247,486,57,57,http://localhost:3002/api/bookings,976,0,0
+1763976873338,1893,Create Booking,400,Bad Request,100 Concurrent Users 1-55,text,false,,1247,486,56,56,http://localhost:3002/api/bookings,1893,0,0
+1763976874289,943,Create Booking,400,Bad Request,100 Concurrent Users 1-61,text,false,,1239,494,55,55,http://localhost:3002/api/bookings,943,0,0
+1763976874288,944,Create Booking,400,Bad Request,100 Concurrent Users 1-74,text,false,,1231,486,55,55,http://localhost:3002/api/bookings,944,0,0
+1763976873286,1946,Create Booking,400,Bad Request,100 Concurrent Users 1-53,text,false,,1247,486,53,53,http://localhost:3002/api/bookings,1946,0,0
+1763976873325,1909,Create Booking,400,Bad Request,100 Concurrent Users 1-52,text,false,,1251,490,52,52,http://localhost:3002/api/bookings,1908,0,0
+1763976873296,1939,Create Booking,400,Bad Request,100 Concurrent Users 1-40,text,false,,1249,488,51,51,http://localhost:3002/api/bookings,1939,0,0
+1763976873334,1902,Create Booking,400,Bad Request,100 Concurrent Users 1-60,text,false,,1247,486,50,50,http://localhost:3002/api/bookings,1902,0,0
+1763976874288,949,Create Booking,400,Bad Request,100 Concurrent Users 1-43,text,false,,1235,490,49,49,http://localhost:3002/api/bookings,949,0,0
+1763976874266,971,Create Booking,400,Bad Request,100 Concurrent Users 1-16,text,false,,1231,486,49,49,http://localhost:3002/api/bookings,971,0,0
+1763976873318,1919,Create Booking,400,Bad Request,100 Concurrent Users 1-35,text,false,,1245,484,48,48,http://localhost:3002/api/bookings,1919,0,0
+1763976873282,1956,Create Booking,400,Bad Request,100 Concurrent Users 1-66,text,false,,1245,484,47,47,http://localhost:3002/api/bookings,1956,0,0
+1763976874253,985,Create Booking,400,Bad Request,100 Concurrent Users 1-71,text,false,,1251,490,47,47,http://localhost:3002/api/bookings,985,0,0
+1763976874266,973,Create Booking,400,Bad Request,100 Concurrent Users 1-83,text,false,,1247,486,45,45,http://localhost:3002/api/bookings,973,0,0
+1763976874293,975,Get Property Details,200,OK,100 Concurrent Users 1-90,text,true,,1792,298,43,43,http://localhost:3002/api/properties/17,975,0,0
+1763976874314,956,Create Booking,400,Bad Request,100 Concurrent Users 1-31,text,false,,1245,484,43,43,http://localhost:3002/api/bookings,956,0,0
+1763976874314,962,Get Property Details,200,OK,100 Concurrent Users 1-96,text,true,,1807,297,42,42,http://localhost:3002/api/properties/4,962,0,0
+1763976874314,963,Create Booking,400,Bad Request,100 Concurrent Users 1-84,text,false,,1245,484,42,42,http://localhost:3002/api/bookings,963,0,0
+1763976874263,1016,Get Property Details,200,OK,100 Concurrent Users 1-89,text,true,,1788,295,41,41,http://localhost:3002/api/properties/3,1016,0,0
+1763976874299,982,Create Booking,400,Bad Request,100 Concurrent Users 1-58,text,false,,1249,488,41,41,http://localhost:3002/api/bookings,982,0,0
+1763976874314,967,Create Booking,400,Bad Request,100 Concurrent Users 1-87,text,false,,1245,484,40,40,http://localhost:3002/api/bookings,967,0,0
+1763976874349,933,Create Booking,400,Bad Request,100 Concurrent Users 1-81,text,false,,1229,484,39,39,http://localhost:3002/api/bookings,933,0,0
+1763976874307,976,Create Booking,400,Bad Request,100 Concurrent Users 1-30,text,false,,1249,488,38,38,http://localhost:3002/api/bookings,976,0,0
+1763976874293,991,Create Booking,400,Bad Request,100 Concurrent Users 1-75,text,false,,1247,486,38,38,http://localhost:3002/api/bookings,991,0,0
+1763976874299,986,Get Property Details,200,OK,100 Concurrent Users 1-29,text,true,,1792,298,36,36,http://localhost:3002/api/properties/17,986,0,0
+1763976874306,979,Create Booking,400,Bad Request,100 Concurrent Users 1-65,text,false,,1247,486,36,36,http://localhost:3002/api/bookings,979,0,0
+1763976874299,986,Create Booking,400,Bad Request,100 Concurrent Users 1-69,text,false,,1247,486,35,35,http://localhost:3002/api/bookings,986,0,0
+1763976874346,958,Create Booking,400,Bad Request,100 Concurrent Users 1-39,text,false,,1247,486,34,34,http://localhost:3002/api/bookings,958,0,0
+1763976874334,970,Create Booking,400,Bad Request,100 Concurrent Users 1-72,text,false,,1245,484,33,33,http://localhost:3002/api/bookings,970,0,0
+1763976873256,2055,Get Property Details,200,OK,100 Concurrent Users 1-92,text,true,,1800,300,32,32,http://localhost:3002/api/properties/19,2055,0,0
+1763976874349,973,Create Booking,400,Bad Request,100 Concurrent Users 1-54,text,false,,1247,486,32,32,http://localhost:3002/api/bookings,973,0,0
+1763976874350,974,Create Booking,400,Bad Request,100 Concurrent Users 1-80,text,false,,1251,490,31,31,http://localhost:3002/api/bookings,974,0,0
+1763976874349,975,Create Booking,400,Bad Request,100 Concurrent Users 1-93,text,false,,1251,490,30,30,http://localhost:3002/api/bookings,975,0,0
+1763976874345,980,Create Booking,400,Bad Request,100 Concurrent Users 1-99,text,false,,1249,488,29,29,http://localhost:3002/api/bookings,980,0,0
+1763976874350,975,Create Booking,400,Bad Request,100 Concurrent Users 1-73,text,false,,1245,484,28,28,http://localhost:3002/api/bookings,975,0,0
+1763976874344,988,Create Booking,400,Bad Request,100 Concurrent Users 1-82,text,false,,1245,484,27,27,http://localhost:3002/api/bookings,988,0,0
+1763976873325,2058,Create Booking,400,Bad Request,100 Concurrent Users 1-64,text,false,,1247,486,26,26,http://localhost:3002/api/bookings,2058,0,0
+1763976875279,135,Create Booking,400,Bad Request,100 Concurrent Users 1-76,text,false,,1249,488,25,25,http://localhost:3002/api/bookings,135,0,0
+1763976875289,125,Create Booking,400,Bad Request,100 Concurrent Users 1-94,text,false,,1247,486,25,25,http://localhost:3002/api/bookings,125,0,0
+1763976875289,126,Create Booking,400,Bad Request,100 Concurrent Users 1-42,text,false,,1247,486,24,24,http://localhost:3002/api/bookings,126,0,0
+1763976875289,126,Create Booking,400,Bad Request,100 Concurrent Users 1-78,text,false,,1245,484,22,22,http://localhost:3002/api/bookings,126,0,0
+1763976875289,127,Create Booking,400,Bad Request,100 Concurrent Users 1-77,text,false,,1249,488,21,21,http://localhost:3002/api/bookings,127,0,0
+1763976875331,90,Create Booking,400,Bad Request,100 Concurrent Users 1-98,text,false,,1233,488,20,20,http://localhost:3002/api/bookings,90,0,0
+1763976875337,85,Create Booking,400,Bad Request,100 Concurrent Users 1-62,text,false,,1233,488,19,19,http://localhost:3002/api/bookings,85,0,0
+1763976875293,130,Create Booking,400,Bad Request,100 Concurrent Users 1-56,text,false,,1245,484,18,18,http://localhost:3002/api/bookings,130,0,0
+1763976875343,90,Create Booking,400,Bad Request,100 Concurrent Users 1-38,text,false,,1233,488,17,17,http://localhost:3002/api/bookings,90,0,0
+1763976875304,130,Create Booking,400,Bad Request,100 Concurrent Users 1-68,text,false,,1247,486,16,16,http://localhost:3002/api/bookings,130,0,0
+1763976875315,124,Create Booking,400,Bad Request,100 Concurrent Users 1-70,text,false,,1247,486,15,15,http://localhost:3002/api/bookings,124,0,0
+1763976875363,90,Create Booking,400,Bad Request,100 Concurrent Users 1-85,text,false,,1237,492,14,14,http://localhost:3002/api/bookings,90,0,0
+1763976875338,119,Create Booking,400,Bad Request,100 Concurrent Users 1-86,text,false,,1245,484,13,13,http://localhost:3002/api/bookings,119,0,0
+1763976875343,124,Create Booking,400,Bad Request,100 Concurrent Users 1-79,text,false,,1247,486,12,12,http://localhost:3002/api/bookings,124,0,0
+1763976875380,864,Create Booking,400,Bad Request,100 Concurrent Users 1-100,text,false,,1247,486,11,11,http://localhost:3002/api/bookings,864,0,0
+1763976875346,899,Create Booking,400,Bad Request,100 Concurrent Users 1-91,text,false,,1247,486,11,11,http://localhost:3002/api/bookings,899,0,0
+1763976875360,885,Create Booking,400,Bad Request,100 Concurrent Users 1-57,text,false,,1245,484,9,9,http://localhost:3002/api/bookings,885,0,0
+1763976876230,125,Create Booking,400,Bad Request,100 Concurrent Users 1-97,text,false,,1247,486,8,8,http://localhost:3002/api/bookings,125,0,0
+1763976876230,129,Create Booking,400,Bad Request,100 Concurrent Users 1-88,text,false,,1245,484,7,7,http://localhost:3002/api/bookings,129,0,0
+1763976876229,130,Create Booking,400,Bad Request,100 Concurrent Users 1-95,text,false,,1245,484,7,7,http://localhost:3002/api/bookings,130,0,0
+1763976876271,130,Create Booking,400,Bad Request,100 Concurrent Users 1-90,text,false,,1247,486,5,5,http://localhost:3002/api/bookings,130,0,0
+1763976876283,128,Create Booking,400,Bad Request,100 Concurrent Users 1-89,text,false,,1245,484,4,4,http://localhost:3002/api/bookings,128,0,0
+1763976876288,130,Create Booking,400,Bad Request,100 Concurrent Users 1-29,text,false,,1247,486,3,3,http://localhost:3002/api/bookings,130,0,0
+1763976876279,139,Create Booking,400,Bad Request,100 Concurrent Users 1-96,text,false,,1247,486,3,3,http://localhost:3002/api/bookings,139,0,0
+1763976876314,119,Create Booking,400,Bad Request,100 Concurrent Users 1-92,text,false,,1249,488,1,1,http://localhost:3002/api/bookings,119,0,0

@@ -6,10 +6,9 @@ metadata:
 data:
   NODE_ENV: "production"
   PORT: "3001"
-  # DB connectivity - set to your MySQL service DNS name or external host
-  DB_HOST: "mysql" # change if using external DB
-  DB_NAME: "air_bnb"
-  DB_USER: "root"
-  DB_PORT: "3306"
+  # MongoDB Atlas connection
+  MONGODB_URI: "mongodb+srv://sarveshwaghmare101_db_user:Z3WNwIKBCUVw390a@airbnb-main.d4apnix.mongodb.net/airbnb?retryWrites=true&w=majority&appName=airbnb-main"
   # CORS frontend origins (adjust as needed)
   FRONTEND_URL: "http://localhost:3000"
+  # Kafka configuration
+  KAFKA_BROKERS: "kafka:9092"

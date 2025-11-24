@@ -2,6 +2,10 @@ require('dotenv').config();
 
 // Build a robust list of local dev origins for CORS
 const defaultOrigins = [
+  'http://localhost',
+  'http://localhost:80',
+  'http://127.0.0.1',
+  'http://127.0.0.1:80',
   'http://localhost:3000',
   'http://127.0.0.1:3000',
   'http://localhost:5173',
@@ -42,7 +46,7 @@ const config = {
     saveUninitialized: false,
     rolling: true,
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
+      secure: false, // Changed to false to work with HTTP in Docker
       httpOnly: true,
       sameSite: 'lax',
       maxAge: 24 * 60 * 60 * 1000 // 24 hours
@@ -78,7 +82,7 @@ const config = {
   // Rate limiting
   rateLimit: {
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100 // limit each IP to 100 requests per windowMs
+    max: process.env.NODE_ENV === 'production' ? 100 : 999999 // effectively unlimited in dev
   }
 };
 

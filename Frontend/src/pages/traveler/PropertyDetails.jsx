@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { bookingApi, propertyApi } from '../../services/api'
+import { useDispatch, useSelector } from 'react-redux'
+import { createBooking } from '../../store/travelerBookingSlice'
 
 export default function PropertyDetails() {
   const { id } = useParams()
@@ -9,6 +11,8 @@ export default function PropertyDetails() {
   const [form, setForm] = useState({ startDate: '', endDate: '', guests: 1 })
   const [msg, setMsg] = useState('')
   const [error, setError] = useState('')
+  const user = useSelector(state => state.auth?.user)
+  const isOwner = user?.role === 'owner' || user?.user_type === 'owner'
 
   useEffect(() => {
     propertyApi.details(id).then(({data}) => setP(data.property)).catch(()=>{})
@@ -28,6 +32,8 @@ export default function PropertyDetails() {
     return false
   })()
 
+  const dispatch = useDispatch()
+
   const book = async () => {
     setMsg(''); setError('')
     if (!isDatesValid) {
@@ -43,12 +49,12 @@ export default function PropertyDetails() {
       return
     }
     try {
-      await bookingApi.create({ propertyId: id, ...form })
+      const result = await dispatch(createBooking({ propertyId: id, ...form })).unwrap()
       setMsg('Booking requested. Status: Pending')
       // Redirect to trips so user can see their pending booking
       setTimeout(() => navigate('/trips'), 500)
     } catch (e) {
-      const m = e?.response?.data?.message || 'Booking failed'
+      const m = e?.response?.data?.message || (e && e.message) || 'Booking failed'
       if (/not available/i.test(m) || /guest limit/i.test(m)) setError(m)
       else setMsg(m)
     }
@@ -83,8 +89,14 @@ export default function PropertyDetails() {
             <div className="d-flex align-items-baseline justify-content-between mb-2">
               <div><span className="h4">${p.pricePerNight}</span> night</div>
             </div>
-            {error && <div className="alert alert-danger">{error}</div>}
-            {msg && <div className="alert alert-info">{msg}</div>}
+            {isOwner && (
+              <div className="alert alert-warning">
+                Property owners cannot book properties. Please log in as a traveler to make bookings.
+              </div>
+            )}
+            {!isOwner && error && <div className="alert alert-danger">{error}</div>}
+            {!isOwner && msg && <div className="alert alert-info">{msg}</div>}
+            {!isOwner && (
             <div className="row g-2">
               <div className="col-6">
                 <label className="form-label">Start</label>
@@ -104,6 +116,7 @@ export default function PropertyDetails() {
                 >Request to book</button>
               </div>
             </div>
+            )}
           </div>
         </div>
       </div>

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { bookingApi, propertyApi } from '../../services/api'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchTravelerBookings } from '../../store/travelerBookingSlice'
+import { getBackendOrigin } from '../../config'
 
 function StatusBadge({ status }) {
   const s = (status || '').toString().toLowerCase()
@@ -18,9 +21,7 @@ function money(x) {
 function assetUrl(path) {
   if (!path) return '/placeholder.svg'
   if (path.startsWith('http://') || path.startsWith('https://')) return path
-  const apiBase = import.meta.env.VITE_API_BASE || 'http://localhost:3001/api'
-  let origin = ''
-  try { origin = new URL(apiBase).origin } catch { origin = 'http://localhost:3001' }
+  const origin = getBackendOrigin()
   return `${origin}${path.startsWith('/') ? path : `/${path}`}`
 }
 
@@ -28,12 +29,13 @@ export default function Trips() {
   const [status, setStatus] = useState('')
   const [list, setList] = useState([])
   const [imgCache, setImgCache] = useState({})
+  const dispatch = useDispatch()
+  const travelerBookings = useSelector(state => state.travelerBookings?.items || [])
 
   const load = async () => {
     try {
-      const { data } = await bookingApi.listTraveler(status)
-      const payload = data?.data || data
-      const bookings = payload?.bookings || []
+      await dispatch(fetchTravelerBookings({ status }))
+      const bookings = (travelerBookings || [])
       setList(bookings)
       // Prefetch missing images using property details as fallback
       const missing = bookings.filter(b => !(b.property_image || b.main_image) && (b.property_id || b.property?.id))
@@ -52,7 +54,7 @@ export default function Trips() {
     } catch { setList([]) }
   }
 
-  useEffect(() => { load() }, [status])
+  useEffect(() => { load() }, [status, travelerBookings])
 
   return (
     <div>

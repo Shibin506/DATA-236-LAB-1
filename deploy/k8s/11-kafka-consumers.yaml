@@ -1,0 +1,169 @@
+---
+# Owner Consumer Deployment (Backend Service - Consumes booking requests)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: owner-consumer
+  namespace: airbnb
+  labels:
+    app: owner-consumer
+    role: backend-consumer
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: owner-consumer
+  template:
+    metadata:
+      labels:
+        app: owner-consumer
+        role: backend-consumer
+    spec:
+      containers:
+      - name: owner-consumer
+        image: airbnb-backend:latest
+        imagePullPolicy: Never  # Use local image for development
+        command: ["npm", "run", "owner-consumer"]
+        envFrom:
+        - configMapRef:
+            name: backend-config
+        - secretRef:
+            name: backend-secret
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: DB_PASSWORD
+        - name: KAFKA_CLIENT_ID
+          value: "airbnb-owner-consumer"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "ps aux | grep 'ownerConsumer.js' | grep -v grep"
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+---
+# Traveler Consumer Deployment (Transaction Service - Consumes status updates)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traveler-consumer
+  namespace: airbnb
+  labels:
+    app: traveler-consumer
+    role: transaction-consumer
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: traveler-consumer
+  template:
+    metadata:
+      labels:
+        app: traveler-consumer
+        role: transaction-consumer
+    spec:
+      containers:
+      - name: traveler-consumer
+        image: airbnb-backend:latest
+        imagePullPolicy: Never  # Use local image for development
+        command: ["npm", "run", "traveler-consumer"]
+        envFrom:
+        - configMapRef:
+            name: backend-config
+        - secretRef:
+            name: backend-secret
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: DB_PASSWORD
+        - name: KAFKA_CLIENT_ID
+          value: "airbnb-traveler-consumer"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "ps aux | grep 'travelerConsumer.js' | grep -v grep"
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+---
+# Owner Consumer HorizontalPodAutoscaler
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: owner-consumer-hpa
+  namespace: airbnb
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: owner-consumer
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+
+---
+# Traveler Consumer HorizontalPodAutoscaler
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: traveler-consumer-hpa
+  namespace: airbnb
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: traveler-consumer
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80

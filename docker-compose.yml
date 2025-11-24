@@ -1,0 +1,189 @@
+# Complete Docker Compose for Airbnb Application with Kafka
+# All services: Frontend, Backend, AgentAI, MySQL, Kafka, Zookeeper
+version: '3.8'
+
+services:
+  # Zookeeper - Required for Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: airbnb_zookeeper
+    restart: unless-stopped
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - airbnb_network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2181"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Kafka - Message Broker for async communication
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: airbnb_kafka
+    restart: unless-stopped
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    ports:
+      - "29092:29092"
+      - "9093:9093"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:29092,PLAINTEXT_INTERNAL://kafka:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,PLAINTEXT_INTERNAL://0.0.0.0:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_LOG_SEGMENT_BYTES: 1073741824
+    networks:
+      - airbnb_network
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: airbnb_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-Lionel@2}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE:-air_bnb}"
+      MYSQL_USER: "${MYSQL_USER:-airbnb_user}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD:-Lionel@2}"
+    ports:
+      - "13306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-Lionel@2}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - airbnb_network
+
+  # Backend Service (Traveler, Owner, Property, Booking services combined)
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: airbnb_backend
+    restart: unless-stopped
+    environment:
+      # Database Configuration
+      DB_HOST: mysql
+      DB_USER: "${MYSQL_USER:-root}"
+      DB_PASSWORD: "${MYSQL_PASSWORD:-abcd@1234}"
+      DB_NAME: "${MYSQL_DATABASE:-air_bnb}"
+      DB_PORT: 3306
+      # Server Configuration
+      SESSION_SECRET: "${SESSION_SECRET:-your-secret-session-key-change-in-production}"
+      NODE_ENV: "${NODE_ENV:-production}"
+      PORT: 3001
+      # Kafka Configuration
+      KAFKA_BROKERS: kafka:9093
+      KAFKA_CLIENT_ID: airbnb-backend
+      KAFKAJS_NO_PARTITIONER_WARNING: 1
+    ports:
+      - "3001:3001"
+    volumes:
+      - backend_uploads:/app/uploads
+    depends_on:
+      mysql:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+    networks:
+      - airbnb_network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # AgentAI Service - Intelligent booking assistant
+  agentai:
+    build:
+      context: ./AgentAI
+      dockerfile: Dockerfile
+    container_name: airbnb_agentai
+    restart: unless-stopped
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: "${MYSQL_USER:-root}"
+      DB_PASSWORD: "${MYSQL_PASSWORD:-abcd@1234}"
+      DB_NAME: "${MYSQL_DATABASE:-air_bnb}"
+      PORT: 8000
+      SERVICE_ROLE: agentai
+    ports:
+      - "8000:8000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - airbnb_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend Service - React SPA
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: airbnb_frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - agentai
+    networks:
+      - airbnb_network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # Adminer - Database management tool (optional)
+  adminer:
+    image: adminer
+    container_name: airbnb_adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - airbnb_network
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql
+
+volumes:
+  mysql_data:
+    driver: local
+  kafka_data:
+    driver: local
+  backend_uploads:
+    driver: local
+
+networks:
+  airbnb_network:
+    driver: bridge
+    name: airbnb_network

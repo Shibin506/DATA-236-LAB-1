@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
-import { authApi } from '../services/api'
+import React, { createContext, useContext, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { login as loginThunk, logout as logoutThunk } from '../store/authSlice'
 
 const normalizeUser = (u) => {
   if (!u) return u
@@ -9,46 +10,25 @@ const normalizeUser = (u) => {
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const dispatch = useDispatch()
+  const authState = useSelector(state => state.auth || {})
+  const { user, status } = authState
 
   useEffect(() => {
-    let mounted = true
-    const init = async () => {
-      try {
-        const sess = await authApi.sessionInfo()
-        if (!sess?.authenticated) {
-          if (mounted) setUser(null)
-          return
-        }
-        const { data } = await authApi.me()
-        if (mounted) setUser(normalizeUser(data.user) || null)
-      } catch (e) {
-        if (mounted) setUser(null)
-      } finally {
-        if (mounted) setLoading(false)
-      }
-    }
-    init()
-    return () => { mounted = false }
+    // If you want to perform an initial session check against the backend,
+    // we could dispatch an action here. For now, rely on persisted auth token
+    // and `authApi.me` if needed elsewhere.
   }, [])
 
   const login = async (email, password) => {
-    const { data } = await authApi.login({ email, password })
-    setUser(normalizeUser(data.user))
+    await dispatch(loginThunk({ email, password }))
   }
   const logout = async () => {
-    try {
-      await authApi.logout()
-    } catch (e) {
-      // Even if the API call fails (e.g., session already gone), force client logout state
-    } finally {
-      setUser(null)
-    }
+    await dispatch(logoutThunk())
   }
 
   return (
-    <AuthContext.Provider value={{ user, setUser, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading: status === 'loading', login, logout }}>
       {children}
     </AuthContext.Provider>
   )

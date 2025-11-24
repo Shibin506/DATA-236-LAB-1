@@ -1,4 +1,5 @@
 const bookingService = require('../services/bookingService');
+const kafkaService = require('../services/kafka')
 
 class BookingController {
   // Create booking
@@ -15,12 +16,26 @@ class BookingController {
       }
       
       const booking = await bookingService.createBooking(req.body, req.userId);
-      
-      res.status(201).json({
-        success: true,
-        message: 'Booking created successfully',
-        data: { booking }
-      });
+
+      // Publish booking request to Kafka topic for asynchronous owner processing
+      try {
+        await kafkaService.produce('bookings.requests', {
+          booking_id: booking.id,
+          property_id: booking.property_id,
+          owner_id: booking.owner_id,
+          traveler_id: req.userId,
+          check_in_date: booking.check_in_date,
+          check_out_date: booking.check_out_date,
+          number_of_guests: booking.number_of_guests,
+          total_price: booking.total_price,
+          status: booking.status,
+          created_at: new Date().toISOString()
+        })
+      } catch (err) {
+        console.warn('Failed to publish booking request to kafka:', err && err.message)
+      }
+
+      res.status(201).json({ success: true, message: 'Booking created successfully', data: { booking } });
       
     } catch (error) {
       console.error('Create booking error:', error);
@@ -73,7 +88,20 @@ class BookingController {
   async acceptBooking(req, res) {
     try {
       const { id } = req.params;
-      await bookingService.acceptBooking(id, req.userId);
+      const booking = await bookingService.acceptBooking(id, req.userId);
+      
+      // Publish status update to Kafka for traveler service
+      try {
+        await kafkaService.produce('bookings.status', {
+          booking_id: id,
+          status: 'accepted',
+          owner_id: req.userId,
+          processed_at: new Date().toISOString()
+        })
+        console.log(`✅ Published booking ${id} acceptance to Kafka`)
+      } catch (err) {
+        console.warn('Failed to publish booking acceptance to kafka:', err && err.message)
+      }
       
       res.json({
         success: true,
@@ -97,6 +125,20 @@ class BookingController {
       
       await bookingService.rejectBooking(id, req.userId, reason);
       
+      // Publish status update to Kafka for traveler service
+      try {
+        await kafkaService.produce('bookings.status', {
+          booking_id: id,
+          status: 'rejected',
+          reason: reason || 'Rejected by owner',
+          owner_id: req.userId,
+          processed_at: new Date().toISOString()
+        })
+        console.log(`✅ Published booking ${id} rejection to Kafka`)
+      } catch (err) {
+        console.warn('Failed to publish booking rejection to kafka:', err && err.message)
+      }
+      
       res.json({
         success: true,
         message: 'Booking rejected successfully'
@@ -118,6 +160,20 @@ class BookingController {
       const { reason } = req.body;
       
       await bookingService.cancelBooking(id, req.userId, reason);
+      
+      // Publish status update to Kafka for owner service notification
+      try {
+        await kafkaService.produce('bookings.status', {
+          booking_id: id,
+          status: 'cancelled',
+          reason: reason || 'Cancelled by traveler',
+          traveler_id: req.userId,
+          processed_at: new Date().toISOString()
+        })
+        console.log(`✅ Published booking ${id} cancellation to Kafka`)
+      } catch (err) {
+        console.warn('Failed to publish booking cancellation to kafka:', err && err.message)
+      }
       
       res.json({
         success: true,

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { userApi } from '../../services/api'
+import { getBackendOrigin } from '../../config'
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:3001/api'
-const API_ORIGIN = API_BASE.replace(/\/api$/, '')
 const toAbsolute = (url) => {
   if (!url) return ''
   if (/^https?:\/\//i.test(url)) return url
-  return `${API_ORIGIN}${url.startsWith('/') ? '' : '/'}${url}`
+  const origin = getBackendOrigin()
+  return `${origin}${url.startsWith('/') ? '' : '/'}${url}`
 }
 
 const countries = ['United States','Canada','United Kingdom','India','Australia']

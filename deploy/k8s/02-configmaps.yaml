@@ -1,0 +1,43 @@
+---
+# MySQL ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+  namespace: airbnb
+data:
+  MYSQL_DATABASE: "air_bnb"
+
+---
+# Backend ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: airbnb
+data:
+  DB_HOST: "mysql-service"
+  DB_PORT: "3306"
+  DB_NAME: "air_bnb"
+  DB_USER: "root"
+  NODE_ENV: "development"
+  PORT: "3001"
+  KAFKA_BROKERS: "kafka-service:9093"
+  KAFKA_CLIENT_ID: "airbnb-backend"
+  KAFKAJS_NO_PARTITIONER_WARNING: "1"
+  CORS_ORIGINS: "http://localhost,http://localhost:80,http://localhost:3001,http://localhost:3002,http://localhost:5173"
+
+---
+# AgentAI ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agentai-config
+  namespace: airbnb
+data:
+  DB_HOST: "mysql-service"
+  DB_PORT: "3306"
+  DB_NAME: "air_bnb"
+  DB_USER: "root"
+  PORT: "8000"
+  SERVICE_ROLE: "agentai"

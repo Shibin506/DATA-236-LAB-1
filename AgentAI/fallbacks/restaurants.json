@@ -10,7 +10,13 @@
     ],
     "san francisco": [
       {"name": "SF Family Cafe", "price_tier": "$$"},
-      {"name": "Mission Vegan Kitchen", "price_tier": "$$", "dietary_match": ["vegan"]}
+      {"name": "Mission Vegan Kitchen", "price_tier": "$$", "dietary_match": ["vegan"]},
+      {"name": "Fisherman's Wharf Seafood Grill", "price_tier": "$$$"},
+      {"name": "Chinatown Dim Sum Palace", "price_tier": "$"},
+      {"name": "North Beach Italian Trattoria", "price_tier": "$$"},
+      {"name": "Ferry Building Marketplace", "price_tier": "$$", "dietary_match": ["vegetarian", "vegan"]},
+      {"name": "Golden Gate Park Cafe", "price_tier": "$"},
+      {"name": "Haight-Ashbury Vegan Bistro", "price_tier": "$$", "dietary_match": ["vegan"]}
     ]
   }
 }

@@ -1,15 +1,17 @@
 import axios from 'axios'
+import config from '../config'
 
-// Base API URL - should point to backend server root (include /api prefix to match backend)
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:3001/api'
+// Base API URL - configured from centralized config
+const API_BASE = config.api.baseURL
 const API_ORIGIN = API_BASE.replace(/\/api$/,'')
-const MOCK = String(import.meta.env.VITE_MOCK || '').toLowerCase() === 'true'
-const AGENT_API_BASE = import.meta.env.VITE_AGENT_API_BASE || 'http://localhost:8000/api/v1'
+const MOCK = config.mock
+const AGENT_API_BASE = config.agent.baseURL
 
 export const api = axios.create({
   baseURL: API_BASE,
   withCredentials: true, // cookies for session-based auth
-  headers: { 'Content-Type': 'application/json' }
+  headers: { 'Content-Type': 'application/json' },
+  timeout: config.api.timeout
 })
 
 // Normalize responses: backend returns { success: true, data: { ... } }
@@ -146,6 +148,16 @@ export const authApi = {
   session: () => MOCK ? Promise.resolve({ data: { active: true }}) : api.get('/auth/session'),
   me: () => MOCK ? Promise.resolve({ data: { user: null }}) : api.get('/auth/me'),
   changePassword: (payload) => api.post('/auth/change-password', payload)
+}
+
+// Utility to set auth token on the axios instance (Bearer token)
+export function setAuthToken(token) {
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    // If using cookie/session auth, leave withCredentials untouched
+  } else {
+    delete api.defaults.headers.common['Authorization']
+  }
 }
 
 // Users endpoints (backend):

@@ -1,17 +1,25 @@
 {
   "default": [
-    {"title": "City Museum", "tags": ["museum"], "duration_minutes": 90},
-    {"title": "Central Park Walk", "tags": ["outdoors"], "duration_minutes": 60},
-    {"title": "Historic Old Town Tour", "tags": ["sightseeing"], "duration_minutes": 120}
+    {"title": "City Museum", "tags": ["museum"], "duration_minutes": 90, "price_tier": "$$"},
+    {"title": "Central Park Walk", "tags": ["outdoors"], "duration_minutes": 60, "price_tier": "$"},
+    {"title": "Historic Old Town Tour", "tags": ["sightseeing"], "duration_minutes": 120, "price_tier": "$$$"}
   ],
   "by_city": {
     "new york": [
-      {"title": "Metropolitan Museum Highlights", "tags": ["museum"], "duration_minutes": 120},
-      {"title": "High Line Stroll", "tags": ["outdoors"], "duration_minutes": 60}
+      {"title": "Metropolitan Museum Highlights", "tags": ["museum"], "duration_minutes": 120, "price_tier": "$$$"},
+      {"title": "High Line Stroll", "tags": ["outdoors"], "duration_minutes": 60, "price_tier": "$"}
     ],
     "san francisco": [
-      {"title": "Golden Gate Bridge Vista", "tags": ["outdoors"], "duration_minutes": 45},
-      {"title": "Fisherman's Wharf Food Sampling", "tags": ["food"], "duration_minutes": 90}
+      {"title": "Golden Gate Bridge Vista", "tags": ["outdoors", "sightseeing"], "duration_minutes": 45, "price_tier": "$"},
+      {"title": "Fisherman's Wharf Food Sampling", "tags": ["food", "sightseeing"], "duration_minutes": 90, "price_tier": "$$"},
+      {"title": "Alcatraz Island Tour", "tags": ["sightseeing", "history"], "duration_minutes": 180, "price_tier": "$$$"},
+      {"title": "Cable Car Ride", "tags": ["sightseeing", "outdoors"], "duration_minutes": 30, "price_tier": "$"},
+      {"title": "Exploratorium Science Museum", "tags": ["museum", "family"], "duration_minutes": 120, "price_tier": "$$"},
+      {"title": "Chinatown Walking Tour", "tags": ["sightseeing", "food"], "duration_minutes": 90, "price_tier": "$"},
+      {"title": "Golden Gate Park Exploration", "tags": ["outdoors", "nature"], "duration_minutes": 120, "price_tier": "$"},
+      {"title": "Pier 39 Sea Lions & Shopping", "tags": ["sightseeing", "family"], "duration_minutes": 60, "price_tier": "$"},
+      {"title": "de Young Museum", "tags": ["museum", "art"], "duration_minutes": 90, "price_tier": "$$"},
+      {"title": "Twin Peaks Sunset Viewing", "tags": ["outdoors", "sightseeing"], "duration_minutes": 45, "price_tier": "$"}
     ]
   }
 }

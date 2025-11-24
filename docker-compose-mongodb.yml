@@ -1,0 +1,98 @@
+services:
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE=http://localhost:3001/api
+    container_name: airbnb_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - airbnb-network
+    restart: unless-stopped
+
+  # Backend API (Node.js + MongoDB Atlas)
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: airbnb_backend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - MONGODB_URI=mongodb+srv://sarveshwaghmare101_db_user:Z3WNwIKBCUVw390a@airbnb-main.d4apnix.mongodb.net/airbnb?retryWrites=true&w=majority&appName=airbnb-main
+      - KAFKA_BROKERS=kafka:9093
+      - SESSION_SECRET=your-secret-key-change-in-production
+      - JWT_SECRET=your-jwt-secret-change-in-production
+    depends_on:
+      - kafka
+    networks:
+      - airbnb-network
+    restart: unless-stopped
+
+  # AgentAI (Python Flask)
+  agentai:
+    build:
+      context: ./AgentAI
+      dockerfile: Dockerfile
+    container_name: airbnb_agentai
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - BACKEND_URL=http://backend:3001
+    depends_on:
+      - backend
+    networks:
+      - airbnb-network
+    restart: unless-stopped
+
+  # Zookeeper (for Kafka)
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: airbnb_zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - airbnb-network
+    restart: unless-stopped
+
+  # Kafka
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: airbnb_kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "29092:29092"
+      - "9093:9093"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:29092,PLAINTEXT_INTERNAL://kafka:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,PLAINTEXT_INTERNAL://0.0.0.0:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    networks:
+      - airbnb-network
+    restart: unless-stopped
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+
+networks:
+  airbnb-network:
+    driver: bridge
+
+volumes:
+  kafka_data:
+    driver: local
