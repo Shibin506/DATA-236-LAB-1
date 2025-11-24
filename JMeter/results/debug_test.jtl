@@ -1,0 +1,401 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1763976705114,1007,User Login,200,OK,100 Concurrent Users 1-1,text,true,,1389,288,21,21,http://localhost:3002/api/auth/login,1003,0,8
+1763976705290,1614,User Login,200,OK,100 Concurrent Users 1-3,text,true,,1393,288,29,29,http://localhost:3002/api/auth/login,1614,0,1
+1763976707142,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-1,text,false,,1208,0,31,31,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976705384,2343,User Login,200,OK,100 Concurrent Users 1-4,text,true,,1383,288,37,37,http://localhost:3002/api/auth/login,2343,0,0
+1763976707907,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-3,text,false,,1208,0,39,39,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976708730,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-4,text,false,,1208,0,47,47,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976705582,3176,User Login,200,OK,100 Concurrent Users 1-6,text,true,,1387,288,47,47,http://localhost:3002/api/auth/login,3176,0,1
+1763976705683,3370,User Login,200,OK,100 Concurrent Users 1-7,text,true,,1383,288,50,50,http://localhost:3002/api/auth/login,3370,0,0
+1763976709766,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-6,text,false,,1208,0,57,57,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976710054,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-7,text,false,,1208,0,60,60,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976705780,5599,User Login,200,OK,100 Concurrent Users 1-8,text,true,,1385,288,74,74,http://localhost:3002/api/auth/login,5599,0,1
+1763976705182,6299,User Login,200,OK,100 Concurrent Users 1-2,text,true,,1383,288,75,75,http://localhost:3002/api/auth/login,6299,0,1
+1763976712382,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-8,text,false,,1208,0,84,84,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976712487,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-2,text,false,,1208,0,85,85,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976706180,6307,User Login,200,OK,100 Concurrent Users 1-12,text,true,,1383,288,85,85,http://localhost:3002/api/auth/login,6307,0,1
+1763976705881,6708,User Login,200,OK,100 Concurrent Users 1-9,text,true,,1387,288,86,86,http://localhost:3002/api/auth/login,6708,0,1
+1763976713493,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-12,text,false,,1208,0,95,95,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976713595,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-9,text,false,,1208,0,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976706680,7024,User Login,200,OK,100 Concurrent Users 1-17,text,true,,1389,288,97,97,http://localhost:3002/api/auth/login,7024,0,1
+1763976705483,8323,User Login,200,OK,100 Concurrent Users 1-5,text,true,,1387,288,98,98,http://localhost:3002/api/auth/login,8323,0,1
+1763976714710,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-17,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976714811,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-5,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976706485,8407,User Login,200,OK,100 Concurrent Users 1-15,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,8407,0,2
+1763976706383,8617,User Login,200,OK,100 Concurrent Users 1-14,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,8617,0,1
+1763976706085,9020,User Login,200,OK,100 Concurrent Users 1-11,text,true,,1389,288,100,100,http://localhost:3002/api/auth/login,9020,0,1
+1763976715895,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-15,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976716001,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-14,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976716107,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-11,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976708147,8198,Get Property Details,200,OK,100 Concurrent Users 1-1,text,true,,1783,302,100,100,http://localhost:3002/api/properties/12,8198,0,0
+1763976706777,9568,User Login,200,OK,100 Concurrent Users 1-18,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,9568,0,1
+1763976717355,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-18,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976706886,11253,User Login,200,OK,100 Concurrent Users 1-19,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,11250,0,1
+1763976707282,10954,User Login,200,OK,100 Concurrent Users 1-23,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,10954,0,1
+1763976719171,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-19,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976719242,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-23,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976707182,12429,User Login,200,OK,100 Concurrent Users 1-22,text,true,,1389,288,100,100,http://localhost:3002/api/auth/login,12429,0,1
+1763976706975,12743,User Login,200,OK,100 Concurrent Users 1-20,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,12743,0,1
+1763976707080,12743,User Login,200,OK,100 Concurrent Users 1-21,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,12743,0,1
+1763976705986,14348,User Login,200,OK,100 Concurrent Users 1-10,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,14348,0,1
+1763976720615,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-22,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976720724,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-20,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976720829,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-21,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976707581,13722,User Login,200,OK,100 Concurrent Users 1-26,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,13722,0,0
+1763976721341,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-10,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976707881,13527,User Login,200,OK,100 Concurrent Users 1-29,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,13527,0,1
+1763976707785,13726,User Login,200,OK,100 Concurrent Users 1-28,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,13726,0,0
+1763976707682,14335,User Login,200,OK,100 Concurrent Users 1-27,text,true,,1389,288,100,100,http://localhost:3002/api/auth/login,14335,0,0
+1763976722310,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-26,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976722409,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-29,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976722512,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-28,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976723023,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-27,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976707981,15280,User Login,200,OK,100 Concurrent Users 1-30,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,15279,0,0
+1763976708081,15685,User Login,200,OK,100 Concurrent Users 1-31,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,15685,0,1
+1763976706582,17286,User Login,200,OK,100 Concurrent Users 1-16,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,17286,0,1
+1763976724262,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-30,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976724770,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-31,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976708280,16539,User Login,200,OK,100 Concurrent Users 1-33,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,16539,0,1
+1763976708383,16436,User Login,200,OK,100 Concurrent Users 1-34,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,16436,0,1
+1763976724871,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-16,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976708486,16942,User Login,200,OK,100 Concurrent Users 1-35,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,16942,0,1
+1763976725821,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-33,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976725822,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-34,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976706278,19882,User Login,200,OK,100 Concurrent Users 1-13,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,19882,0,2
+1763976708683,17580,User Login,200,OK,100 Concurrent Users 1-37,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,17580,0,1
+1763976708779,17585,User Login,200,OK,100 Concurrent Users 1-38,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,17585,0,1
+1763976726429,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-35,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976708883,17996,User Login,200,OK,100 Concurrent Users 1-39,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,17996,0,1
+1763976727164,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-13,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976727264,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-37,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976727370,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-38,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976727887,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-39,text,false,,1208,0,100,100,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976708985,19094,User Login,200,OK,100 Concurrent Users 1-40,text,true,,1389,288,100,100,http://localhost:3002/api/auth/login,19094,0,0
+1763976709083,18997,User Login,200,OK,100 Concurrent Users 1-41,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,18997,0,0
+1763976709734,18348,Get Property Details,200,OK,100 Concurrent Users 1-4,text,true,,1788,295,100,100,http://localhost:3002/api/properties/3,18348,0,0
+1763976710769,17313,Get Property Details,200,OK,100 Concurrent Users 1-6,text,true,,1800,300,100,100,http://localhost:3002/api/properties/19,17313,0,0
+1763976709184,18900,User Login,200,OK,100 Concurrent Users 1-42,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,18900,0,1
+1763976711057,17027,Get Property Details,200,OK,100 Concurrent Users 1-7,text,true,,1784,296,100,100,http://localhost:3002/api/properties/20,17027,0,0
+1763976709281,18804,User Login,200,OK,100 Concurrent Users 1-43,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,18804,0,1
+1763976709377,19052,User Login,200,OK,100 Concurrent Users 1-44,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,19052,0,1
+1763976709480,18950,User Login,200,OK,100 Concurrent Users 1-45,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,18950,0,2
+1763976713383,15048,Get Property Details,200,OK,100 Concurrent Users 1-8,text,true,,1802,298,100,100,http://localhost:3002/api/properties/13,15048,0,0
+1763976713488,14944,Get Property Details,200,OK,100 Concurrent Users 1-2,text,true,,1782,295,100,100,http://localhost:3002/api/properties/8,14944,0,0
+1763976714495,13937,Get Property Details,200,OK,100 Concurrent Users 1-12,text,true,,1785,296,100,100,http://localhost:3002/api/properties/16,13937,0,0
+1763976714600,13833,Get Property Details,200,OK,100 Concurrent Users 1-9,text,true,,1809,299,100,100,http://localhost:3002/api/properties/4,13833,0,0
+1763976715713,12721,Get Property Details,200,OK,100 Concurrent Users 1-17,text,true,,1789,302,100,100,http://localhost:3002/api/properties/14,12721,0,0
+1763976707480,20954,User Login,200,OK,100 Concurrent Users 1-25,text,true,,1391,288,100,100,http://localhost:3002/api/auth/login,20954,0,1
+1763976709585,18881,User Login,200,OK,100 Concurrent Users 1-46,text,true,,1389,288,100,100,http://localhost:3002/api/auth/login,18881,0,1
+1763976715817,12656,Get Property Details,200,OK,100 Concurrent Users 1-5,text,true,,1786,299,100,100,http://localhost:3002/api/properties/8,12656,0,0
+1763976709984,18497,User Login,200,OK,100 Concurrent Users 1-50,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,18497,0,0
+1763976710081,18402,User Login,200,OK,100 Concurrent Users 1-51,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,18402,0,1
+1763976709878,18605,User Login,200,OK,100 Concurrent Users 1-49,text,true,,1389,288,100,100,http://localhost:3002/api/auth/login,18605,0,3
+1763976717114,11574,Get Property Details,200,OK,100 Concurrent Users 1-11,text,true,,1783,302,100,100,http://localhost:3002/api/properties/12,11574,0,0
+1763976708179,20509,User Login,200,OK,100 Concurrent Users 1-32,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,20509,0,1
+1763976717005,11684,Get Property Details,200,OK,100 Concurrent Users 1-14,text,true,,1786,298,100,100,http://localhost:3002/api/properties/20,11684,0,0
+1763976710581,18109,User Login,200,OK,100 Concurrent Users 1-56,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,18109,0,1
+1763976709780,18911,User Login,200,OK,100 Concurrent Users 1-48,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,18911,0,3
+1763976709684,19008,User Login,200,OK,100 Concurrent Users 1-47,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,19008,0,1
+1763976710276,18416,User Login,200,OK,100 Concurrent Users 1-53,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,18416,0,1
+1763976710182,18511,User Login,200,OK,100 Concurrent Users 1-52,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,18511,0,1
+1763976710386,18307,User Login,200,OK,100 Concurrent Users 1-54,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,18307,0,1
+1763976716902,11824,Get Property Details,200,OK,100 Concurrent Users 1-15,text,true,,1919,297,100,100,http://localhost:3002/api/properties/1,11824,0,0
+1763976718366,10362,Get Property Details,200,OK,100 Concurrent Users 1-18,text,true,,1783,296,100,100,http://localhost:3002/api/properties/14,10362,0,0
+1763976707378,21351,User Login,200,OK,100 Concurrent Users 1-24,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,21351,0,1
+1763976710886,17848,User Login,200,OK,100 Concurrent Users 1-59,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,17848,0,0
+1763976710785,17950,User Login,200,OK,100 Concurrent Users 1-58,text,true,,1389,288,100,100,http://localhost:3002/api/auth/login,17950,0,0
+1763976710979,17756,User Login,200,OK,100 Concurrent Users 1-60,text,true,,1389,288,100,100,http://localhost:3002/api/auth/login,17756,0,1
+1763976711081,17658,User Login,200,OK,100 Concurrent Users 1-61,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,17658,0,1
+1763976711278,17492,User Login,200,OK,100 Concurrent Users 1-63,text,true,,1389,288,100,100,http://localhost:3002/api/auth/login,17492,0,1
+1763976711185,17587,User Login,200,OK,100 Concurrent Users 1-62,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,17587,0,1
+1763976711385,17394,User Login,200,OK,100 Concurrent Users 1-64,text,true,,1389,288,100,100,http://localhost:3002/api/auth/login,17394,0,1
+1763976708914,19901,Get Property Details,200,OK,100 Concurrent Users 1-3,text,true,,1787,306,100,100,http://localhost:3002/api/properties/12,19901,0,0
+1763976720178,8638,Get Property Details,200,OK,100 Concurrent Users 1-19,text,true,,1784,300,100,100,http://localhost:3002/api/properties/18,8638,0,0
+1763976711581,17239,User Login,200,OK,100 Concurrent Users 1-66,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,17239,0,1
+1763976711884,16936,User Login,200,OK,100 Concurrent Users 1-69,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,16935,0,0
+1763976711784,17036,User Login,200,OK,100 Concurrent Users 1-68,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,17036,0,1
+1763976711686,17134,User Login,200,OK,100 Concurrent Users 1-67,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,17134,0,1
+1763976711982,16839,User Login,200,OK,100 Concurrent Users 1-70,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,16839,0,0
+1763976711482,17339,User Login,200,OK,100 Concurrent Users 1-65,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,17339,0,1
+1763976720248,8573,Get Property Details,200,OK,100 Concurrent Users 1-23,text,true,,1795,296,100,100,http://localhost:3002/api/properties/11,8573,0,0
+1763976721621,7238,Get Property Details,200,OK,100 Concurrent Users 1-22,text,true,,1813,302,100,100,http://localhost:3002/api/properties/15,7238,0,0
+1763976721730,7130,Get Property Details,200,OK,100 Concurrent Users 1-20,text,true,,1785,298,100,100,http://localhost:3002/api/properties/14,7130,0,0
+1763976722344,6516,Get Property Details,200,OK,100 Concurrent Users 1-10,text,true,,1790,297,100,100,http://localhost:3002/api/properties/9,6516,0,0
+1763976721831,7029,Get Property Details,200,OK,100 Concurrent Users 1-21,text,true,,1786,299,100,100,http://localhost:3002/api/properties/8,7029,0,0
+1763976712083,16788,User Login,200,OK,100 Concurrent Users 1-71,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,16788,0,1
+1763976712280,16590,User Login,200,OK,100 Concurrent Users 1-73,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,16590,0,1
+1763976712183,16689,User Login,200,OK,100 Concurrent Users 1-72,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,16689,0,1
+1763976712381,16491,User Login,200,OK,100 Concurrent Users 1-74,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,16491,0,1
+1763976712586,16319,User Login,200,OK,100 Concurrent Users 1-76,text,true,,1393,288,100,100,http://localhost:3002/api/auth/login,16319,0,1
+1763976723313,5600,Get Property Details,200,OK,100 Concurrent Users 1-26,text,true,,1798,298,100,100,http://localhost:3002/api/properties/19,5599,0,0
+1763976712685,16234,User Login,200,OK,100 Concurrent Users 1-77,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,16234,0,1
+1763976708582,20338,User Login,200,OK,100 Concurrent Users 1-36,text,true,,1383,288,100,100,http://localhost:3002/api/auth/login,20338,0,1
+1763976712882,16038,User Login,200,OK,100 Concurrent Users 1-79,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,16038,0,1
+1763976723414,5598,Get Property Details,200,OK,100 Concurrent Users 1-29,text,true,,1809,298,100,100,http://localhost:3002/api/properties/15,5598,0,0
+1763976724029,4983,Get Property Details,200,OK,100 Concurrent Users 1-27,text,true,,1847,301,100,100,http://localhost:3002/api/properties/2,4983,0,0
+1763976713283,15736,User Login,200,OK,100 Concurrent Users 1-83,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,15736,0,1
+1763976713185,15834,User Login,200,OK,100 Concurrent Users 1-82,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,15834,0,1
+1763976713481,15538,User Login,200,OK,100 Concurrent Users 1-85,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,15538,0,1
+1763976723518,5502,Get Property Details,200,OK,100 Concurrent Users 1-28,text,true,,1917,295,100,100,http://localhost:3002/api/properties/1,5502,0,0
+1763976713384,15636,User Login,200,OK,100 Concurrent Users 1-84,text,true,,1387,288,100,100,http://localhost:3002/api/auth/login,15636,0,0
+1763976712979,16042,User Login,200,OK,100 Concurrent Users 1-80,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,16042,0,1
+1763976713580,15442,User Login,200,OK,100 Concurrent Users 1-86,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,15442,0,1
+1763976713081,15941,User Login,200,OK,100 Concurrent Users 1-81,text,true,,1385,288,100,100,http://localhost:3002/api/auth/login,15941,0,1
+1763976725776,3291,Get Property Details,200,OK,100 Concurrent Users 1-31,text,true,,1787,298,100,100,http://localhost:3002/api/properties/16,3291,0,0
+1763976717355,11711,Create Booking,400,Bad Request,100 Concurrent Users 1-1,text,false,,1251,490,100,100,http://localhost:3002/api/bookings,11711,0,0
+1763976725876,3194,Get Property Details,200,OK,100 Concurrent Users 1-16,text,true,,1798,298,99,99,http://localhost:3002/api/properties/19,3193,0,0
+1763976713884,15194,User Login,200,OK,100 Concurrent Users 1-89,text,true,,1389,288,99,99,http://localhost:3002/api/auth/login,15193,0,1
+1763976714183,14895,User Login,200,OK,100 Concurrent Users 1-92,text,true,,1387,288,99,99,http://localhost:3002/api/auth/login,14895,0,1
+1763976713684,15394,User Login,200,OK,100 Concurrent Users 1-87,text,true,,1383,288,99,99,http://localhost:3002/api/auth/login,15394,0,1
+1763976713980,15100,User Login,200,OK,100 Concurrent Users 1-90,text,true,,1385,288,99,99,http://localhost:3002/api/auth/login,15100,0,1
+1763976710483,18598,User Login,200,OK,100 Concurrent Users 1-55,text,true,,1383,288,99,99,http://localhost:3002/api/auth/login,18598,0,0
+1763976729082,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-40,text,false,,1208,0,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976714080,15002,User Login,200,OK,100 Concurrent Users 1-91,text,true,,1383,288,99,99,http://localhost:3002/api/auth/login,15002,0,1
+1763976729084,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-41,text,false,,1208,0,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976725268,3816,Get Property Details,200,OK,100 Concurrent Users 1-30,text,true,,1807,297,99,99,http://localhost:3002/api/properties/4,3816,0,0
+1763976729085,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-43,text,false,,1208,0,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729085,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-42,text,false,,1208,0,99,99,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976713785,15301,User Login,200,OK,100 Concurrent Users 1-88,text,true,,1383,288,99,99,http://localhost:3002/api/auth/login,15301,0,1
+1763976726824,2298,Get Property Details,200,OK,100 Concurrent Users 1-33,text,true,,1788,295,99,99,http://localhost:3002/api/properties/3,2298,0,0
+1763976714483,14644,User Login,200,OK,100 Concurrent Users 1-95,text,true,,1385,288,99,99,http://localhost:3002/api/auth/login,14644,0,2
+1763976714386,14743,User Login,200,OK,100 Concurrent Users 1-94,text,true,,1387,288,99,99,http://localhost:3002/api/auth/login,14743,0,1
+1763976714280,14850,User Login,200,OK,100 Concurrent Users 1-93,text,true,,1389,288,99,99,http://localhost:3002/api/auth/login,14850,0,1
+1763976714785,14347,User Login,200,OK,100 Concurrent Users 1-98,text,true,,1391,288,99,99,http://localhost:3002/api/auth/login,14347,0,0
+1763976714580,14557,User Login,200,OK,100 Concurrent Users 1-96,text,true,,1385,288,99,99,http://localhost:3002/api/auth/login,14557,0,1
+1763976714686,14451,User Login,200,OK,100 Concurrent Users 1-97,text,true,,1385,288,99,99,http://localhost:3002/api/auth/login,14451,0,0
+1763976714881,14256,User Login,200,OK,100 Concurrent Users 1-99,text,true,,1383,288,99,99,http://localhost:3002/api/auth/login,14256,0,1
+1763976712486,16675,User Login,200,OK,100 Concurrent Users 1-75,text,true,,1389,288,99,99,http://localhost:3002/api/auth/login,16675,0,0
+1763976727435,1735,Get Property Details,200,OK,100 Concurrent Users 1-35,text,true,,1784,297,99,99,http://localhost:3002/api/properties/8,1735,0,0
+1763976712785,16388,User Login,200,OK,100 Concurrent Users 1-78,text,true,,1387,288,99,99,http://localhost:3002/api/auth/login,16388,0,2
+1763976714978,14196,User Login,200,OK,100 Concurrent Users 1-100,text,true,,1385,288,99,99,http://localhost:3002/api/auth/login,14196,0,1
+1763976728170,1005,Get Property Details,200,OK,100 Concurrent Users 1-13,text,true,,1790,297,99,99,http://localhost:3002/api/properties/9,1005,0,0
+1763976728267,952,Get Property Details,200,OK,100 Concurrent Users 1-37,text,true,,1845,299,99,99,http://localhost:3002/api/properties/2,952,0,0
+1763976728374,859,Get Property Details,200,OK,100 Concurrent Users 1-38,text,true,,1786,295,99,99,http://localhost:3002/api/properties/7,859,0,0
+1763976729086,162,Create Booking,400,Bad Request,100 Concurrent Users 1-6,text,false,,1249,488,99,99,http://localhost:3002/api/bookings,162,0,0
+1763976729088,165,Create Booking,400,Bad Request,100 Concurrent Users 1-7,text,false,,1245,484,98,98,http://localhost:3002/api/bookings,165,0,0
+1763976728890,364,Get Property Details,200,OK,100 Concurrent Users 1-39,text,true,,1777,296,98,98,http://localhost:3002/api/properties/12,364,0,0
+1763976729084,171,Create Booking,400,Bad Request,100 Concurrent Users 1-4,text,false,,1245,484,97,97,http://localhost:3002/api/bookings,171,0,0
+1763976726826,2586,Get Property Details,200,OK,100 Concurrent Users 1-34,text,true,,1782,298,96,96,http://localhost:3002/api/properties/18,2586,0,0
+1763976710681,18735,User Login,200,OK,100 Concurrent Users 1-57,text,true,,1385,288,96,96,http://localhost:3002/api/auth/login,18735,0,0
+1763976729430,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-44,text,false,,1208,0,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729431,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-45,text,false,,1208,0,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729437,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-25,text,false,,1208,0,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729469,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-46,text,false,,1208,0,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729483,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-50,text,false,,1208,0,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729485,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-51,text,false,,1208,0,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729487,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-49,text,false,,1208,0,96,96,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729433,127,Create Booking,400,Bad Request,100 Concurrent Users 1-12,text,false,,1245,484,96,96,http://localhost:3002/api/bookings,127,0,0
+1763976729436,131,Create Booking,400,Bad Request,100 Concurrent Users 1-2,text,false,,1245,484,95,95,http://localhost:3002/api/bookings,131,0,0
+1763976729434,133,Create Booking,400,Bad Request,100 Concurrent Users 1-8,text,false,,1247,486,95,95,http://localhost:3002/api/bookings,133,0,0
+1763976729438,130,Create Booking,400,Bad Request,100 Concurrent Users 1-9,text,false,,1249,488,93,93,http://localhost:3002/api/bookings,130,0,0
+1763976729438,131,Create Booking,400,Bad Request,100 Concurrent Users 1-17,text,false,,1251,490,92,92,http://localhost:3002/api/bookings,131,0,0
+1763976729474,149,Create Booking,400,Bad Request,100 Concurrent Users 1-5,text,false,,1249,488,91,91,http://localhost:3002/api/bookings,149,0,0
+1763976729690,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-32,text,false,,1208,0,90,90,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729691,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-56,text,false,,1208,0,90,90,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729692,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-48,text,false,,1208,0,90,90,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729693,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-47,text,false,,1208,0,90,90,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729693,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-53,text,false,,1208,0,90,90,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729695,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-52,text,false,,1208,0,90,90,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729698,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-54,text,false,,1208,0,90,90,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729734,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-24,text,false,,1208,0,90,90,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729737,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-60,text,false,,1208,0,90,90,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729738,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-59,text,false,,1208,0,90,90,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729738,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-58,text,false,,1208,0,90,90,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729741,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-61,text,false,,1208,0,90,90,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729775,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-63,text,false,,1208,0,90,90,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729776,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-62,text,false,,1208,0,90,90,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729784,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-64,text,false,,1208,0,90,90,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729690,116,Create Booking,400,Bad Request,100 Concurrent Users 1-11,text,false,,1251,490,90,90,http://localhost:3002/api/bookings,116,0,0
+1763976729821,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-66,text,false,,1208,0,89,89,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729821,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-68,text,false,,1208,0,89,89,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729821,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-69,text,false,,1208,0,89,89,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729822,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-70,text,false,,1208,0,89,89,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729822,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-67,text,false,,1208,0,89,89,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729823,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-65,text,false,,1208,0,89,89,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729693,134,Create Booking,400,Bad Request,100 Concurrent Users 1-14,text,false,,1247,486,89,89,http://localhost:3002/api/bookings,134,0,0
+1763976729728,124,Create Booking,400,Bad Request,100 Concurrent Users 1-15,text,false,,1247,486,88,88,http://localhost:3002/api/bookings,124,0,0
+1763976729873,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-74,text,false,,1208,0,87,87,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729729,145,Create Booking,400,Bad Request,100 Concurrent Users 1-18,text,false,,1245,484,87,87,http://localhost:3002/api/bookings,145,0,0
+1763976729875,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-71,text,false,,1208,0,87,87,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729875,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-73,text,false,,1208,0,86,86,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729876,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-72,text,false,,1208,0,86,86,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729908,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-76,text,false,,1208,0,86,86,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729920,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-77,text,false,,1208,0,86,86,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729923,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-36,text,false,,1208,0,86,86,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729926,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-79,text,false,,1208,0,86,86,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730021,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-83,text,false,,1208,0,86,86,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730022,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-82,text,false,,1208,0,86,86,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730023,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-81,text,false,,1208,0,86,86,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730024,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-85,text,false,,1208,0,86,86,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730025,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-86,text,false,,1208,0,86,86,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730025,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-84,text,false,,1208,0,86,86,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730026,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-80,text,false,,1208,0,86,86,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729820,248,Create Booking,400,Bad Request,100 Concurrent Users 1-19,text,false,,1249,488,86,86,http://localhost:3002/api/bookings,248,0,0
+1763976729823,245,Create Booking,400,Bad Request,100 Concurrent Users 1-23,text,false,,1245,484,86,86,http://localhost:3002/api/bookings,245,0,0
+1763976729821,257,Create Booking,400,Bad Request,100 Concurrent Users 1-3,text,false,,1255,494,84,84,http://localhost:3002/api/bookings,257,0,0
+1763976730079,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-89,text,false,,1208,0,83,83,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730079,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-92,text,false,,1208,0,83,83,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730081,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-87,text,false,,1208,0,83,83,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730081,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-90,text,false,,1208,0,83,83,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730082,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-55,text,false,,1208,0,83,83,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730087,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-91,text,false,,1208,0,83,83,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730089,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-88,text,false,,1208,0,83,83,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976729917,176,Create Booking,400,Bad Request,100 Concurrent Users 1-26,text,false,,1247,486,83,83,http://localhost:3002/api/bookings,176,0,0
+1763976729863,240,Create Booking,400,Bad Request,100 Concurrent Users 1-21,text,false,,1249,488,82,82,http://localhost:3002/api/bookings,240,0,0
+1763976730014,107,Create Booking,400,Bad Request,100 Concurrent Users 1-27,text,false,,1235,490,81,81,http://localhost:3002/api/bookings,107,0,0
+1763976729864,258,Create Booking,400,Bad Request,100 Concurrent Users 1-10,text,false,,1247,486,80,80,http://localhost:3002/api/bookings,258,0,0
+1763976729864,260,Create Booking,400,Bad Request,100 Concurrent Users 1-22,text,false,,1251,490,79,79,http://localhost:3002/api/bookings,260,0,0
+1763976729863,262,Create Booking,400,Bad Request,100 Concurrent Users 1-20,text,false,,1247,486,78,78,http://localhost:3002/api/bookings,262,0,0
+1763976730130,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-95,text,false,,1208,0,77,77,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730135,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-94,text,false,,1208,0,77,77,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730135,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-93,text,false,,1208,0,77,77,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730135,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-98,text,false,,1208,0,77,77,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730138,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-96,text,false,,1208,0,77,77,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730139,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-99,text,false,,1208,0,77,77,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730143,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-97,text,false,,1208,0,77,77,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730163,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-75,text,false,,1208,0,77,77,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730024,141,Create Booking,400,Bad Request,100 Concurrent Users 1-28,text,false,,1245,484,77,77,http://localhost:3002/api/bookings,141,0,0
+1763976730175,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-78,text,false,,1208,0,76,76,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730176,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-100,text,false,,1208,0,76,76,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730015,174,Create Booking,400,Bad Request,100 Concurrent Users 1-29,text,false,,1247,486,76,76,http://localhost:3002/api/bookings,174,0,0
+1763976730073,123,Create Booking,400,Bad Request,100 Concurrent Users 1-16,text,false,,1247,486,75,75,http://localhost:3002/api/bookings,123,0,0
+1763976730071,127,Create Booking,400,Bad Request,100 Concurrent Users 1-31,text,false,,1247,486,74,74,http://localhost:3002/api/bookings,127,0,0
+1763976730084,143,Get Property Details,200,OK,100 Concurrent Users 1-40,text,true,,1792,301,73,73,http://localhost:3002/api/properties/7,143,0,0
+1763976730089,139,Get Property Details,200,OK,100 Concurrent Users 1-41,text,true,,1785,298,73,73,http://localhost:3002/api/properties/14,139,0,0
+1763976730088,140,Get Property Details,200,OK,100 Concurrent Users 1-42,text,true,,1782,295,73,73,http://localhost:3002/api/properties/8,140,0,0
+1763976730088,140,Get Property Details,200,OK,100 Concurrent Users 1-43,text,true,,1782,298,73,73,http://localhost:3002/api/properties/18,140,0,0
+1763976730085,146,Create Booking,400,Bad Request,100 Concurrent Users 1-30,text,false,,1247,486,73,73,http://localhost:3002/api/bookings,146,0,0
+1763976730128,122,Create Booking,400,Bad Request,100 Concurrent Users 1-33,text,false,,1245,484,72,72,http://localhost:3002/api/bookings,122,0,0
+1763976730176,124,Create Booking,400,Bad Request,100 Concurrent Users 1-35,text,false,,1247,486,71,71,http://localhost:3002/api/bookings,124,0,0
+1763976730180,124,Create Booking,400,Bad Request,100 Concurrent Users 1-13,text,false,,1247,486,70,70,http://localhost:3002/api/bookings,124,0,0
+1763976730223,126,Create Booking,400,Bad Request,100 Concurrent Users 1-37,text,false,,1249,488,69,69,http://localhost:3002/api/bookings,126,0,0
+1763976730239,119,Create Booking,400,Bad Request,100 Concurrent Users 1-38,text,false,,1245,484,68,68,http://localhost:3002/api/bookings,118,0,0
+1763976730257,105,Create Booking,400,Bad Request,100 Concurrent Users 1-39,text,false,,1245,484,67,67,http://localhost:3002/api/bookings,105,0,0
+1763976730421,0,Search Properties,Non HTTP response code: java.net.URISyntaxException,Non HTTP response message: Illegal character in query at index 61: http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,100 Concurrent Users 1-57,text,false,,1208,0,66,66,http://localhost:3002/api/properties?page=1&limit=10&city=San Francisco,0,0,0
+1763976730416,117,Create Booking,400,Bad Request,100 Concurrent Users 1-34,text,false,,1247,486,66,66,http://localhost:3002/api/bookings,117,0,0
+1763976730436,111,Get Property Details,200,OK,100 Concurrent Users 1-44,text,true,,1794,300,65,65,http://localhost:3002/api/properties/17,111,0,0
+1763976730438,121,Get Property Details,200,OK,100 Concurrent Users 1-25,text,true,,1791,304,65,65,http://localhost:3002/api/properties/14,121,0,0
+1763976730436,128,Get Property Details,200,OK,100 Concurrent Users 1-45,text,true,,1781,297,65,65,http://localhost:3002/api/properties/5,128,0,0
+1763976730473,98,Get Property Details,200,OK,100 Concurrent Users 1-46,text,true,,1790,302,65,65,http://localhost:3002/api/properties/20,98,0,0
+1763976730488,116,Get Property Details,200,OK,100 Concurrent Users 1-51,text,true,,1790,300,65,65,http://localhost:3002/api/properties/10,115,0,0
+1763976730490,114,Get Property Details,200,OK,100 Concurrent Users 1-49,text,true,,1923,301,65,65,http://localhost:3002/api/properties/1,114,0,0
+1763976730484,127,Get Property Details,200,OK,100 Concurrent Users 1-50,text,true,,1841,295,65,65,http://localhost:3002/api/properties/2,127,0,0
+1763976730692,329,Get Property Details,200,OK,100 Concurrent Users 1-32,text,true,,1788,298,65,65,http://localhost:3002/api/properties/10,329,0,0
+1763976730696,326,Get Property Details,200,OK,100 Concurrent Users 1-56,text,true,,1798,298,65,65,http://localhost:3002/api/properties/19,326,0,0
+1763976730696,327,Get Property Details,200,OK,100 Concurrent Users 1-53,text,true,,1798,298,65,65,http://localhost:3002/api/properties/19,327,0,0
+1763976730696,371,Get Property Details,200,OK,100 Concurrent Users 1-48,text,true,,1921,299,65,65,http://localhost:3002/api/properties/1,371,0,0
+1763976730745,324,Get Property Details,200,OK,100 Concurrent Users 1-61,text,true,,1788,295,65,65,http://localhost:3002/api/properties/9,324,0,0
+1763976730740,329,Get Property Details,200,OK,100 Concurrent Users 1-59,text,true,,1807,297,65,65,http://localhost:3002/api/properties/6,329,0,0
+1763976730699,371,Get Property Details,200,OK,100 Concurrent Users 1-54,text,true,,1784,297,65,65,http://localhost:3002/api/properties/8,371,0,0
+1763976730696,405,Get Property Details,200,OK,100 Concurrent Users 1-47,text,true,,1788,298,65,65,http://localhost:3002/api/properties/10,405,0,0
+1763976730698,405,Get Property Details,200,OK,100 Concurrent Users 1-52,text,true,,1787,298,65,65,http://localhost:3002/api/properties/16,405,0,0
+1763976730829,311,Get Property Details,200,OK,100 Concurrent Users 1-65,text,true,,1788,298,65,65,http://localhost:3002/api/properties/10,311,0,0
+1763976730781,360,Get Property Details,200,OK,100 Concurrent Users 1-63,text,true,,1790,302,65,65,http://localhost:3002/api/properties/20,360,0,0
+1763976730740,402,Get Property Details,200,OK,100 Concurrent Users 1-58,text,true,,1791,302,65,65,http://localhost:3002/api/properties/16,402,0,0
+1763976730786,357,Get Property Details,200,OK,100 Concurrent Users 1-64,text,true,,1785,301,65,65,http://localhost:3002/api/properties/5,357,0,0
+1763976730823,329,Get Property Details,200,OK,100 Concurrent Users 1-69,text,true,,1781,297,65,65,http://localhost:3002/api/properties/5,329,0,0
+1763976730823,330,Get Property Details,200,OK,100 Concurrent Users 1-66,text,true,,1792,299,65,65,http://localhost:3002/api/properties/3,330,0,0
+1763976730823,335,Get Property Details,200,OK,100 Concurrent Users 1-68,text,true,,1786,299,65,65,http://localhost:3002/api/properties/8,335,0,0
+1763976730781,412,Get Property Details,200,OK,100 Concurrent Users 1-62,text,true,,1787,298,65,65,http://localhost:3002/api/properties/16,412,0,0
+1763976730740,456,Get Property Details,200,OK,100 Concurrent Users 1-60,text,true,,1789,302,65,65,http://localhost:3002/api/properties/14,456,0,0
+1763976730880,320,Get Property Details,200,OK,100 Concurrent Users 1-72,text,true,,1789,300,65,65,http://localhost:3002/api/properties/16,320,0,0
+1763976730826,375,Get Property Details,200,OK,100 Concurrent Users 1-70,text,true,,1807,296,65,65,http://localhost:3002/api/properties/15,375,0,0
+1763976730880,347,Get Property Details,200,OK,100 Concurrent Users 1-71,text,true,,1779,295,65,65,http://localhost:3002/api/properties/5,347,0,0
+1763976730925,311,Get Property Details,200,OK,100 Concurrent Users 1-77,text,true,,1784,297,65,65,http://localhost:3002/api/properties/8,311,0,0
+1763976730912,325,Get Property Details,200,OK,100 Concurrent Users 1-76,text,true,,1800,306,65,65,http://localhost:3002/api/properties/17,325,0,0
+1763976731024,995,Get Property Details,200,OK,100 Concurrent Users 1-82,text,true,,1790,297,65,65,http://localhost:3002/api/properties/9,995,0,0
+1763976731029,990,Get Property Details,200,OK,100 Concurrent Users 1-85,text,true,,1809,298,65,65,http://localhost:3002/api/properties/15,990,0,0
+1763976730930,1090,Get Property Details,200,OK,100 Concurrent Users 1-79,text,true,,1790,297,65,65,http://localhost:3002/api/properties/3,1090,0,0
+1763976731026,998,Get Property Details,200,OK,100 Concurrent Users 1-81,text,true,,1788,297,65,65,http://localhost:3002/api/properties/7,998,0,0
+1763976730925,1099,Get Property Details,200,OK,100 Concurrent Users 1-36,text,true,,1777,296,65,65,http://localhost:3002/api/properties/12,1099,0,0
+1763976731025,1000,Get Property Details,200,OK,100 Concurrent Users 1-83,text,true,,1797,298,65,65,http://localhost:3002/api/properties/11,1000,0,0
+1763976731029,997,Get Property Details,200,OK,100 Concurrent Users 1-80,text,true,,1790,297,65,65,http://localhost:3002/api/properties/3,997,0,0
+1763976731087,981,Get Property Details,200,OK,100 Concurrent Users 1-55,text,true,,1786,296,65,65,http://localhost:3002/api/properties/10,981,0,0
+1763976731029,1040,Get Property Details,200,OK,100 Concurrent Users 1-86,text,true,,1807,297,65,65,http://localhost:3002/api/properties/4,1040,0,0
+1763976731029,1041,Get Property Details,200,OK,100 Concurrent Users 1-84,text,true,,1792,299,65,65,http://localhost:3002/api/properties/3,1041,0,0
+1763976731080,1006,Get Property Details,200,OK,100 Concurrent Users 1-92,text,true,,1811,300,65,65,http://localhost:3002/api/properties/15,1006,0,0
+1763976731086,1014,Get Property Details,200,OK,100 Concurrent Users 1-90,text,true,,1790,297,65,65,http://localhost:3002/api/properties/3,1014,0,0
+1763976731080,1030,Get Property Details,200,OK,100 Concurrent Users 1-89,text,true,,1802,302,65,65,http://localhost:3002/api/properties/19,1030,0,0
+1763976730875,1238,Get Property Details,200,OK,100 Concurrent Users 1-74,text,true,,1809,298,65,65,http://localhost:3002/api/properties/15,1238,0,0
+1763976731094,1020,Get Property Details,200,OK,100 Concurrent Users 1-88,text,true,,1780,296,65,65,http://localhost:3002/api/properties/18,1020,0,0
+1763976731179,985,Get Property Details,200,OK,100 Concurrent Users 1-78,text,true,,1845,299,65,65,http://localhost:3002/api/properties/2,985,0,0
+1763976731140,1025,Get Property Details,200,OK,100 Concurrent Users 1-95,text,true,,1784,297,65,65,http://localhost:3002/api/properties/8,1025,0,0
+1763976731147,1019,Get Property Details,200,OK,100 Concurrent Users 1-97,text,true,,1797,298,65,65,http://localhost:3002/api/properties/11,1019,0,0
+1763976731609,557,Create Booking,400,Bad Request,100 Concurrent Users 1-49,text,false,,1235,490,65,65,http://localhost:3002/api/bookings,557,0,0
+1763976731084,1082,Get Property Details,200,OK,100 Concurrent Users 1-87,text,true,,1800,296,64,64,http://localhost:3002/api/properties/13,1082,0,0
+1763976731138,1029,Get Property Details,200,OK,100 Concurrent Users 1-93,text,true,,1789,302,64,64,http://localhost:3002/api/properties/14,1029,0,0
+1763976731137,1031,Get Property Details,200,OK,100 Concurrent Users 1-98,text,true,,1798,304,64,64,http://localhost:3002/api/properties/17,1031,0,0
+1763976731140,1038,Get Property Details,200,OK,100 Concurrent Users 1-94,text,true,,1792,299,64,64,http://localhost:3002/api/properties/3,1038,0,0
+1763976731179,999,Get Property Details,200,OK,100 Concurrent Users 1-100,text,true,,1809,298,64,64,http://localhost:3002/api/properties/15,999,0,0
+1763976731140,1060,Get Property Details,200,OK,100 Concurrent Users 1-99,text,true,,1782,295,64,64,http://localhost:3002/api/properties/8,1060,0,0
+1763976731230,989,Create Booking,400,Bad Request,100 Concurrent Users 1-42,text,false,,1245,484,64,64,http://localhost:3002/api/bookings,989,0,0
+1763976730823,1398,Get Property Details,200,OK,100 Concurrent Users 1-67,text,true,,1802,298,63,63,http://localhost:3002/api/properties/13,1398,0,0
+1763976731565,656,Create Booking,400,Bad Request,100 Concurrent Users 1-45,text,false,,1247,486,63,63,http://localhost:3002/api/bookings,656,0,0
+1763976731165,1057,Get Property Details,200,OK,100 Concurrent Users 1-75,text,true,,1785,301,63,63,http://localhost:3002/api/properties/5,1057,0,0
+1763976730740,1484,Get Property Details,200,OK,100 Concurrent Users 1-24,text,true,,1781,300,62,62,http://localhost:3002/api/properties/12,1484,0,0
+1763976730877,1348,Get Property Details,200,OK,100 Concurrent Users 1-73,text,true,,1919,297,62,62,http://localhost:3002/api/properties/1,1348,0,0
+1763976731230,1002,Create Booking,400,Bad Request,100 Concurrent Users 1-43,text,false,,1247,486,62,62,http://localhost:3002/api/bookings,1002,0,0
+1763976731229,1004,Create Booking,400,Bad Request,100 Concurrent Users 1-41,text,false,,1247,486,62,62,http://localhost:3002/api/bookings,1004,0,0
+1763976731563,679,Create Booking,400,Bad Request,100 Concurrent Users 1-25,text,false,,1253,492,60,60,http://localhost:3002/api/bookings,679,0,0
+1763976731427,823,Get Property Details,200,OK,100 Concurrent Users 1-57,text,true,,1790,297,59,59,http://localhost:3002/api/properties/3,823,0,0
+1763976731574,688,Create Booking,400,Bad Request,100 Concurrent Users 1-46,text,false,,1251,490,59,59,http://localhost:3002/api/bookings,688,0,0
+1763976731608,656,Create Booking,400,Bad Request,100 Concurrent Users 1-51,text,false,,1249,488,58,58,http://localhost:3002/api/bookings,656,0,0
+1763976731229,1037,Create Booking,400,Bad Request,100 Concurrent Users 1-40,text,false,,1251,490,57,57,http://localhost:3002/api/bookings,1037,0,0
+1763976731549,718,Create Booking,400,Bad Request,100 Concurrent Users 1-44,text,false,,1249,488,56,56,http://localhost:3002/api/bookings,718,0,0
+1763976731615,1419,Create Booking,400,Bad Request,100 Concurrent Users 1-50,text,false,,1245,484,55,55,http://localhost:3002/api/bookings,1419,0,0
+1763976732147,888,Create Booking,400,Bad Request,100 Concurrent Users 1-64,text,false,,1235,490,55,55,http://localhost:3002/api/bookings,888,0,0
+1763976732023,1012,Create Booking,400,Bad Request,100 Concurrent Users 1-32,text,false,,1247,486,53,53,http://localhost:3002/api/bookings,1012,0,0
+1763976732023,1014,Create Booking,400,Bad Request,100 Concurrent Users 1-56,text,false,,1247,486,52,52,http://localhost:3002/api/bookings,1014,0,0
+1763976732024,1013,Create Booking,400,Bad Request,100 Concurrent Users 1-53,text,false,,1247,486,51,51,http://localhost:3002/api/bookings,1013,0,0
+1763976732070,1004,Create Booking,400,Bad Request,100 Concurrent Users 1-61,text,false,,1245,484,50,50,http://localhost:3002/api/bookings,1004,0,0
+1763976732075,1001,Create Booking,400,Bad Request,100 Concurrent Users 1-54,text,false,,1247,486,49,49,http://localhost:3002/api/bookings,1001,0,0
+1763976732069,1008,Create Booking,400,Bad Request,100 Concurrent Users 1-48,text,false,,1249,488,48,48,http://localhost:3002/api/bookings,1008,0,0
+1763976732070,1008,Create Booking,400,Bad Request,100 Concurrent Users 1-59,text,false,,1247,486,47,47,http://localhost:3002/api/bookings,1008,0,0
+1763976732106,974,Create Booking,400,Bad Request,100 Concurrent Users 1-52,text,false,,1247,486,46,46,http://localhost:3002/api/bookings,974,0,0
+1763976732107,975,Create Booking,400,Bad Request,100 Concurrent Users 1-47,text,false,,1247,486,45,45,http://localhost:3002/api/bookings,975,0,0
+1763976732147,935,Create Booking,400,Bad Request,100 Concurrent Users 1-63,text,false,,1251,490,44,44,http://localhost:3002/api/bookings,935,0,0
+1763976732159,924,Create Booking,400,Bad Request,100 Concurrent Users 1-68,text,false,,1249,488,43,43,http://localhost:3002/api/bookings,924,0,0
+1763976732146,938,Create Booking,400,Bad Request,100 Concurrent Users 1-65,text,false,,1247,486,42,42,http://localhost:3002/api/bookings,938,0,0
+1763976732201,915,Create Booking,400,Bad Request,100 Concurrent Users 1-72,text,false,,1249,488,41,41,http://localhost:3002/api/bookings,915,0,0
+1763976732148,971,Create Booking,400,Bad Request,100 Concurrent Users 1-58,text,false,,1251,490,40,40,http://localhost:3002/api/bookings,971,0,0
+1763976732197,923,Create Booking,400,Bad Request,100 Concurrent Users 1-60,text,false,,1251,490,39,39,http://localhost:3002/api/bookings,923,0,0
+1763976732159,962,Create Booking,400,Bad Request,100 Concurrent Users 1-66,text,false,,1249,488,38,38,http://localhost:3002/api/bookings,962,0,0
+1763976732203,921,Create Booking,400,Bad Request,100 Concurrent Users 1-70,text,false,,1245,484,37,37,http://localhost:3002/api/bookings,921,0,0
+1763976732158,969,Create Booking,400,Bad Request,100 Concurrent Users 1-69,text,false,,1247,486,36,36,http://localhost:3002/api/bookings,969,0,0
+1763976732238,910,Create Booking,400,Bad Request,100 Concurrent Users 1-77,text,false,,1247,486,35,35,http://localhost:3002/api/bookings,910,0,0
+1763976732230,927,Create Booking,400,Bad Request,100 Concurrent Users 1-71,text,false,,1245,484,34,34,http://localhost:3002/api/bookings,927,0,0
+1763976732239,919,Create Booking,400,Bad Request,100 Concurrent Users 1-76,text,false,,1255,494,33,33,http://localhost:3002/api/bookings,919,0,0
+1763976731139,2022,Get Property Details,200,OK,100 Concurrent Users 1-96,text,true,,1781,297,32,32,http://localhost:3002/api/properties/5,2022,0,0
+1763976733029,136,Create Booking,400,Bad Request,100 Concurrent Users 1-80,text,false,,1247,486,32,32,http://localhost:3002/api/bookings,136,0,0
+1763976733030,135,Create Booking,400,Bad Request,100 Concurrent Users 1-83,text,false,,1247,486,32,32,http://localhost:3002/api/bookings,135,0,0
+1763976731088,2078,Get Property Details,200,OK,100 Concurrent Users 1-91,text,true,,1795,296,30,30,http://localhost:3002/api/properties/11,2078,0,0
+1763976733021,150,Create Booking,400,Bad Request,100 Concurrent Users 1-85,text,false,,1247,486,30,30,http://localhost:3002/api/bookings,150,0,0
+1763976733021,151,Create Booking,400,Bad Request,100 Concurrent Users 1-82,text,false,,1247,486,30,30,http://localhost:3002/api/bookings,151,0,0
+1763976733029,143,Create Booking,400,Bad Request,100 Concurrent Users 1-81,text,false,,1247,486,28,28,http://localhost:3002/api/bookings,143,0,0
+1763976733030,144,Create Booking,400,Bad Request,100 Concurrent Users 1-36,text,false,,1245,484,27,27,http://localhost:3002/api/bookings,144,0,0
+1763976733075,130,Create Booking,400,Bad Request,100 Concurrent Users 1-84,text,false,,1249,488,26,26,http://localhost:3002/api/bookings,130,0,0
+1763976733072,134,Create Booking,400,Bad Request,100 Concurrent Users 1-55,text,false,,1245,484,25,25,http://localhost:3002/api/bookings,134,0,0
+1763976733072,135,Create Booking,400,Bad Request,100 Concurrent Users 1-86,text,false,,1247,486,24,24,http://localhost:3002/api/bookings,135,0,0
+1763976733101,108,Create Booking,400,Bad Request,100 Concurrent Users 1-90,text,false,,1247,486,23,23,http://localhost:3002/api/bookings,108,0,0
+1763976733087,132,Create Booking,400,Bad Request,100 Concurrent Users 1-92,text,false,,1249,488,22,22,http://localhost:3002/api/bookings,132,0,0
+1763976733117,111,Create Booking,400,Bad Request,100 Concurrent Users 1-74,text,false,,1247,486,21,21,http://localhost:3002/api/bookings,111,0,0
+1763976733116,125,Create Booking,400,Bad Request,100 Concurrent Users 1-89,text,false,,1251,490,20,20,http://localhost:3002/api/bookings,125,0,0
+1763976733118,134,Create Booking,400,Bad Request,100 Concurrent Users 1-88,text,false,,1245,484,19,19,http://localhost:3002/api/bookings,134,0,0
+1763976733169,84,Create Booking,400,Bad Request,100 Concurrent Users 1-78,text,false,,1233,488,18,18,http://localhost:3002/api/bookings,84,0,0
+1763976733181,905,Create Booking,400,Bad Request,100 Concurrent Users 1-94,text,false,,1249,488,17,17,http://localhost:3002/api/bookings,905,0,0
+1763976733170,919,Create Booking,400,Bad Request,100 Concurrent Users 1-93,text,false,,1251,490,16,16,http://localhost:3002/api/bookings,919,0,0
+1763976733170,921,Create Booking,400,Bad Request,100 Concurrent Users 1-87,text,false,,1245,484,15,15,http://localhost:3002/api/bookings,921,0,0
+1763976733184,908,Create Booking,400,Bad Request,100 Concurrent Users 1-100,text,false,,1247,486,15,15,http://localhost:3002/api/bookings,908,0,0
+1763976733167,926,Create Booking,400,Bad Request,100 Concurrent Users 1-97,text,false,,1247,486,13,13,http://localhost:3002/api/bookings,925,0,0
+1763976733167,927,Create Booking,400,Bad Request,100 Concurrent Users 1-95,text,false,,1247,486,12,12,http://localhost:3002/api/bookings,927,0,0
+1763976733169,929,Create Booking,400,Bad Request,100 Concurrent Users 1-98,text,false,,1253,492,11,11,http://localhost:3002/api/bookings,928,0,0
+1763976733200,938,Create Booking,400,Bad Request,100 Concurrent Users 1-99,text,false,,1245,484,10,10,http://localhost:3002/api/bookings,938,0,0
+1763976733224,915,Create Booking,400,Bad Request,100 Concurrent Users 1-75,text,false,,1251,490,9,9,http://localhost:3002/api/bookings,915,0,0
+1763976733230,915,Create Booking,400,Bad Request,100 Concurrent Users 1-24,text,false,,1249,488,8,8,http://localhost:3002/api/bookings,915,0,0
+1763976733224,922,Create Booking,400,Bad Request,100 Concurrent Users 1-67,text,false,,1247,486,7,7,http://localhost:3002/api/bookings,922,0,0
+1763976733230,942,Create Booking,400,Bad Request,100 Concurrent Users 1-73,text,false,,1247,486,6,6,http://localhost:3002/api/bookings,942,0,0
+1763976733254,935,Create Booking,400,Bad Request,100 Concurrent Users 1-57,text,false,,1247,486,5,5,http://localhost:3002/api/bookings,935,0,0
+1763976732197,1993,Create Booking,400,Bad Request,100 Concurrent Users 1-62,text,false,,1247,486,5,5,http://localhost:3002/api/bookings,1993,0,0
+1763976733023,1200,Create Booking,400,Bad Request,100 Concurrent Users 1-79,text,false,,1247,486,3,3,http://localhost:3002/api/bookings,1200,0,0
+1763976734166,140,Create Booking,400,Bad Request,100 Concurrent Users 1-96,text,false,,1247,486,2,2,http://localhost:3002/api/bookings,140,0,0
+1763976734171,135,Create Booking,400,Bad Request,100 Concurrent Users 1-91,text,false,,1245,484,2,2,http://localhost:3002/api/bookings,135,0,0

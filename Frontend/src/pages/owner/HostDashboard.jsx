@@ -51,7 +51,7 @@ export default function HostDashboard() {
         <div className="col-sm-6 col-lg-3">
           <div className="card"><div className="card-body">
             <div className="text-muted">Pending requests</div>
-            <div className="h4 m-0">{requests.length}</div>
+            <div className="h4 m-0">{ownerBookings.filter(r => r.status && r.status.toLowerCase() === 'pending').length}</div>
           </div></div>
         </div>
       </div>

@@ -5,19 +5,21 @@ import bookingReducer from './bookingSlice'
 import authReducer from './authSlice'
 import propertiesReducer from './propertiesSlice'
 import travelerBookingReducer from './travelerBookingSlice'
+import favoritesReducer from './favoritesSlice'
 import { combineReducers } from 'redux'
 
 const rootReducer = combineReducers({
   auth: authReducer,
   properties: propertiesReducer,
   bookings: bookingReducer,
-  travelerBookings: travelerBookingReducer
+  travelerBookings: travelerBookingReducer,
+  favorites: favoritesReducer
 })
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth', 'properties'] // persist auth and properties
+  whitelist: ['auth', 'properties', 'favorites'] // persist auth, properties and favorites
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
@@ -32,3 +34,10 @@ export const store = configureStore({
 })
 
 export const persistor = persistStore(store)
+
+// Export all selectors for easy access
+export * from './authSlice'
+export * from './propertiesSlice'
+export * from './bookingSlice'
+export * from './travelerBookingSlice'
+export * from './favoritesSlice'

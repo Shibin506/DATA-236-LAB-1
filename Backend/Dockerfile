@@ -14,11 +14,9 @@ RUN npm ci --only=production
 
 # Copy application code
 COPY src/ ./src/
-COPY config/ ./config/
-COPY routes/ ./routes/
-COPY middleware/ ./middleware/
-COPY server.js ./
+COPY server.js ./server.js
 COPY add-sample-data.js ./add-sample-data.js
+COPY add-property-images.js ./add-property-images.js
 COPY add-all-property-images.js ./add-all-property-images.js
 COPY add-property-reviews.js ./add-property-reviews.js
 COPY add-bookings-and-reviews.js ./add-bookings-and-reviews.js
@@ -35,4 +33,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3001/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
 # Start the application
-CMD ["node", "server.js"]
+CMD ["node", "src/server.js"]

@@ -1,401 +1,341 @@
-const { pool } = require('../config/database');
+const { Property, PropertyImage, User, Booking } = require('../models');
 
 class PropertyService {
   // Get all properties
   async getAllProperties(filters = {}) {
-    const connection = await pool.getConnection();
+    const query = { is_active: true };
     
-    try {
-      let whereConditions = ['p.is_active = TRUE'];
-      let queryParams = [];
-      
-      // Apply filters
-      if (filters.location) {
-        whereConditions.push('(p.city LIKE ? OR p.state LIKE ? OR p.country LIKE ? OR p.address LIKE ?)');
-        const locationParam = `%${filters.location}%`;
-        queryParams.push(locationParam, locationParam, locationParam, locationParam);
-      }
-      
-      if (filters.city) {
-        whereConditions.push('p.city LIKE ?');
-        queryParams.push(`%${filters.city}%`);
-      }
-      
-      if (filters.state) {
-        whereConditions.push('p.state LIKE ?');
-        queryParams.push(`%${filters.state}%`);
-      }
-      
-      if (filters.guests) {
-        whereConditions.push('p.max_guests >= ?');
-        queryParams.push(parseInt(filters.guests));
-      }
-      
-      if (filters.min_price) {
-        whereConditions.push('p.price_per_night >= ?');
-        queryParams.push(parseInt(filters.min_price));
-      }
-      
-      if (filters.max_price) {
-        whereConditions.push('p.price_per_night <= ?');
-        queryParams.push(parseInt(filters.max_price));
-      }
-      
-      if (filters.property_type) {
-        whereConditions.push('p.property_type = ?');
-        queryParams.push(filters.property_type);
-      }
-      
-      const query = `
-        SELECT p.id, p.name, p.description, p.property_type, p.address, p.city, p.state, p.country,
-               p.price_per_night, p.bedrooms, p.bathrooms, p.max_guests, p.amenities,
-               p.created_at, u.name as owner_name
-        FROM properties p
-        JOIN users u ON p.owner_id = u.id
-        WHERE ${whereConditions.join(' AND ')}
-        ORDER BY p.created_at DESC
-      `;
-      
-      const [properties] = await connection.execute(query, queryParams);
-      
-      // Add images for each property
-      for (const property of properties) {
-        const [images] = await connection.execute(
-          'SELECT id, image_url, image_type, created_at FROM property_images WHERE property_id = ? ORDER BY created_at',
-          [property.id]
-        );
-        property.images = images;
-      }
-      
-      return properties;
-      
-    } finally {
-      connection.release();
+    // Apply filters
+    if (filters.location) {
+      query.$or = [
+        { city: { $regex: filters.location, $options: 'i' } },
+        { state: { $regex: filters.location, $options: 'i' } },
+        { country: { $regex: filters.location, $options: 'i' } },
+        { address: { $regex: filters.location, $options: 'i' } }
+      ];
     }
+    
+    if (filters.city) {
+      query.city = { $regex: filters.city, $options: 'i' };
+    }
+    
+    if (filters.state) {
+      query.state = { $regex: filters.state, $options: 'i' };
+    }
+    
+    if (filters.guests) {
+      query.max_guests = { $gte: parseInt(filters.guests) };
+    }
+    
+    if (filters.min_price || filters.max_price) {
+      query.price_per_night = {};
+      if (filters.min_price) {
+        query.price_per_night.$gte = parseInt(filters.min_price);
+      }
+      if (filters.max_price) {
+        query.price_per_night.$lte = parseInt(filters.max_price);
+      }
+    }
+    
+    if (filters.property_type) {
+      query.property_type = filters.property_type;
+    }
+    
+    const properties = await Property.find(query)
+      .sort({ created_at: -1 })
+      .lean();
+    
+    // Add images for each property
+    for (const property of properties) {
+      const images = await PropertyImage.find({ property_id: property._id })
+        .sort({ display_order: 1 })
+        .lean();
+      property.images = images;
+      property.id = property._id;
+      // Set main_image and coverImage for frontend compatibility
+      property.main_image = images[0]?.image_url || `/uploads/properties/property-${property._id}-1.jpg`;
+      property.coverImage = property.main_image;
+    }
+    
+    return properties;
   }
   
   // Search properties with pagination
   async searchProperties(searchParams) {
-    const connection = await pool.getConnection();
+    const {
+      location, city, state, guests, min_price, max_price, property_type,
+      page = 1, limit = 10
+    } = searchParams;
+    const startDate = searchParams.startDate || searchParams.check_in_date;
+    const endDate = searchParams.endDate || searchParams.check_out_date;
     
-    try {
-      const {
-        location, city, state, guests, min_price, max_price, property_type,
-        page = 1, limit = 10
-      } = searchParams;
-      // optional date range filters coming from frontend as startDate/endDate
-      const startDate = searchParams.startDate || searchParams.check_in_date
-      const endDate = searchParams.endDate || searchParams.check_out_date
-      
-      let whereConditions = ['p.is_active = TRUE'];
-      let queryParams = [];
-      
-      if (location) {
-        whereConditions.push('(p.city LIKE ? OR p.state LIKE ? OR p.country LIKE ? OR p.address LIKE ?)');
-        const locationParam = `%${location}%`;
-        queryParams.push(locationParam, locationParam, locationParam, locationParam);
-      }
-      
-      if (city) {
-        whereConditions.push('p.city LIKE ?');
-        queryParams.push(`%${city}%`);
-      }
-      
-      if (state) {
-        whereConditions.push('p.state LIKE ?');
-        queryParams.push(`%${state}%`);
-      }
-      
-      if (guests) {
-        whereConditions.push('p.max_guests >= ?');
-        queryParams.push(parseInt(guests));
-      }
-      
-      if (min_price) {
-        whereConditions.push('p.price_per_night >= ?');
-        queryParams.push(parseInt(min_price));
-      }
-      
-      if (max_price) {
-        whereConditions.push('p.price_per_night <= ?');
-        queryParams.push(parseInt(max_price));
-      }
-      
-      if (property_type) {
-        whereConditions.push('p.property_type = ?');
-        queryParams.push(property_type);
-      }
-
-      // Guests capacity
-      if (guests) {
-        whereConditions.push('p.max_guests >= ?')
-        queryParams.push(parseInt(guests))
-      }
-
-      // Availability window on property and exclude overlapping bookings
-      if (startDate && endDate) {
-        whereConditions.push('(p.availability_start IS NULL OR p.availability_start <= ?)')
-        whereConditions.push('(p.availability_end IS NULL OR p.availability_end >= ?)')
-        queryParams.push(startDate, endDate)
-        // Exclude properties that have a booking overlapping the requested window (pending or accepted)
-        whereConditions.push(`NOT EXISTS (
-          SELECT 1 FROM bookings b
-          WHERE b.property_id = p.id
-            AND (b.status IS NULL OR b.status IN ('pending','accepted'))
-            AND NOT (b.check_out_date <= ? OR b.check_in_date >= ?)
-        )`)
-        queryParams.push(startDate, endDate)
-      }
-      
-      const pageNum = parseInt(page) || 1;
-      const limitNum = parseInt(limit) || 10;
-      const offset = (pageNum - 1) * limitNum;
-      
-      const searchQuery = `
-        SELECT p.id, p.name, p.description, p.property_type, p.address, p.city, p.state, p.country,
-               p.price_per_night, p.bedrooms, p.bathrooms, p.max_guests, p.amenities, p.availability_start, p.availability_end,
-               p.created_at, u.name as owner_name
-        FROM properties p
-        JOIN users u ON p.owner_id = u.id
-        WHERE ${whereConditions.join(' AND ')}
-        ORDER BY p.created_at DESC
-        LIMIT ${limitNum} OFFSET ${offset}
-      `;
-      
-      const [properties] = await connection.execute(searchQuery, queryParams);
-      
-      // Add images for each property
-      for (const property of properties) {
-        const [images] = await connection.execute(
-          'SELECT id, image_url, image_type, created_at FROM property_images WHERE property_id = ? ORDER BY created_at',
-          [property.id]
-        );
-        property.images = images;
-      }
-      
-      return {
-        properties,
-        pagination: {
-          page: pageNum,
-          limit: limitNum,
-          total: properties.length
-        }
-      };
-      
-    } finally {
-      connection.release();
+    const query = { is_active: true };
+    
+    if (location) {
+      query.$or = [
+        { city: { $regex: location, $options: 'i' } },
+        { state: { $regex: location, $options: 'i' } },
+        { country: { $regex: location, $options: 'i' } },
+        { address: { $regex: location, $options: 'i' } }
+      ];
     }
+    
+    if (city) {
+      query.city = { $regex: city, $options: 'i' };
+    }
+    
+    if (state) {
+      query.state = { $regex: state, $options: 'i' };
+    }
+    
+    if (guests) {
+      query.max_guests = { $gte: parseInt(guests) };
+    }
+    
+    if (min_price || max_price) {
+      query.price_per_night = {};
+      if (min_price) {
+        query.price_per_night.$gte = parseInt(min_price);
+      }
+      if (max_price) {
+        query.price_per_night.$lte = parseInt(max_price);
+      }
+    }
+    
+    if (property_type) {
+      query.property_type = property_type;
+    }
+    
+    // Availability window on property
+    if (startDate && endDate) {
+      query.$and = query.$and || [];
+      query.$and.push({
+        $or: [
+          { availability_start: null },
+          { availability_start: { $lte: new Date(startDate) } }
+        ]
+      });
+      query.$and.push({
+        $or: [
+          { availability_end: null },
+          { availability_end: { $gte: new Date(endDate) } }
+        ]
+      });
+    }
+    
+    const pageNum = parseInt(page) || 1;
+    const limitNum = parseInt(limit) || 10;
+    const skip = (pageNum - 1) * limitNum;
+    
+    let properties = await Property.find(query)
+      .sort({ created_at: -1 })
+      .skip(skip)
+      .limit(limitNum)
+      .lean();
+    
+    // Filter out properties with overlapping bookings if dates provided
+    if (startDate && endDate) {
+      const availablePropertyIds = [];
+      for (const property of properties) {
+        const overlappingBookings = await Booking.countDocuments({
+          property_id: property._id,
+          status: { $in: ['pending', 'accepted'] },
+          $nor: [
+            { check_out_date: { $lte: new Date(startDate) } },
+            { check_in_date: { $gte: new Date(endDate) } }
+          ]
+        });
+        if (overlappingBookings === 0) {
+          availablePropertyIds.push(property._id);
+        }
+      }
+      properties = properties.filter(p => availablePropertyIds.some(id => id.equals(p._id)));
+    }
+    
+    // Add images for each property
+    for (const property of properties) {
+      const images = await PropertyImage.find({ property_id: property._id })
+        .sort({ display_order: 1 })
+        .lean();
+      property.images = images;
+      property.id = property._id;
+      property.owner_name = property.owner_id?.name;
+      // Set main_image and coverImage for frontend compatibility
+      property.main_image = images[0]?.image_url || `/uploads/properties/property-${property._id}-1.jpg`;
+      property.coverImage = property.main_image;
+      delete property.owner_id;
+    }
+    
+    return {
+      properties,
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        total: properties.length
+      }
+    };
   }
   
   // Get property by ID
   async getPropertyById(propertyId) {
-    const connection = await pool.getConnection();
+    // Convert to number if it's a numeric string
+    const id = isNaN(propertyId) ? propertyId : parseInt(propertyId);
+    const property = await Property.findOne({ _id: id, is_active: true })
+      .lean();
     
-    try {
-      const [properties] = await connection.execute(`
-        SELECT p.*, u.name as owner_name, u.profile_picture as owner_avatar
-        FROM properties p
-        JOIN users u ON p.owner_id = u.id
-        WHERE p.id = ? AND p.is_active = TRUE
-      `, [propertyId]);
-      
-      if (properties.length === 0) {
-        throw new Error('Property not found');
-      }
-      
-      const property = properties[0];
-      
-      // Add images for the property
-      const [images] = await connection.execute(
-        'SELECT id, image_url, image_type, created_at FROM property_images WHERE property_id = ? ORDER BY created_at',
-        [propertyId]
-      );
-      property.images = images;
-      
-      return property;
-      
-    } finally {
-      connection.release();
+    if (!property) {
+      throw new Error('Property not found');
     }
+    
+    // Add images for the property
+    const images = await PropertyImage.find({ property_id: property._id })
+      .sort({ display_order: 1 })
+      .lean();
+    
+    property.images = images;
+    property.id = property._id;
+    property.owner_name = property.owner_id?.name;
+    property.owner_avatar = property.owner_id?.profile_picture;
+    // Set main_image and coverImage for frontend compatibility
+    property.main_image = images[0]?.image_url || `/uploads/properties/property-${property._id}-1.jpg`;
+    property.coverImage = property.main_image;
+    delete property.owner_id;
+    
+    return property;
   }
 
   // Add property images (expects array of { image_url, image_type })
   async addPropertyImages(propertyId, images) {
-    const connection = await pool.getConnection();
-    try {
-      const insertValues = images.map(img => [propertyId, img.image_url, img.image_type || 'gallery'])
-      if (insertValues.length === 0) return []
-      const [result] = await connection.query(
-        'INSERT INTO property_images (property_id, image_url, image_type) VALUES ?',[insertValues]
-      )
-      return result
-    } finally {
-      connection.release()
-    }
+    if (images.length === 0) return [];
+    
+    const imageDocuments = images.map(img => ({
+      property_id: propertyId,
+      image_url: img.image_url,
+      image_type: img.image_type || 'gallery'
+    }));
+    
+    const result = await PropertyImage.insertMany(imageDocuments);
+    return result;
   }
 
   async getPropertyImageById(imageId) {
-    const connection = await pool.getConnection();
-    try {
-      const [rows] = await connection.execute('SELECT * FROM property_images WHERE id = ?', [imageId])
-      return rows[0]
-    } finally {
-      connection.release()
-    }
+    const image = await PropertyImage.findById(imageId).lean();
+    return image;
   }
 
   async deletePropertyImage(propertyId, imageId) {
-    const connection = await pool.getConnection();
-    try {
-      await connection.execute('DELETE FROM property_images WHERE id = ? AND property_id = ?', [imageId, propertyId])
-      return { success: true }
-    } finally {
-      connection.release()
-    }
+    await PropertyImage.deleteOne({ _id: imageId, property_id: propertyId });
+    return { success: true };
   }
   
   // Create property
   async createProperty(propertyData, ownerId) {
-    const connection = await pool.getConnection();
+    const {
+      name, description, property_type, address, city, state, country,
+      price_per_night, bedrooms, bathrooms, max_guests, amenities, house_rules
+    } = propertyData;
     
-    try {
-      const {
-        name, description, property_type, address, city, state, country,
-        price_per_night, bedrooms, bathrooms, max_guests, amenities, house_rules
-      } = propertyData;
-      
-      const [result] = await connection.execute(
-        `INSERT INTO properties (owner_id, name, description, property_type, address, city, state, country,
-                                price_per_night, bedrooms, bathrooms, max_guests, amenities, house_rules,
-                                created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
-        [ownerId, name, description, property_type, address, city, state, country,
-         price_per_night, bedrooms, bathrooms, max_guests, amenities, house_rules]
-      );
-      
-      return {
-        id: result.insertId,
-        name,
-        property_type,
-        city,
-        state
-      };
-      
-    } finally {
-      connection.release();
-    }
+    const property = await Property.create({
+      owner_id: ownerId,
+      name,
+      description,
+      property_type,
+      address,
+      city,
+      state,
+      country,
+      price_per_night,
+      bedrooms,
+      bathrooms,
+      max_guests,
+      amenities,
+      house_rules
+    });
+    
+    return {
+      id: property._id,
+      name: property.name,
+      property_type: property.property_type,
+      city: property.city,
+      state: property.state
+    };
   }
   
   // Update property
   async updateProperty(propertyId, updateData, ownerId) {
-    const connection = await pool.getConnection();
+    // Check if property exists and belongs to user
+    const property = await Property.findOne({ _id: propertyId, owner_id: ownerId });
     
-    try {
-      // Check if property exists and belongs to user
-      const [properties] = await connection.execute(
-        'SELECT id FROM properties WHERE id = ? AND owner_id = ?',
-        [propertyId, ownerId]
-      );
-      
-      if (properties.length === 0) {
-        throw new Error('Property not found or you do not have permission to update it');
-      }
-      
-      // Build update query
-      const updateFields = [];
-      const updateValues = [];
-      
-      Object.keys(updateData).forEach(key => {
-        if (updateData[key] !== undefined) {
-          updateFields.push(`${key} = ?`);
-          updateValues.push(updateData[key]);
-        }
-      });
-      
-      if (updateFields.length === 0) {
-        throw new Error('No valid fields to update');
-      }
-      
-      updateFields.push('updated_at = NOW()');
-      updateValues.push(propertyId);
-      
-      await connection.execute(
-        `UPDATE properties SET ${updateFields.join(', ')} WHERE id = ?`,
-        [...updateValues]
-      );
-      
-      return { success: true };
-      
-    } finally {
-      connection.release();
+    if (!property) {
+      throw new Error('Property not found or you do not have permission to update it');
     }
+    
+    // Build update object
+    const updates = {};
+    Object.keys(updateData).forEach(key => {
+      if (updateData[key] !== undefined) {
+        updates[key] = updateData[key];
+      }
+    });
+    
+    if (Object.keys(updates).length === 0) {
+      throw new Error('No valid fields to update');
+    }
+    
+    updates.updated_at = new Date();
+    
+    await Property.updateOne({ _id: propertyId }, { $set: updates });
+    
+    return { success: true };
   }
   
   // Delete property
   async deleteProperty(propertyId, ownerId, hardDelete = false) {
-    const connection = await pool.getConnection();
+    // Check if property exists and belongs to user
+    const property = await Property.findOne({ _id: propertyId, owner_id: ownerId });
     
-    try {
-      await connection.beginTransaction()
-      // Check if property exists and belongs to user
-      const [properties] = await connection.execute(
-        'SELECT id FROM properties WHERE id = ? AND owner_id = ?',
-        [propertyId, ownerId]
-      );
-      
-      if (properties.length === 0) {
-        throw new Error('Property not found or you do not have permission to delete it');
-      }
-      
-      if (hardDelete) {
-        // Hard delete: remove dependents then the property
-        await connection.execute('DELETE FROM property_images WHERE property_id = ?', [propertyId])
-        await connection.execute('DELETE FROM favorites WHERE property_id = ?', [propertyId])
-        await connection.execute('DELETE FROM reviews WHERE property_id = ?', [propertyId])
-        await connection.execute('DELETE FROM bookings WHERE property_id = ?', [propertyId])
-        await connection.execute('DELETE FROM properties WHERE id = ?', [propertyId])
-      } else {
-        // Soft delete
-        await connection.execute(
-          'UPDATE properties SET is_active = FALSE, updated_at = NOW() WHERE id = ?',
-          [propertyId]
-        );
-      }
-      await connection.commit()
-      return { success: true };
-      
-    } finally {
-      try { await connection.rollback() } catch (_) {}
-      connection.release();
+    if (!property) {
+      throw new Error('Property not found or you do not have permission to delete it');
     }
+    
+    if (hardDelete) {
+      // Hard delete: remove dependents then the property
+      await PropertyImage.deleteMany({ property_id: propertyId });
+      const { Favorite, Review, Booking } = require('../models');
+      await Favorite.deleteMany({ property_id: propertyId });
+      await Review.deleteMany({ property_id: propertyId });
+      await Booking.deleteMany({ property_id: propertyId });
+      await Property.deleteOne({ _id: propertyId });
+    } else {
+      // Soft delete
+      await Property.updateOne(
+        { _id: propertyId },
+        { $set: { is_active: false, updated_at: new Date() } }
+      );
+    }
+    
+    return { success: true };
   }
   
   // Get properties by owner
   async getPropertiesByOwner(ownerId, filters = {}) {
-    const connection = await pool.getConnection();
+    const query = { owner_id: ownerId };
     
-    try {
-      let whereConditions = ['p.owner_id = ?'];
-      let queryParams = [ownerId];
-      
-      if (filters.is_active !== undefined) {
-        whereConditions.push('p.is_active = ?');
-        queryParams.push(filters.is_active);
-      }
-      
-      const [properties] = await connection.execute(`
-        SELECT p.*, u.name as owner_name
-        FROM properties p
-        JOIN users u ON p.owner_id = u.id
-        WHERE ${whereConditions.join(' AND ')}
-        ORDER BY p.created_at DESC
-      `, queryParams);
-      
-      return properties;
-      
-    } finally {
-      connection.release();
+    if (filters.is_active !== undefined) {
+      query.is_active = filters.is_active;
     }
+    
+    const properties = await Property.find(query)
+      .sort({ created_at: -1 })
+      .lean();
+    
+    for (const property of properties) {
+      property.id = property._id;
+      property.owner_name = property.owner_id?.name;
+      delete property.owner_id;
+    }
+    
+    return properties;
   }
 }
 

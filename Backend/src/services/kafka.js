@@ -6,6 +6,7 @@ class KafkaService {
     this.kafka = null
     this.producer = null
     this.consumer = null
+    this.isConnected = false
     this.brokers = (process.env.KAFKA_BROKERS || 'localhost:9092').split(',')
     this.clientId = process.env.KAFKA_CLIENT_ID || 'airbnb-backend'
   }
@@ -16,22 +17,26 @@ class KafkaService {
     this.producer = this.kafka.producer()
     try {
       await this.producer.connect()
+      this.isConnected = true
       console.log('✅ Kafka producer connected')
     } catch (err) {
+      this.isConnected = false
       console.warn('⚠️ Kafka producer failed to connect:', err.message)
     }
   }
 
   async produce(topic, messageObj) {
-    if (!this.producer) {
-      console.warn('Kafka producer not initialized, skipping produce')
+    if (!this.producer || !this.isConnected) {
+      console.warn('Kafka producer not connected, skipping message to topic:', topic)
       return
     }
     try {
       const payload = { value: JSON.stringify(messageObj) }
       await this.producer.send({ topic, messages: [payload] })
     } catch (err) {
-      console.error('Kafka produce error:', err)
+      console.error('Kafka produce error:', err.message)
+      // Mark as disconnected on error
+      this.isConnected = false
     }
   }
 

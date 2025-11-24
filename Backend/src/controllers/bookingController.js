@@ -88,7 +88,20 @@ class BookingController {
   async acceptBooking(req, res) {
     try {
       const { id } = req.params;
-      await bookingService.acceptBooking(id, req.userId);
+      const booking = await bookingService.acceptBooking(id, req.userId);
+      
+      // Publish status update to Kafka for traveler service
+      try {
+        await kafkaService.produce('bookings.status', {
+          booking_id: id,
+          status: 'accepted',
+          owner_id: req.userId,
+          processed_at: new Date().toISOString()
+        })
+        console.log(`✅ Published booking ${id} acceptance to Kafka`)
+      } catch (err) {
+        console.warn('Failed to publish booking acceptance to kafka:', err && err.message)
+      }
       
       res.json({
         success: true,
@@ -112,6 +125,20 @@ class BookingController {
       
       await bookingService.rejectBooking(id, req.userId, reason);
       
+      // Publish status update to Kafka for traveler service
+      try {
+        await kafkaService.produce('bookings.status', {
+          booking_id: id,
+          status: 'rejected',
+          reason: reason || 'Rejected by owner',
+          owner_id: req.userId,
+          processed_at: new Date().toISOString()
+        })
+        console.log(`✅ Published booking ${id} rejection to Kafka`)
+      } catch (err) {
+        console.warn('Failed to publish booking rejection to kafka:', err && err.message)
+      }
+      
       res.json({
         success: true,
         message: 'Booking rejected successfully'
@@ -133,6 +160,20 @@ class BookingController {
       const { reason } = req.body;
       
       await bookingService.cancelBooking(id, req.userId, reason);
+      
+      // Publish status update to Kafka for owner service notification
+      try {
+        await kafkaService.produce('bookings.status', {
+          booking_id: id,
+          status: 'cancelled',
+          reason: reason || 'Cancelled by traveler',
+          traveler_id: req.userId,
+          processed_at: new Date().toISOString()
+        })
+        console.log(`✅ Published booking ${id} cancellation to Kafka`)
+      } catch (err) {
+        console.warn('Failed to publish booking cancellation to kafka:', err && err.message)
+      }
       
       res.json({
         success: true,

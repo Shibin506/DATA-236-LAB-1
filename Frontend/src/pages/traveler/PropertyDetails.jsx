@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { bookingApi, propertyApi } from '../../services/api'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createBooking } from '../../store/travelerBookingSlice'
 
 export default function PropertyDetails() {
@@ -11,6 +11,8 @@ export default function PropertyDetails() {
   const [form, setForm] = useState({ startDate: '', endDate: '', guests: 1 })
   const [msg, setMsg] = useState('')
   const [error, setError] = useState('')
+  const user = useSelector(state => state.auth?.user)
+  const isOwner = user?.role === 'owner' || user?.user_type === 'owner'
 
   useEffect(() => {
     propertyApi.details(id).then(({data}) => setP(data.property)).catch(()=>{})
@@ -87,8 +89,14 @@ export default function PropertyDetails() {
             <div className="d-flex align-items-baseline justify-content-between mb-2">
               <div><span className="h4">${p.pricePerNight}</span> night</div>
             </div>
-            {error && <div className="alert alert-danger">{error}</div>}
-            {msg && <div className="alert alert-info">{msg}</div>}
+            {isOwner && (
+              <div className="alert alert-warning">
+                Property owners cannot book properties. Please log in as a traveler to make bookings.
+              </div>
+            )}
+            {!isOwner && error && <div className="alert alert-danger">{error}</div>}
+            {!isOwner && msg && <div className="alert alert-info">{msg}</div>}
+            {!isOwner && (
             <div className="row g-2">
               <div className="col-6">
                 <label className="form-label">Start</label>
@@ -108,6 +116,7 @@ export default function PropertyDetails() {
                 >Request to book</button>
               </div>
             </div>
+            )}
           </div>
         </div>
       </div>

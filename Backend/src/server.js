@@ -14,11 +14,13 @@ async function startServer() {
     await initializeDatabase();
     console.log('✅ Database tables initialized successfully');
     
-    // Initialize Kafka (best-effort)
+    // Initialize Kafka
     try {
-      await kafkaService.init()
-    } catch (err) {
-      console.warn('Kafka init error (continuing without kafka):', err.message)
+      await kafkaService.init();
+      console.log('✅ Kafka initialized successfully');
+    } catch (error) {
+      console.error('⚠️  Kafka initialization failed:', error.message);
+      console.log('⚠️  Continuing without Kafka - some features may be limited');
     }
 
     // Start server

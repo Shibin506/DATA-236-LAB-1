@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { bookingApi, propertyApi } from '../../services/api'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchTravelerBookings } from '../../store/travelerBookingSlice'
+import { getBackendOrigin } from '../../config'
 
 function StatusBadge({ status }) {
   const s = (status || '').toString().toLowerCase()
@@ -20,9 +21,7 @@ function money(x) {
 function assetUrl(path) {
   if (!path) return '/placeholder.svg'
   if (path.startsWith('http://') || path.startsWith('https://')) return path
-  const apiBase = import.meta.env.VITE_API_BASE || 'http://localhost:3001/api'
-  let origin = ''
-  try { origin = new URL(apiBase).origin } catch { origin = 'http://localhost:3001' }
+  const origin = getBackendOrigin()
   return `${origin}${path.startsWith('/') ? path : `/${path}`}`
 }
 

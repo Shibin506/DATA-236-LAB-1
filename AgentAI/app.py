@@ -147,7 +147,14 @@ app = FastAPI(title="Concierge Agent API", version="0.1.0")
 frontend_origin = os.getenv("FRONTEND_URL", "http://localhost:3000")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[frontend_origin, "http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=[
+        frontend_origin,
+        "http://localhost",
+        "http://localhost:80", 
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:5173"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -853,7 +860,33 @@ async def concierge_agent(payload: Union[AgentV2Input, AgentLegacyInput] = Body(
     for e in events[:6]:
         add_activity_from_item(e, ["event"]) 
 
-    # No fallback activities: if live results are empty, activities remains empty.
+    # Fallback activities from JSON file if Tavily returned nothing
+    if not activities:
+        try:
+            import os
+            fallback_path = os.path.join(os.path.dirname(__file__), "fallbacks", "activities.json")
+            with open(fallback_path, "r") as f:
+                fallback_data = json.load(f)
+            city_key = booking.location.lower().strip() if booking.location else ""
+            city_activities = fallback_data.get("by_city", {}).get(city_key, fallback_data.get("default", []))
+            for idx, act in enumerate(city_activities[:10]):
+                activities.append(Activity(
+                    id=f"fallback-activity-{idx}",
+                    title=act.get("title", "Activity"),
+                    address="",
+                    geo=Geo(lat=0.0, lng=0.0),
+                    price_tier=act.get("price_tier", "$$"),
+                    duration_minutes=act.get("duration_minutes", 90),
+                    tags=act.get("tags", ["sightseeing"]),
+                    wheelchair_friendly=bool(getattr(prefs.mobility_needs or MobilityNeeds(), 'wheelchair', False)),
+                    child_friendly=(booking.party_type == 'family' or bool(booking.children_ages)),
+                    stroller_friendly=bool(getattr(prefs.mobility_needs or MobilityNeeds(), 'stroller', False)),
+                    booking_link=None,
+                    source={"name": "fallback", "file": "activities.json"}
+                ))
+        except Exception as e:
+            # If fallback loading fails, continue with empty activities
+            pass
 
     # 3) Restaurants based on dietary
     dietary_filters = _dietary_keys(prefs.dietary)
@@ -880,7 +913,30 @@ async def concierge_agent(payload: Union[AgentV2Input, AgentLegacyInput] = Body(
         ))
     if rest_results:
         sources.append(DebugSource(type="tavily", query=rest_query, url=rest_results[0].get("url")))
-    # No fallback restaurants: if live results are empty, restaurants remains empty.
+    
+    # Fallback restaurants from JSON file if Tavily returned nothing
+    if not restaurants:
+        try:
+            import os
+            fallback_path = os.path.join(os.path.dirname(__file__), "fallbacks", "restaurants.json")
+            with open(fallback_path, "r") as f:
+                fallback_data = json.load(f)
+            city_key = booking.location.lower().strip() if booking.location else ""
+            city_restaurants = fallback_data.get("by_city", {}).get(city_key, fallback_data.get("default", []))
+            for rest in city_restaurants[:6]:
+                restaurants.append(Restaurant(
+                    name=rest.get("name", "Restaurant"),
+                    address="",
+                    geo=Geo(lat=0.0, lng=0.0),
+                    dietary_match=rest.get("dietary_match", dietary_filters),
+                    price_tier=rest.get("price_tier", "$$"),
+                    kid_friendly=(booking.party_type == 'family'),
+                    reservation_link=None,
+                    source={"name": "fallback", "file": "restaurants.json"}
+                ))
+        except Exception as e:
+            # If fallback loading fails, continue with empty restaurants
+            pass
 
     # 4) Itinerary mapping across dates
     dates = _date_range(booking.start_date, booking.end_date)

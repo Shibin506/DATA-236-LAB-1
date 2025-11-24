@@ -1,0 +1,95 @@
+---
+# AgentAI Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agentai
+  namespace: airbnb
+  labels:
+    app: agentai
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: agentai
+  template:
+    metadata:
+      labels:
+        app: agentai
+    spec:
+      containers:
+      - name: agentai
+        image: airbnb-agentai:latest
+        imagePullPolicy: Never  # Use local image for development
+        ports:
+        - containerPort: 8000
+          name: http
+        envFrom:
+        - configMapRef:
+            name: agentai-config
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: DB_PASSWORD
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 20
+          periodSeconds: 15
+          timeoutSeconds: 5
+        resources:
+          requests:
+            cpu: "150m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+
+---
+# AgentAI Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: agentai-service
+  namespace: airbnb
+spec:
+  selector:
+    app: agentai
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+    name: http
+  type: LoadBalancer
+
+---
+# AgentAI HorizontalPodAutoscaler
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: agentai-hpa
+  namespace: airbnb
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: agentai
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75
