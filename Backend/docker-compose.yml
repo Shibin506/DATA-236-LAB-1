@@ -196,6 +196,22 @@ services:
       timeout: 3s
       retries: 3
 
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: airbnb_kafka_ui
+    restart: unless-stopped
+    ports:
+      - "8090:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: airbnb-cluster
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9093
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    depends_on:
+      - kafka
+      - zookeeper
+    networks:
+      - airbnb_network
+
 volumes:
   mysql_data:
 
