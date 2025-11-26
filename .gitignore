@@ -127,6 +127,17 @@ tmp/
 uploads/
 media/
 
+# JMeter test results and reports
+JMeter/results/
+JMeter/ec2_report/
+JMeter/*.jtl
+JMeter/*.csv
+JMeter/*.log
+
+# AWS deployment scripts with hardcoded credentials
+aws-deployment/*.sh
+aws-deployment/YOUR_DEPLOYMENT_SETTINGS.txt
+
 # Local scripts not for production (backend utilities)
 Backend/real-server.js
 Backend/setup.js
@@ -134,6 +145,8 @@ Backend/simple-test.js
 Backend/test-api.js
 Backend/check-table-structure.js
 Backend/frontend-test.html
+Backend/jmeter.log
+Backend/nohup.out
 
 # Python specific tooling caches
 .pyre/
