@@ -160,7 +160,7 @@ services:
       context: ../Frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_BASE: http://localhost:3002/api
+        VITE_API_BASE: ${VITE_API_BASE:-http://localhost:3002/api}
     container_name: airbnb_frontend_app
     restart: unless-stopped
     ports:
@@ -174,6 +174,43 @@ services:
       interval: 30s
       timeout: 3s
       retries: 3
+
+  agentai:
+    build:
+      context: ../AgentAI
+      dockerfile: Dockerfile
+    container_name: airbnb_agentai
+    restart: unless-stopped
+    ports:
+      - "5001:5000"
+    environment:
+      BACKEND_URL: ${BACKEND_URL:-http://backend:3001}
+      FLASK_ENV: ${FLASK_ENV:-production}
+    depends_on:
+      - backend
+    networks:
+      - airbnb_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: airbnb_kafka_ui
+    restart: unless-stopped
+    ports:
+      - "8090:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: airbnb-cluster
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9093
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    depends_on:
+      - kafka
+      - zookeeper
+    networks:
+      - airbnb_network
 
 volumes:
   mysql_data:
