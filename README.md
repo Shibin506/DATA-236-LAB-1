@@ -456,9 +456,12 @@ cd HostIQ
 1. Create a free cluster at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
 2. Get your connection string:
    ```
-   mongodb+srv://<username>:<password>@cluster.mongodb.net/hostiq?retryWrites=true&w=majority
+   mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@your-cluster.mongodb.net/hostiq?retryWrites=true&w=majority
    ```
 3. Whitelist your IP address in Network Access
+
+> [!WARNING]
+> **Never commit real credentials to Git!** The examples below use placeholder values (`YOUR_USERNAME`, `YOUR_PASSWORD`). Replace them with your actual MongoDB credentials in your local `.env` file, which is already in `.gitignore`.
 
 ### 3. Environment Configuration
 
@@ -467,7 +470,7 @@ Create `Backend/.env`:
 
 ```bash
 # Database
-MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/hostiq?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@your-cluster.mongodb.net/hostiq?retryWrites=true&w=majority
 
 # Server
 NODE_ENV=development
