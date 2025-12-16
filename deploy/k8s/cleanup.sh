@@ -8,7 +8,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-echo -e "${YELLOW}This will delete all Kubernetes resources in the 'airbnb' namespace${NC}"
+echo -e "${YELLOW}This will delete all Kubernetes resources in the 'hostiq' namespace${NC}"
 read -p "Are you sure? (y/N) " -n 1 -r
 echo
 

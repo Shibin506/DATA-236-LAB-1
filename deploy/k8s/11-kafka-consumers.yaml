@@ -4,7 +4,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: owner-consumer
-  namespace: airbnb
+  namespace: hostiq
   labels:
     app: owner-consumer
     role: backend-consumer
@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: owner-consumer
-        image: airbnb-backend:latest
+        image: hostiq-backend:latest
         imagePullPolicy: Never  # Use local image for development
         command: ["npm", "run", "owner-consumer"]
         envFrom:
@@ -61,7 +61,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: traveler-consumer
-  namespace: airbnb
+  namespace: hostiq
   labels:
     app: traveler-consumer
     role: transaction-consumer
@@ -78,7 +78,7 @@ spec:
     spec:
       containers:
       - name: traveler-consumer
-        image: airbnb-backend:latest
+        image: hostiq-backend:latest
         imagePullPolicy: Never  # Use local image for development
         command: ["npm", "run", "traveler-consumer"]
         envFrom:
@@ -118,7 +118,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: owner-consumer-hpa
-  namespace: airbnb
+  namespace: hostiq
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -146,7 +146,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: traveler-consumer-hpa
-  namespace: airbnb
+  namespace: hostiq
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

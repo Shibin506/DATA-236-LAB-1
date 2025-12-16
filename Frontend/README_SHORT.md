@@ -1,4 +1,4 @@
-# Airbnb Clone Frontend
+# HostIQ Frontend
 
 ## Quick start
 

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: ghcr.io/your-org/airbnb-backend:latest
+          image: ghcr.io/your-org/hostiq-backend:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3001

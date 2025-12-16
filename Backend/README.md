@@ -1,6 +1,6 @@
-# Airbnb Clone Backend API
+# HostIQ Backend API
 
-A comprehensive backend API for an Airbnb clone application built with Node.js, Express, and MySQL.
+A comprehensive backend API for the HostIQ property rental application built with Node.js, Express, and MongoDB.
 
 ## 🚀 Features
 
@@ -59,7 +59,7 @@ src/
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd airbnb-backend
+   cd hostiq-backend
    ```
 
 2. **Install dependencies**
@@ -76,15 +76,14 @@ src/
    ```env
    DB_HOST=localhost
    DB_USER=root
-   DB_PASSWORD=your_password
-   DB_NAME=airbnb_db
+   DB_NAME=hostiq_db
    DB_PORT=3306
    SESSION_SECRET=your_session_secret
    NODE_ENV=development
    ```
 
 4. **Database Setup**
-   - Create MySQL database: `airbnb_db`
+   - Create MySQL database: `hostiq_db`
    - The application will automatically create tables on startup
 
 5. **Start the server**
@@ -156,7 +155,7 @@ src/
 | `DB_HOST` | Database host | localhost |
 | `DB_USER` | Database user | root |
 | `DB_PASSWORD` | Database password | - |
-| `DB_NAME` | Database name | airbnb_db |
+| `DB_NAME` | Database name | hostiq_db |
 | `DB_PORT` | Database port | 3306 |
 | `SESSION_SECRET` | Session secret key | - |
 | `NODE_ENV` | Environment | development |
@@ -224,8 +223,8 @@ curl -X POST http://localhost:3001/api/bookings \
 
 2. **Docker Deployment**
    ```bash
-   docker build -t airbnb-backend .
-   docker run -p 3001:3001 airbnb-backend
+   docker build -t hostiq-backend .
+   docker run -p 3001:3001 hostiq-backend
    ```
 
 ## 🤝 Contributing

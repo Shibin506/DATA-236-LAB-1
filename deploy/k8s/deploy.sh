@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Kubernetes Deployment Script for Airbnb Application
+# Kubernetes Deployment Script for HostIQ Application
 # This script builds Docker images and deploys them to Kubernetes
 
 set -e
@@ -78,19 +78,19 @@ print_info "Deploying Zookeeper..."
 kubectl apply -f deploy/k8s/04-zookeeper.yaml
 
 print_info "Waiting for Zookeeper to be ready..."
-kubectl wait --for=condition=available --timeout=120s deployment/zookeeper -n airbnb
+kubectl wait --for=condition=available --timeout=120s deployment/zookeeper -n hostiq
 
 print_info "Deploying Kafka..."
 kubectl apply -f deploy/k8s/05-kafka.yaml
 
 print_info "Waiting for Kafka to be ready..."
-kubectl wait --for=condition=available --timeout=120s deployment/kafka -n airbnb
+kubectl wait --for=condition=available --timeout=120s deployment/kafka -n hostiq
 
 print_info "Deploying MySQL..."
 kubectl apply -f deploy/k8s/06-mysql.yaml
 
 print_info "Waiting for MySQL to be ready..."
-kubectl wait --for=condition=available --timeout=180s deployment/mysql -n airbnb
+kubectl wait --for=condition=available --timeout=180s deployment/mysql -n hostiq
 
 print_info "Deploying Backend..."
 kubectl apply -f deploy/k8s/07-backend.yaml
@@ -108,9 +108,9 @@ print_success "All services deployed successfully!"
 
 # Wait for all deployments to be ready
 print_info "Waiting for all deployments to be ready (this may take a few minutes)..."
-kubectl wait --for=condition=available --timeout=300s deployment/backend -n airbnb
-kubectl wait --for=condition=available --timeout=300s deployment/agentai -n airbnb
-kubectl wait --for=condition=available --timeout=300s deployment/frontend -n airbnb
+kubectl wait --for=condition=available --timeout=300s deployment/backend -n hostiq
+kubectl wait --for=condition=available --timeout=300s deployment/agentai -n hostiq
+kubectl wait --for=condition=available --timeout=300s deployment/frontend -n hostiq
 
 print_success "All deployments are ready!"
 
@@ -120,21 +120,21 @@ echo "Deployment Complete!"
 echo "========================================="
 echo ""
 echo "Check pod status:"
-echo "  kubectl get pods -n airbnb"
+echo "  kubectl get pods -n hostiq"
 echo ""
 echo "Check services:"
-echo "  kubectl get services -n airbnb"
+echo "  kubectl get services -n hostiq"
 echo ""
 echo "View logs:"
-echo "  kubectl logs -f deployment/backend -n airbnb"
-echo "  kubectl logs -f deployment/agentai -n airbnb"
-echo "  kubectl logs -f deployment/frontend -n airbnb"
+echo "  kubectl logs -f deployment/backend -n hostiq"
+echo "  kubectl logs -f deployment/agentai -n hostiq"
+echo "  kubectl logs -f deployment/frontend -n hostiq"
 echo ""
 echo "Access the application:"
-echo "  Frontend: kubectl port-forward svc/frontend-service 8080:80 -n airbnb"
-echo "  Backend:  kubectl port-forward svc/backend-service 3001:3001 -n airbnb"
-echo "  AgentAI:  kubectl port-forward svc/agentai-service 8000:8000 -n airbnb"
+echo "  Frontend: kubectl port-forward svc/frontend-service 8080:80 -n hostiq"
+echo "  Backend:  kubectl port-forward svc/backend-service 3001:3001 -n hostiq"
+echo "  AgentAI:  kubectl port-forward svc/agentai-service 8000:8000 -n hostiq"
 echo ""
 echo "Or get the LoadBalancer IP:"
-echo "  kubectl get svc frontend-service -n airbnb"
+echo "  kubectl get svc frontend-service -n hostiq"
 echo ""

@@ -1,6 +1,6 @@
-# Airbnb Clone Frontend
+# HostIQ Frontend
 
-This is a React (Vite) frontend for the Airbnb clone. It targets the backend running at http://localhost:3001.
+This is a React (Vite) frontend for the HostIQ platform. It targets the backend running at http://localhost:3001.
 
 Features implemented:
 - Traveler: signup/login, profile with avatar upload, search, property details, booking request, favorites, trips/history, Agent AI button

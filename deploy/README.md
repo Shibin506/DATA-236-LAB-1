@@ -18,7 +18,7 @@ Replace `ghcr.io/your-org` with your container registry (Docker Hub, GHCR, etc.)
 # Backend (Node)
 cd Backend
 # Build a production bundle and image
-docker build -t ghcr.io/your-org/airbnb-backend:latest .
+docker build -t ghcr.io/your-org/hostiq-backend:latest .
 
 # AgentAI (FastAPI)
 cd ../AgentAI
@@ -28,7 +28,7 @@ docker build -t ghcr.io/your-org/agentai:latest .
 Optional: push images to your registry.
 
 ```bash
-docker push ghcr.io/your-org/airbnb-backend:latest
+docker push ghcr.io/your-org/hostiq-backend:latest
 docker push ghcr.io/your-org/agentai:latest
 ```
 

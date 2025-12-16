@@ -4,7 +4,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  namespace: airbnb
+  namespace: hostiq
   labels:
     app: backend
 spec:
@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: airbnb-backend:latest
+        image: hostiq-backend:latest
         imagePullPolicy: Never  # Use local image for development
         ports:
         - containerPort: 3001
@@ -66,7 +66,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
-  namespace: airbnb
+  namespace: hostiq
 spec:
   selector:
     app: backend
@@ -83,7 +83,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: backend-hpa
-  namespace: airbnb
+  namespace: hostiq
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

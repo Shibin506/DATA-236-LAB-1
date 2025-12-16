@@ -1,7 +1,7 @@
 {
-  "name": "airbnb-backend-api",
+  "name": "hostiq-backend-api",
   "version": "1.0.0",
-  "description": "Airbnb Clone Backend API with Node.js, Express, and MySQL",
+  "description": "HostIQ Backend API with Node.js, Express, and MongoDB",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
@@ -13,12 +13,12 @@
     "lint:fix": "eslint src/ --fix"
   },
   "keywords": [
-    "airbnb",
-    "clone",
+    "hostiq",
+    "property rental",
     "api",
     "nodejs",
     "express",
-    "mysql",
+    "mongodb",
     "booking",
     "property"
   ],

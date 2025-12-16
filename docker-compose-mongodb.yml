@@ -5,13 +5,13 @@ services:
       dockerfile: Dockerfile
       args:
         - VITE_API_BASE=http://localhost:3001/api
-    container_name: airbnb_frontend
+    container_name: hostiq_frontend
     ports:
       - "80:80"
     depends_on:
       - backend
     networks:
-      - airbnb-network
+      - hostiq-network
     restart: unless-stopped
 
   # Backend API (Node.js + MongoDB Atlas)
@@ -19,20 +19,20 @@ services:
     build:
       context: ./Backend
       dockerfile: Dockerfile
-    container_name: airbnb_backend
+    container_name: hostiq_backend
     ports:
       - "3001:3001"
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - MONGODB_URI=mongodb+srv://sarveshwaghmare101_db_user:Z3WNwIKBCUVw390a@airbnb-main.d4apnix.mongodb.net/airbnb?retryWrites=true&w=majority&appName=airbnb-main
+      - MONGODB_URI=${MONGODB_URI}
       - KAFKA_BROKERS=kafka:9093
       - SESSION_SECRET=your-secret-key-change-in-production
       - JWT_SECRET=your-jwt-secret-change-in-production
     depends_on:
       - kafka
     networks:
-      - airbnb-network
+      - hostiq-network
     restart: unless-stopped
 
   # AgentAI (Python Flask)
@@ -40,7 +40,7 @@ services:
     build:
       context: ./AgentAI
       dockerfile: Dockerfile
-    container_name: airbnb_agentai
+    container_name: hostiq_agentai
     ports:
       - "5000:5000"
     environment:
@@ -49,26 +49,26 @@ services:
     depends_on:
       - backend
     networks:
-      - airbnb-network
+      - hostiq-network
     restart: unless-stopped
 
   # Zookeeper (for Kafka)
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
-    container_name: airbnb_zookeeper
+    container_name: hostiq_zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
     networks:
-      - airbnb-network
+      - hostiq-network
     restart: unless-stopped
 
   # Kafka
   kafka:
     image: confluentinc/cp-kafka:7.5.0
-    container_name: airbnb_kafka
+    container_name: hostiq_kafka
     depends_on:
       - zookeeper
     ports:
@@ -84,13 +84,13 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     networks:
-      - airbnb-network
+      - hostiq-network
     restart: unless-stopped
     volumes:
       - kafka_data:/var/lib/kafka/data
 
 networks:
-  airbnb-network:
+  hostiq-network:
     driver: bridge
 
 volumes:

@@ -1,6 +1,6 @@
-# Concierge Agent (FastAPI)
+# HostIQ Concierge Agent (FastAPI)
 
-A minimal FastAPI microservice providing a structured AI concierge endpoint for the frontend "Ask Agent AI" button.
+A minimal FastAPI microservice providing a structured AI concierge endpoint for the HostIQ platform "Ask Agent AI" button.
 
 ## Endpoints
 - `GET /` — health check

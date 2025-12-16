@@ -1,7 +1,7 @@
-# JMeter Performance Testing Guide for Airbnb Application
+# JMeter Performance Testing Guide for HostIQ Application
 
 ## Overview
-This directory contains Apache JMeter test plans for performance testing the Airbnb application's critical APIs including user authentication, property data fetching, and booking processing.
+This directory contains Apache JMeter test plans for performance testing the HostIQ application's critical APIs including user authentication, property data fetching, and booking processing.
 
 ## Prerequisites
 
@@ -212,7 +212,7 @@ grep -E "User Login|Search Properties|Get Property Details|Create Booking" \
 Monitor backend performance:
 ```bash
 # Watch container stats
-docker stats airbnb_backend
+docker stats hostiq_backend
 
 # Watch logs
 docker compose logs -f backend

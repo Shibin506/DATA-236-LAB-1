@@ -21,7 +21,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-pvc
-  namespace: airbnb
+  namespace: hostiq
 spec:
   storageClassName: manual
   accessModes:
@@ -53,7 +53,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: kafka-pvc
-  namespace: airbnb
+  namespace: hostiq
 spec:
   storageClassName: manual
   accessModes:
